@@ -1,11 +1,12 @@
+// ignore_for_file: use_key_in_widget_constructors, use_build_context_synchronously
+
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/mixins/valid_mixin.dart';
-import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/otp_form.dart';
 import 'package:project/src/screen/verfication_code.dart';
-import 'package:project/widgets/button.dart';
+import 'package:project/widgets/button_2.dart';
+import 'package:project/widgets/design.dart';
 import 'package:project/widgets/form_field.dart';
 
 class ForgetPassword extends StatefulWidget {
@@ -51,7 +52,32 @@ class ForgetPass extends State<ForgetPassword> with ValidationMixin {
             SizedBox(
               height: 30.0,
             ),
-            CustomeButton(
+            CustomeButton2(
+                text: 'Send',
+                onPressed: () async {
+                  auth.setConfig(
+                    appEmail: "contact@hdevcoder.com",
+                    appName: "Email OTP",
+                    userEmail: email.text,
+                    otpLength: 4,
+                    otpType: OTPType.digitsOnly,
+                  );
+                  if (await auth.sendOTP() == true) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("OTP has been sent"),
+                    ));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OtpForm()),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("OTP send failed"),
+                    ));
+                  }
+                }),
+
+            /* CustomeButton(
               hintText: 'Send',
               onPressed: () async {
                 auth.setConfig(
@@ -77,7 +103,7 @@ class ForgetPass extends State<ForgetPassword> with ValidationMixin {
               },
               borderRadius: BorderRadius.all(Radius.circular(25)),
               // loginButton(),
-            ),
+            ),*/
             // loginButton(),
           ],
         ),
@@ -92,27 +118,26 @@ class ForgetPass extends State<ForgetPassword> with ValidationMixin {
     // double h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Are You Forget Your Password ? ',
-          style: GoogleFonts.aBeeZee(
-            textStyle: TextStyle(
-              color: Color.fromARGB(255, 2, 92, 123),
-              fontSize: 20,
-
-              // decoration: TextDecoration.underline,
-              decorationThickness: 1,
-              // fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          CustemDesign(
+            text: 'Forget Password ',
+            text2: 'Are you forget your password ?',
+            fontSize: 18,
+            num2: 55,
+            num: 70,
+          ),
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: 280.0,
+                left: 50,
+                right: 50,
+              ),
+              child: textfield1(),
             ),
           ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: textfield1(),
-        ),
+        ],
       ),
     );
   }

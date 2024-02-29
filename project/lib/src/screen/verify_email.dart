@@ -1,5 +1,8 @@
+// ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:project/widgets/button_2.dart';
+import 'package:project/widgets/design.dart';
 
 class VerifyEmail extends StatefulWidget {
   @override
@@ -10,7 +13,7 @@ class _VerifyYourEmail extends State<VerifyEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /* appBar: AppBar(
         centerTitle: true,
         title: Text(
           'Veirify Your Email  ',
@@ -25,30 +28,36 @@ class _VerifyYourEmail extends State<VerifyEmail> {
             ),
           ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF0D6775),
-                minimumSize: Size(90, 40),
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(40)),
+      ),*/
+      body: Stack(
+        children: [
+          CustemDesign(
+            text: 'Verify your Email',
+            text2: 'We have sent verfication to your email',
+            fontSize: 18,
+            num2: 24,
+            num: 70,
+          ),
+          /* Positioned(
+            top: 375,
+            left: 20,
+            child: Text(
+              'We have sent verfication to your email',
+              style: GoogleFonts.aBeeZee(
+                textStyle: TextStyle(
+                  color: Color.fromARGB(255, 168, 169, 170),
+                  fontSize: 18,
                 ),
               ),
-              child: Text(
-                'Veirify Email',
-                style: GoogleFonts.aBeeZee(
-                  textStyle: TextStyle(
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              onPressed: () {}),
-        ),
+            ),
+          ),*/
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(left: 123.0, right: 20.0, top: 420),
+              child: CustomeButton2(text: 'Verify Email', onPressed: () {}),
+            ),
+          ),
+        ],
       ),
     );
   }

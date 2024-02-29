@@ -23,7 +23,7 @@ class CoverPage extends StatelessWidget {
             ),
             Center(
               child: Image.asset(
-                "images/icon/shape.png",
+                "images/icon/splash.png",
               ),
             ),
             /*  Image.asset(

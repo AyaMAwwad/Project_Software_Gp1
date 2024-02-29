@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors_in_immutables, camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -37,7 +39,7 @@ class custemField extends StatelessWidget {
         hintText: hintText,
         hintStyle: GoogleFonts.aBeeZee(
           textStyle: TextStyle(
-            color: Colors.black,
+            color: Color.fromARGB(255, 78, 78, 78),
             fontSize: 16,
           ),
         ),

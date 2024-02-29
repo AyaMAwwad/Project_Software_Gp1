@@ -1,37 +1,18 @@
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class DateField extends StatelessWidget {
   final TextEditingController controller;
-  final void Function(DateTime?)? onDateSelected;
-
+  final void Function()? onTap;
+  final DateTime? selectedDate;
   DateField({
     required this.controller,
-    required this.onDateSelected,
+    required this.onTap,
+    required this.selectedDate,
   });
-
-  DateTime? selectedDate;
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null) {
-      if (onDateSelected != null) {
-        onDateSelected!(picked);
-      }
-    }
-
-    /*if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }*/
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +32,7 @@ class DateField extends StatelessWidget {
             : DateFormat('yyyy-MM-dd').format(selectedDate!),
         hintStyle: GoogleFonts.aBeeZee(
           textStyle: TextStyle(
-            color: Colors.black,
+            color: Color.fromARGB(255, 78, 78, 78),
             fontSize: 16,
           ),
         ),
@@ -75,10 +56,7 @@ class DateField extends StatelessWidget {
         // ignore: avoid_print
         // phone = val!;
       },
-      onTap: () {
-        // Show date picker when the text field is tapped
-        _selectDate(context);
-      },
+      onTap: onTap,
     );
   }
 }

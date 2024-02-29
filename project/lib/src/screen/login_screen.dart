@@ -1,18 +1,17 @@
 //import 'dart:html';
 
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, prefer_final_fields
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, prefer_final_fields, use_key_in_widget_constructors, use_build_context_synchronously, avoid_print, non_constant_identifier_names
 
+//import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/mixins/valid_mixin.dart';
-
+import 'dart:core';
 import 'package:project/src/screen/home_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:project/src/screen/forget_pass.dart';
-
 import 'package:project/src/screen/signup_screen.dart';
 import 'package:project/widgets/button.dart';
 import 'package:project/widgets/form_field.dart';
@@ -23,6 +22,7 @@ class Login extends StatefulWidget {
   // @override
   //LoginScreen Login.createState({super.key}) => LoginScreen();
 
+  @override
   LoginScreen createState() => LoginScreen();
 }
 
@@ -40,14 +40,17 @@ class LoginScreen extends State<Login> with ValidationMixin {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          /* Image.asset(
-            'lib/assest/logo3.png',
+          SizedBox(
+            height: 100.0,
+          ),
+          Image.asset(
+            'images/icon/logo3.png',
             width: 900.0,
             height: 200.0,
           ),
-*/
+
           SizedBox(
-            height: 20.0,
+            height: 10.0,
           ),
           custemField(
             hintText: 'UserName',
@@ -105,7 +108,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
           ),
 
           CustomeButton(
-            hintText: 'Login',
+            text: 'Login',
             onPressed: () async {
               // Add the action the button should perform
               onFormSubmitted();
@@ -172,23 +175,25 @@ class LoginScreen extends State<Login> with ValidationMixin {
               // Facebook Icon
               Icon(
                 FontAwesomeIcons.facebook,
-                color: Color.fromARGB(255, 2, 92, 123),
+                color: Color.fromARGB(255, 9, 93, 123),
                 size: 30,
               ),
               // Twitter Icon
               //  SizedBox(width: 10.0), //
               Icon(
                 FontAwesomeIcons.twitter,
-                color: Color.fromARGB(255, 2, 92, 123),
+                //FontAwesomeIcons.twitter,
+                color: Color.fromARGB(255, 9, 93, 123),
+                size: 30,
+              ),
+              Icon(
+                FontAwesomeIcons.google,
+                //FontAwesomeIcons.twitter,
+                color: Color.fromARGB(255, 9, 93, 123),
                 size: 30,
               ),
               // Google Icon
               // SizedBox(width: 2.0), //
-              Icon(
-                FontAwesomeIcons.google,
-                color: Color.fromARGB(255, 2, 92, 123),
-                size: 30,
-              ),
             ],
           ),
 
@@ -300,17 +305,23 @@ class LoginScreen extends State<Login> with ValidationMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          // title: Text('career Voyage'),
-          // Text(),
+      body: Stack(
+        children: [
+          Positioned(
+            top: -15,
+            left: 0,
+            right: -20,
+            child: Image.asset(
+              'images/icon/designB.png', // Path to your image asset
+              // Adjust height as needed
+              fit: BoxFit.cover, // Adjust BoxFit as needed
+            ),
           ),
-      body: Padding(
-        // Text(style: ,),
-        padding: EdgeInsets.all(55.0),
-        //  child: textfield1(),
-        child: SingleChildScrollView(
-          child: //FirebaseAuth.instance.currentUser != null &&
-              FirebaseAuth.instance.currentUser == null
+          // This widget holds the content of your app
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: FirebaseAuth.instance.currentUser == null
                   ? textfield1()
                   : FirebaseAuth.instance.currentUser!.emailVerified
                       ? textfield1()
@@ -343,8 +354,10 @@ class LoginScreen extends State<Login> with ValidationMixin {
                             ),
                           ),
                         ),
-          // textfield1(),
-        ),
+            ),
+          ),
+          // This widget holds the image and is positioned at the top of the stack
+        ],
       ),
     );
   }
