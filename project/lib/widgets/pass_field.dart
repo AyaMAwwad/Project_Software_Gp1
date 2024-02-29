@@ -59,7 +59,7 @@ class PassField extends StatelessWidget {
         hintText: 'Password',
         hintStyle: GoogleFonts.aBeeZee(
           textStyle: TextStyle(
-            color: Colors.black,
+            color: Color.fromARGB(255, 78, 78, 78),
             fontSize: 16,
           ),
         ),

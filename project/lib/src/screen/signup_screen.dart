@@ -1,13 +1,12 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_print, use_build_context_synchronously, unused_local_variable
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/mixins/valid_mixin.dart';
-import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/button.dart';
+import 'package:project/widgets/date_field.dart';
 import 'package:project/widgets/form_field.dart';
 import 'package:project/widgets/pass_field.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 class Signup extends StatefulWidget {
@@ -23,7 +22,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
   TextEditingController lastName = TextEditingController();
   TextEditingController address = TextEditingController();
   //TextEditingController phone = TextEditingController();
-  //TextEditingController gender = TextEditingController();
+  TextEditingController gender = TextEditingController();
   //String email = '';
   String phone = '';
   DateTime? selectedDate;
@@ -63,7 +62,8 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your Name';
-                } /*else if (validatemail(value)) {
+                }
+                return null; /*else if (validatemail(value)) {
                 return null;
               } else {
                 return 'Please enter your valid email';
@@ -83,6 +83,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your Name';
                 }
+                return null;
               },
               icon: Icons.person,
             ),
@@ -130,52 +131,14 @@ class SignupScreen extends State<Signup> with ValidationMixin {
             ),
 ////////////////////////
             //
-            TextFormField(
-              readOnly: true,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color.fromARGB(82, 209, 224, 223),
-                prefixIcon: Icon(
-                  Icons.calendar_today,
-                  color: Color(0xFF063A4E),
-                  size: 22,
-                ),
-                hintText: selectedDate == null
-                    ? 'Select your birthday'
-                    : DateFormat('yyyy-MM-dd').format(selectedDate!),
-                hintStyle: GoogleFonts.aBeeZee(
-                  textStyle: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                  ),
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xFF107086),
-                  ),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF2679A3)),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 10.0,
-                  horizontal: 16,
-                ),
-              ),
-              // validator: validPhone,
-              onSaved: (String? val) {
-                // ignore: avoid_print
-                phone = val!;
-              },
+            DateField(
+              controller: gender,
               onTap: () {
-                // Show date picker when the text field is tapped
                 _selectDate(context);
               },
+              selectedDate: selectedDate,
             ),
-            //////////////
-            //Style(child: 5),
+
             SizedBox(
               height: 30.0,
             ),
@@ -225,14 +188,14 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               ],
             ),
             CustomeButton(
-              hintText: 'Sign Up',
+              text: 'Sign Up',
               onPressed: () async {
                 if (formKey.currentState != null) {
                   //formKey.currentState!.reset();
-                  // ignore: avoid_print
+
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
-                    // ignore: avoid_print
+
                     //print('Time to post $email and $password to API');
 
                     try {
@@ -299,31 +262,52 @@ class SignupScreen extends State<Signup> with ValidationMixin {
 
   @override
   Widget build(BuildContext context) {
-    //double w = MediaQuery.of(context).size.width;
-    // double h = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Create Account ',
-          style: GoogleFonts.aBeeZee(
-            textStyle: TextStyle(
-              color: Color.fromARGB(255, 2, 92, 123),
-              fontSize: 20,
-
-              // decoration: TextDecoration.underline,
-              decorationThickness: 1,
-              // fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          Positioned(
+            top: -20,
+            left: 15,
+            right: -15,
+            child: Stack(
+              children: [
+                Image.asset(
+                  'images/icon/designB.png', // Path to your image asset
+                  // Adjust height as needed
+                  // fit: BoxFit.cover, // Adjust BoxFit as needed
+                ),
+                Positioned.fill(
+                  top: -40,
+                  left: -25,
+                  child: Icon(
+                    Icons.circle, // Add Circle Icon
+                    size: 50, // Adjust the size of the icon as needed
+                    color: Color.fromARGB(255, 215, 218,
+                        219), // Adjust the color of the icon as needed
+                  ),
+                ),
+                Positioned.fill(
+                  // Adjust position to align with the Person icon
+                  top: -40,
+                  left: -25,
+                  child: Icon(Icons.account_circle,
+                      // Icons
+                      //.person_outline, //Icons.account_circle, // Person Icon
+                      size: 50, // Adjust the size of the icon as needed
+                      color: const Color.fromARGB(255, 46, 120, 126)
+                      // Adjust the color of the icon as needed
+                      ),
+                ),
+              ],
             ),
           ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: textfield1(),
-        ),
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(top: 120, right: 50, left: 55),
+              child: textfield1(),
+            ),
+          ),
+        ],
       ),
     );
   }

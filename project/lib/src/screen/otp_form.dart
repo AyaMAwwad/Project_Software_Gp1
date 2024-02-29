@@ -1,6 +1,9 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:project/widgets/button_2.dart';
+import 'package:project/widgets/design.dart';
 
 class OtpForm extends StatefulWidget {
   @override
@@ -10,9 +13,6 @@ class OtpForm extends StatefulWidget {
 class OtpFormEmail extends State<OtpForm> {
   formDesign() {
     return SingleChildScrollView(
-      // child: Padding(
-      // key: formKey,
-      // padding: EdgeInsets.all(20.0),
       child: Form(
         /// key: formKey,
         child: Column(
@@ -21,76 +21,20 @@ class OtpFormEmail extends State<OtpForm> {
             Container(
               height: 20,
             ),
-            Text(
-              'Verification Code ',
-              style: GoogleFonts.aBeeZee(
-                textStyle: TextStyle(
-                  color: Color.fromARGB(255, 2, 92, 123),
-                  fontSize: 30,
-
-                  // decoration: TextDecoration.underline,
-                  decorationThickness: 1,
-                  // fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
             Container(
-              height: 10,
-            ),
-            Text(
-              'We have sent verification code to your email',
-              style: GoogleFonts.aBeeZee(
-                textStyle: TextStyle(
-                  color: Color.fromARGB(255, 168, 169, 170),
-                  fontSize: 15,
-
-                  // decoration: TextDecoration.underline,
-                  decorationThickness: 1,
-                  // fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Container(
-              height: 40,
+              height: 110,
             ),
             fromEmail(),
             Container(
-              height: 40,
+              height: 20,
             ),
-            loginButton(),
+            CustomeButton2(
+              text: 'Confirm',
+              onPressed: () {},
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget loginButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF0D6775),
-        minimumSize: Size(90, 40),
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-      ),
-      /*child: GestureDetector(
-        onTap: () {
-          //Navigator.of(context).pushReplacementNamed("login");
-          // Navigator.push(
-          // context, MaterialPageRoute(builder: (context) => Login()));
-        },*/
-      child: Text(
-        'Confirm',
-        style: GoogleFonts.aBeeZee(
-          textStyle: TextStyle(
-            color: const Color.fromARGB(255, 255, 255, 255),
-            fontSize: 20,
-          ),
-        ),
-      ),
-      //),
-      onPressed: () async {},
     );
   }
 
@@ -218,27 +162,22 @@ class OtpFormEmail extends State<OtpForm> {
     // double h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Code Verfication  ',
-          style: GoogleFonts.aBeeZee(
-            textStyle: TextStyle(
-              color: Color.fromARGB(255, 2, 92, 123),
-              fontSize: 20,
-
-              // decoration: TextDecoration.underline,
-              decorationThickness: 1,
-              // fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          CustemDesign(
+            text: 'Verification Code',
+            text2: 'We have sent verification code to your email',
+            num2: 25,
+            fontSize: 15,
+            num: 70.0,
+          ),
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(right: 20.0, left: 20, top: 300),
+              child: formDesign(),
             ),
           ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: formDesign(),
-        ),
+        ],
       ),
     );
   }

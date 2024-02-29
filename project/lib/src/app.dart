@@ -1,15 +1,16 @@
+// ignore_for_file: use_key_in_widget_constructors, avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project/src/screen/forget_pass.dart';
+
 import 'package:project/src/screen/home_page.dart';
-//import 'package:project/src/screen/cover_page.dart';
+
 import 'package:project/src/screen/login_screen.dart';
-import 'package:project/src/screen/otp_form.dart';
+
 import 'package:project/src/screen/signup_screen.dart';
-//import 'package:project/src/screen/screen_state.dart';
-//import 'package:project/src/screen/signup_screen.dart';
 
 class MyApp extends StatefulWidget {
+  @override
   State<MyApp> createState() => MyAppState();
 }
 
@@ -33,8 +34,12 @@ class MyAppState extends State<MyApp> {
       home: //(FirebaseAuth.instance.currentUser != null &&
           // FirebaseAuth.instance.currentUser!.emailVerified)
           // OtpForm(),
-          //  Signup(),
+          //Signup(),
+          // CoverPage(),
+          //  Demo(),
           Login(),
+      //HomePage(),
+      // VerifyEmail(),
       // OtpForm(),
       //FirebaseAuth.instance.currentUser == null ? Login() : HomePage(),
       routes: {

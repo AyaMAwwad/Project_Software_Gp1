@@ -1,16 +1,15 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomeButton extends StatelessWidget {
   final void Function()? onPressed;
-  final String hintText;
+  final String text;
   final BorderRadius borderRadius;
   CustomeButton({
     super.key,
-    required this.hintText,
+    required this.text,
     required this.onPressed,
     required this.borderRadius,
   });
@@ -22,8 +21,8 @@ class CustomeButton extends StatelessWidget {
           colors: [
             // Color.fromARGB(109, 69, 102, 99),
             //  Color(0xFF0D6775),
-            Color.fromARGB(108, 93, 206, 196),
-            Color.fromARGB(255, 1, 84, 97),
+            Color.fromARGB(108, 82, 173, 166),
+            Color.fromARGB(255, 21, 101, 117)
 //0xAC8FDDD7
           ],
           // زهري و بنفزجي
@@ -40,7 +39,7 @@ class CustomeButton extends StatelessWidget {
           ElevatedButton(
             onPressed: onPressed,
             child: Text(
-              hintText,
+              text,
               style: GoogleFonts.aBeeZee(
                 textStyle: TextStyle(
                   color: const Color.fromARGB(255, 255, 255, 255),

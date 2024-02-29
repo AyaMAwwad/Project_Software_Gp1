@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields, unused_field, avoid_print
+
 /*import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -95,13 +97,13 @@ class VerificationService {
       // Use your email service provider to send a custom email
       await sendEmail(
         email: email,
-        subject: 'Verification Code',
+        subject: 'Verfication Code',
         body: 'Your verification code is: $verificationCode',
       );
 
-      print('Verification code sent to $email: $verificationCode');
+      print('Verfication code sent to $email: $verificationCode');
     } catch (e) {
-      print('Error sending verification code: $e');
+      print('Error sending verfication code: $e');
       // Handle error
     }
   }

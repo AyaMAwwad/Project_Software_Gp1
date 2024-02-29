@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:project/src/screen/cover_page.dart';
