@@ -55,6 +55,13 @@ class ForgetPass extends State<ForgetPassword> with ValidationMixin {
             CustomeButton2(
                 text: 'Send',
                 onPressed: () async {
+                  /// need to delete after update
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => OtpForm()),
+                  );
+
+                  ///
                   auth.setConfig(
                     appEmail: "contact@hdevcoder.com",
                     appName: "Email OTP",
@@ -124,8 +131,8 @@ class ForgetPass extends State<ForgetPassword> with ValidationMixin {
             text: 'Forget Password ',
             text2: 'Are you forget your password ?',
             fontSize: 18,
-            num2: 55,
-            num: 70,
+            num2: MediaQuery.of(context).size.width * 0.12,
+            num: MediaQuery.of(context).size.width * 0.16,
           ),
           SingleChildScrollView(
             child: Padding(

@@ -1,8 +1,10 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/src/screen/cover_page.dart';
+import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
 
 //splash screen
@@ -20,7 +22,16 @@ class CoverStateThreeSec extends State<CoverStateScreen> {
       () {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => Login(),
+            builder:
+                (context) => /*(FirebaseAuth.instance.currentUser != null &&
+                    FirebaseAuth.instance.currentUser!.emailVerified)
+                ? HomePage()
+                : Login(),
+                */
+                    (FirebaseAuth.instance.currentUser == null ||
+                            !(FirebaseAuth.instance.currentUser!.emailVerified))
+                        ? Login()
+                        : HomePage(), //Login(),
           ),
         );
       },
@@ -31,8 +42,10 @@ class CoverStateThreeSec extends State<CoverStateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: CoverPage(),
-      ),
+          child: //FirebaseAuth.instance.currentUser == null
+              CoverPage()
+          //: HomePage(),
+          ),
     );
   }
 }

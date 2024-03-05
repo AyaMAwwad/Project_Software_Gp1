@@ -3,6 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/mixins/valid_mixin.dart';
+import 'package:project/src/screen/verify_email.dart';
 import 'package:project/widgets/button.dart';
 import 'package:project/widgets/date_field.dart';
 import 'package:project/widgets/form_field.dart';
@@ -21,7 +22,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
   TextEditingController address = TextEditingController();
-  //TextEditingController phone = TextEditingController();
+  TextEditingController phoneA = TextEditingController();
   TextEditingController gender = TextEditingController();
   //String email = '';
   String phone = '';
@@ -193,7 +194,8 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                 if (formKey.currentState != null) {
                   //formKey.currentState!.reset();
 
-                  if (formKey.currentState!.validate()) {
+                  if (formKey.currentState!.validate() &&
+                      selectedGender != null) {
                     formKey.currentState!.save();
 
                     //print('Time to post $email and $password to API');
@@ -205,7 +207,11 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                         password: password.text,
                       );
                       //FirebaseAuth.instance.currentUser!.sendEmailVerification();
-                      Navigator.of(context).pushReplacementNamed("login");
+                      // Navigator.of(context).pushReplacementNamed("login");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VerifyEmail()));
                     } on FirebaseAuthException catch (e) {
                       if (e.code == 'weak-password') {
                         print('The password provided is too weak.');
@@ -232,7 +238,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
   Widget phoneField(int child) {
     return custemField(
       hintText: 'Phone Number',
-      controller: address,
+      controller: phoneA,
       validator: (value) {
         if (value!.length == 10 &&
             (value.startsWith('059') || value.startsWith('056'))) {
@@ -257,6 +263,9 @@ class SignupScreen extends State<Signup> with ValidationMixin {
         });
       },
       controller: password,
+      obscureText: !valpass,
+      icon: valpass ? Icons.visibility : Icons.visibility_off,
+      hintText: 'Password', //Icons.visibility,
     );
   }
 
@@ -266,37 +275,29 @@ class SignupScreen extends State<Signup> with ValidationMixin {
       body: Stack(
         children: [
           Positioned(
-            top: -20,
-            left: 15,
-            right: -15,
+            top: MediaQuery.of(context).size.height * -0.02, //-20,
+            left: MediaQuery.of(context).size.width * 0.05,
+            right: MediaQuery.of(context).size.width * -0.05,
             child: Stack(
               children: [
                 Image.asset(
-                  'images/icon/designB.png', // Path to your image asset
-                  // Adjust height as needed
-                  // fit: BoxFit.cover, // Adjust BoxFit as needed
+                  'images/icon/designB.png',
                 ),
                 Positioned.fill(
-                  top: -40,
-                  left: -25,
+                  top: MediaQuery.of(context).size.height * -0.06,
+                  left: MediaQuery.of(context).size.width * -0.09,
                   child: Icon(
-                    Icons.circle, // Add Circle Icon
-                    size: 50, // Adjust the size of the icon as needed
-                    color: Color.fromARGB(255, 215, 218,
-                        219), // Adjust the color of the icon as needed
+                    Icons.circle,
+                    size: 50,
+                    color: Color.fromARGB(255, 215, 218, 219),
                   ),
                 ),
                 Positioned.fill(
-                  // Adjust position to align with the Person icon
-                  top: -40,
-                  left: -25,
+                  top: MediaQuery.of(context).size.height * -0.06,
+                  left: MediaQuery.of(context).size.width * -0.09,
                   child: Icon(Icons.account_circle,
-                      // Icons
-                      //.person_outline, //Icons.account_circle, // Person Icon
                       size: 50, // Adjust the size of the icon as needed
-                      color: const Color.fromARGB(255, 46, 120, 126)
-                      // Adjust the color of the icon as needed
-                      ),
+                      color: const Color.fromARGB(255, 46, 120, 126)),
                 ),
               ],
             ),

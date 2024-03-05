@@ -32,7 +32,9 @@ class DateField extends StatelessWidget {
             : DateFormat('yyyy-MM-dd').format(selectedDate!),
         hintStyle: GoogleFonts.aBeeZee(
           textStyle: TextStyle(
-            color: Color.fromARGB(255, 78, 78, 78),
+            color: selectedDate == null
+                ? Color.fromARGB(255, 78, 78, 78)
+                : Colors.black,
             fontSize: 16,
           ),
         ),

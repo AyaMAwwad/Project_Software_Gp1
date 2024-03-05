@@ -8,7 +8,7 @@ class CustomeButton2 extends StatelessWidget {
   final String text;
   // final BorderRadius borderRadius;
   CustomeButton2({
-    super.key,
+    // super.key,
     required this.text,
     required this.onPressed,
     // required this.borderRadius,

@@ -9,7 +9,7 @@ class CustemDesign extends StatelessWidget {
   final double? fontSize;
 
   const CustemDesign(
-      {super.key,
+      { //super.key,
       required this.text,
       required this.num,
       required this.text2,
@@ -20,9 +20,9 @@ class CustemDesign extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          top: -15,
-          left: 15,
-          right: -15,
+          top: MediaQuery.of(context).size.height * -0.02,
+          left: MediaQuery.of(context).size.width * 0.05,
+          right: MediaQuery.of(context).size.width * -0.05,
           child: Stack(
             children: [
               Image.asset(
@@ -63,18 +63,18 @@ class CustemDesign extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: 100,
-          right: -20,
-          left: 20,
+          top: MediaQuery.of(context).size.height * 0.13,
+          right: 0,
+          left: 0,
           child: Image.asset(
             'images/icon/logo3.png',
-            width: 900.0,
+            //width: 900.0,
             height: 230.0,
           ),
         ),
         Positioned(
-            top: 330,
-            right: -20,
+            top: MediaQuery.of(context).size.height * 0.45,
+            right: MediaQuery.of(context).size.width * -0.05,
             left: num,
             child: Text(
               text,
@@ -101,7 +101,7 @@ class CustemDesign extends StatelessWidget {
             ),*/
             ),
         Positioned(
-          top: 375,
+          top: MediaQuery.of(context).size.height * 0.501,
           left: num2,
           child: Text(
             text2,

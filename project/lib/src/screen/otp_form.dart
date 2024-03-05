@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project/src/screen/new_pass.dart';
 import 'package:project/widgets/button_2.dart';
 import 'package:project/widgets/design.dart';
 
@@ -30,7 +31,12 @@ class OtpFormEmail extends State<OtpForm> {
             ),
             CustomeButton2(
               text: 'Confirm',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewPass()),
+                );
+              },
             ),
           ],
         ),
@@ -167,9 +173,9 @@ class OtpFormEmail extends State<OtpForm> {
           CustemDesign(
             text: 'Verification Code',
             text2: 'We have sent verification code to your email',
-            num2: 25,
+            num2: MediaQuery.of(context).size.width * 0.07,
             fontSize: 15,
-            num: 70.0,
+            num: MediaQuery.of(context).size.width * 0.16,
           ),
           SingleChildScrollView(
             child: Padding(
