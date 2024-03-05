@@ -3,7 +3,7 @@ mixin ValidationMixin {
     if (value!.length == 10 &&
         (value.startsWith('059') || value.startsWith('056'))) {
     } else if (value.isEmpty) {
-      return 'This Field is required';
+      return 'Enter phone number';
     } else {
       return 'Please enter a valid phone number';
     }

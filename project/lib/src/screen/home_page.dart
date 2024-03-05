@@ -2,10 +2,17 @@
 
 // ignore_for_file: prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/src/screen/cat_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
+import 'package:project/src/screen/login_screen.dart';
+import 'package:project/widgets/app_bar.dart';
+import 'package:project/widgets/search_app.dart';
+import 'package:project/widgets/slider.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatelessWidget {
@@ -73,11 +80,44 @@ class HomePage extends StatelessWidget {
      */
 
     return Scaffold(
-      appBar: buildAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      drawer: Drawer(
+        //child: CustemAppBar(),
+        child: IconButton(
+          icon: Icon(Icons.exit_to_app),
+          onPressed: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Login()),
+            );
+          },
+        ),
+      ),
+      //appBar: buildAppBar(context),
+
+      body: SafeArea(
+        //SingleChildScrollView(
+        child: ListView(
+          //padding: EdgeInsets.all(8),
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            CustemAppBar(
+              text: 'Home',
+            ),
+            SizedBox(
+              height: 10,
+              //  child:Carousel(),
+            ),
+            SearchAppBar(),
+            SizedBox(
+              height: 10,
+              //  child:Carousel(),
+            ),
+            SliderPage(),
+            SizedBox(
+              height: 10,
+              //  child:Carousel(),
+            ),
             //Expanded(child:
             SizedBox(
               height: 180, // Set the height of the category list section
@@ -87,7 +127,7 @@ class HomePage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   // SizedBox(height: 16);
 
-                  return buildCategoryCard(categories[index]);
+                  return buildCategoryCard(categories[index], context);
                 },
               ),
             ),
@@ -112,7 +152,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  AppBar buildAppBar() {
+  AppBar buildAppBar(context) {
     return AppBar(
       // title: Text('Home Page'),
       backgroundColor: Color.fromARGB(255, 230, 240, 243),
@@ -146,6 +186,18 @@ class HomePage extends StatelessWidget {
           ),
           onPressed: () {},
         ),
+/*
+        IconButton(
+          icon: Icon(Icons.exit_to_app),
+          onPressed: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Login()),
+            );
+          },
+        ),
+*/
         // SizedBox(width: kDefaultPaddin /2,)
       ],
 
@@ -154,25 +206,34 @@ class HomePage extends StatelessWidget {
   }
 
   // card with catogery
-  Widget buildCategoryCard(Category category) {
+  Widget buildCategoryCard(Category category, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // ClipRRect
-          ClipOval(
-            // borderRadius: BorderRadius.circular(14),
-            child: Image.asset(
-              category.imagePath,
-              width: 100, // Adjust the width as needed
-              height: 100, // Adjust the height as needed
-              fit: BoxFit.cover,
+      child: GestureDetector(
+        onTap: () {
+          // Navigate to a new page when the image is tapped
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CategScreen()),
+          );
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // ClipRRect
+            ClipOval(
+              // borderRadius: BorderRadius.circular(14),
+              child: Image.asset(
+                category.imagePath,
+                width: 100, // Adjust the width as needed
+                height: 100, // Adjust the height as needed
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          SizedBox(height: 8),
-          Text(category.name),
-        ],
+            SizedBox(height: 8),
+            Text(category.name),
+          ],
+        ),
       ),
     );
   }
@@ -355,11 +416,11 @@ class HomePage extends StatelessWidget {
         style: GoogleFonts.aBeeZee(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: Color.fromARGB(255, 33, 85, 78),
+          color: Color.fromARGB(255, 2, 92, 123),
           shadows: [
             Shadow(
               blurRadius: 2.0,
-              color: Color.fromARGB(255, 41, 104, 83),
+              color: Color.fromARGB(255, 69, 123, 141),
               offset: Offset(2.0, 2.0),
             ),
           ],
@@ -377,11 +438,11 @@ class HomePage extends StatelessWidget {
         style: GoogleFonts.aBeeZee(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: Color.fromARGB(255, 8, 86, 75),
+          color: Color.fromARGB(255, 2, 92, 123),
           shadows: [
             Shadow(
-              blurRadius: 2.0,
-              color: Color.fromARGB(255, 41, 104, 83),
+              blurRadius: 4.0,
+              color: Color.fromARGB(255, 69, 123, 141),
               offset: Offset(2.0, 2.0),
             ),
           ],

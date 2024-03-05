@@ -13,7 +13,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project/src/screen/forget_pass.dart';
 import 'package:project/src/screen/signup_screen.dart';
+import 'package:project/src/screen/verify_email.dart';
 import 'package:project/widgets/button.dart';
+import 'package:project/widgets/button_2.dart';
+import 'package:project/widgets/design.dart';
 import 'package:project/widgets/form_field.dart';
 import 'package:project/widgets/pass_field.dart';
 
@@ -118,7 +121,8 @@ class LoginScreen extends State<Login> with ValidationMixin {
                   email: emailController.text,
                   password: passwordController.text,
                 );
-                if (credential.user!.emailVerified) {
+                Navigator.of(context).pushReplacementNamed("homepagee");
+                /* if (credential.user!.emailVerified) {
                   Navigator.of(context).pushReplacementNamed("login");
                 } else {
                   showDialog(
@@ -138,7 +142,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
                       );
                     },
                   );
-                }
+                }*/
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
                   print('No user found for that email.');
@@ -215,6 +219,9 @@ class LoginScreen extends State<Login> with ValidationMixin {
         });
       },
       controller: passwordController,
+      obscureText: !valpass,
+      icon: valpass ? Icons.visibility : Icons.visibility_off,
+      hintText: 'Password',
     );
   }
 
@@ -308,9 +315,9 @@ class LoginScreen extends State<Login> with ValidationMixin {
       body: Stack(
         children: [
           Positioned(
-            top: -15,
+            top: MediaQuery.of(context).size.height * -0.02,
             left: 0,
-            right: -20,
+            right: MediaQuery.of(context).size.width * -0.05, //-20,
             child: Image.asset(
               'images/icon/designB.png', // Path to your image asset
               // Adjust height as needed
@@ -320,12 +327,16 @@ class LoginScreen extends State<Login> with ValidationMixin {
           // This widget holds the content of your app
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: FirebaseAuth.instance.currentUser == null
+              padding: EdgeInsets.all(55.0),
+              child:
+                  textfield1(), /*FirebaseAuth.instance.currentUser == null
                   ? textfield1()
                   : FirebaseAuth.instance.currentUser!.emailVerified
                       ? textfield1()
-                      : ElevatedButton(
+                      : Container(),*/
+
+              //VerifyEmail(),
+              /*ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF0D6775),
                             minimumSize: Size(90, 40),
@@ -353,7 +364,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
                               ),
                             ),
                           ),
-                        ),
+                        ),*/
             ),
           ),
           // This widget holds the image and is positioned at the top of the stack

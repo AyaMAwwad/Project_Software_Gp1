@@ -20,7 +20,7 @@ version: 1.0.0+1
 
 environment:
   sdk: '>=3.4.0-157.0.dev <4.0.0'
-
+#'>=3.4.0-157.0.dev <4.0.0'
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -48,6 +48,8 @@ dependencies:
   email_otp: ^2.1.2
   email_auth: ^1.1.1
   font_awesome_flutter: ^10.7.0
+  another_carousel_pro: ^1.0.2
+  #carousel_pro: ^1.0.0
   #flutter_email_sender: ^6.0.2
   #mailer: ^6.1.0
   #webview_flutter: any
