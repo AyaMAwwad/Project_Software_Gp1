@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
+// ignore_for_file: prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +8,7 @@ import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/cat_product.dart';
 import 'package:project/widgets/prod_type.dart';
+import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
 
 class CategScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class CategState extends State<CategScreen> {
               //  child:Carousel(),
             ),
             Container(
-              height: 70,
+              height: 60,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -112,9 +113,19 @@ class CategState extends State<CategScreen> {
                     image: 'images/icon/clock.png',
                     name: 'Clock',
                   ),
+                  CatProduct(
+                    press: () {},
+                    image: 'images/icon/glasses.png',
+                    name: 'Glasses',
+                  ),
                 ],
               ),
             ),
+            SizedBox(
+              height: 30,
+              //  child:Carousel(),
+            ),
+            Container(height: 1000, child: RecentProd()),
           ],
         ),
       ),

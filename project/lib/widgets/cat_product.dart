@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,9 +18,13 @@ class CatProduct extends StatelessWidget {
       padding: EdgeInsets.all(10),
       child: GestureDetector(
         onTap: press,
+        // child: ClipRRect(
+        // borderRadius: BorderRadius.circular(20),
         child: Container(
           child: Chip(
-            backgroundColor: Color.fromARGB(255, 215, 215, 215),
+            backgroundColor:
+                Color.fromARGB(255, 146, 190, 204), // Color.fromARGB(
+            // 255, 95, 150, 168), //Color.fromARGB(255, 215, 215, 215),
             label: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -32,7 +38,8 @@ class CatProduct extends StatelessWidget {
                   name,
                   style: GoogleFonts.aBeeZee(
                     textStyle: TextStyle(
-                      color: Color.fromARGB(255, 2, 92, 123),
+                      color: Color.fromARGB(255, 255, 255,
+                          255), // Color.fromARGB(255, 2, 92, 123),
                       fontSize: 18,
                       //fontWeight: FontWeight.bold,
                     ),
@@ -42,6 +49,7 @@ class CatProduct extends StatelessWidget {
             ),
           ),
         ),
+        // ),
       ),
     );
   }
