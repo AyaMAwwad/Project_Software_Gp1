@@ -13,6 +13,7 @@ import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/search_app.dart';
 import 'package:project/widgets/slider.dart';
+import 'package:project/src/screen/detailpage.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatelessWidget {
@@ -135,7 +136,7 @@ class HomePage extends StatelessWidget {
             // SizedBox(height: 16),
             textfunction2(),
             SizedBox(height: 16),
-            buildBottom(), //openSans
+            buildBottom(context), //openSans
             SizedBox(height: 16),
 
             textfunction(),
@@ -283,17 +284,35 @@ class HomePage extends StatelessWidget {
   }
 
 /////////////////////////
-  Widget buildBottom() {
+  Widget buildBottom(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
         padding: EdgeInsets.all(8.0),
         child: Row(
           children: [
-            buildItem('Jacket', 'images/icon/goat.jpg', 'Price: \$50.00'),
+            buildItem(
+                context, 'Jacket', ['images/icon/goat.jpg'], 'Price: \$50.00'),
             SizedBox(width: 16),
-            buildItem('shoes', 'images/icon/shoes.jpg', 'Price: \$80.00'),
-            buildItem('Iphone', 'images/icon/iphone.webp', 'Price: \$200.00'),
+            buildItem(
+                context, 'shoes', ['images/icon/shoes.jpg'], 'Price: \$80.00'),
+            buildItem(context, 'Iphone', ['images/icon/iphone.webp'],
+                'Price: \$200.00'),
+            buildItem(
+                context,
+                'CAR',
+                [
+                  'images/icon/carxv.png',
+                  'images/icon/car11.png',
+                  'images/icon/car12.png',
+                  'images/icon/car13.png',
+                ],
+                'Price: \$900.00'),
+            buildItem(
+                context,
+                'CLOCK',
+                ['images/icon/clockhand.jpeg', 'images/icon/clockhand2.jpeg'],
+                'Price: \$200.00'),
           ],
         ),
       ),
@@ -323,42 +342,60 @@ class HomePage extends StatelessWidget {
   }
 
   ///
-  Widget buildItem(String itemName, String imagePath, String price) {
-    return Card(
-      elevation: 5,
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Image.asset(
-                imagePath,
-                width: 200,
-                height: 230, // 200
-                fit: BoxFit.cover,
+  Widget buildItem(BuildContext context, String itemName,
+      List<String> imagePath, String price) {
+    return GestureDetector(
+      onTap: () {
+        // Navigate to the new page here
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailPage(
+              categoryName: itemName, imagePaths: imagePath,
+              //'lib/icon/tablet.jpg',
+              //'lib/icon/fashion.jpg',
+              //  ] ,// dots: [DotInfo(left: 50, top: 100
+            ),
+//DotInfo(left: 150, top: 200),],),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 5,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Image.asset(
+                  imagePath[0],
+                  width: 200,
+                  height: 230, // 200
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            SizedBox(height: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  itemName,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  price,
-                  style: TextStyle(fontSize: 16, color: Colors.green),
-                ),
-              ],
-            ),
-          ],
+              SizedBox(height: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    itemName,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    price,
+                    style: TextStyle(fontSize: 16, color: Colors.green),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
