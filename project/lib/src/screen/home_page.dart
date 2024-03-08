@@ -73,7 +73,6 @@ class HomePage extends StatelessWidget {
         ),
          
       ),
-      
 
  // body: buildBottomSection(),
 

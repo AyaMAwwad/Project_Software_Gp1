@@ -14,15 +14,16 @@ class ProductType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(13),
       child: GestureDetector(
         onTap: press,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(20),
           child: Container(
-            width: 200,
+            width: 100,
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 95, 150, 168),
+              color: Color.fromARGB(255, 2, 92, 123), // Color.fromARGB(
+              // 255, 134, 135, 134), // Color.fromARGB(255, 95, 150, 168),
               // borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(

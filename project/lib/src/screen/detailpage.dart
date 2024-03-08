@@ -1,10 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:project/src/screen/categorylist.dart';
+import 'package:project/src/screen/login_screen.dart';
+import 'package:project/widgets/app_bar.dart';
+import 'package:project/widgets/search_app.dart';
 
 class DetailPage extends StatefulWidget {
-  final String   categoryName;
+  final String categoryName;
   final List<String> imagePaths;
 
   DetailPage({required this.categoryName, required this.imagePaths});
@@ -12,9 +16,6 @@ class DetailPage extends StatefulWidget {
   String get catoryname => categoryName;
   @override
   _DetailPageState createState() => _DetailPageState();
-
-
-  
 }
 
 class _DetailPageState extends State<DetailPage> {
@@ -24,59 +25,91 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /* appBar: AppBar(
         title: Text(widget.categoryName),
-      ),
-      body: Center(
+      ),*/
+      drawer: Drawer(
+        //child: CustemAppBar(),
         child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(40),
-                child: Image.asset(
-                  widget.imagePaths[selectedDotIndex],
-                  fit: BoxFit.cover,
-                  height: 400,
-                ),
-              ),
+            IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
+              },
             ),
-            SizedBox(height: 5),
-           // Text('hiiiiiiiii'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                widget.imagePaths.length,
-                (index) => DotWidget(
-                  dotIndex: index,
-                  isSelected: index == selectedDotIndex,
-                  onTap: () {
-                    setState(() {
-                      selectedDotIndex = index;
-                    });
-                  },
-                ),
-              ),
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed("homepagee");
+              },
             ),
-            SizedBox(height: 5),
-            Row(mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-             // child: Padding(padding: padding)
-             // Text(''),
-             // Padding(padding: EdgeInsets.all(10),
-             // Text(''),
-              
-              textjacket(),
-              
-             // ),
-              
-              ],
-              
-              
-              //Text('hghgghghh'),
-              ),
-            
           ],
+        ),
+      ),
+
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              CustemAppBar(
+                text: widget.categoryName,
+              ),
+              SizedBox(
+                height: 10,
+                //  child:Carousel(),
+              ),
+              // SearchAppBar(),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40),
+                  child: Image.asset(
+                    widget.imagePaths[selectedDotIndex],
+                    fit: BoxFit.cover,
+                    height: 400,
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+              // Text('hiiiiiiiii'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  widget.imagePaths.length,
+                  (index) => DotWidget(
+                    dotIndex: index,
+                    isSelected: index == selectedDotIndex,
+                    onTap: () {
+                      setState(() {
+                        selectedDotIndex = index;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // child: Padding(padding: padding)
+                  // Text(''),
+                  // Padding(padding: EdgeInsets.all(10),
+                  // Text(''),
+
+                  textjacket(),
+
+                  // ),
+                ],
+
+                //Text('hghgghghh'),
+              ),
+            ],
+          ),
         ),
       ),
       //Text(),
@@ -84,51 +117,59 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   ///
-  
-textjacket(){
-  String rr = widget.catoryname;
-  return Padding(padding: EdgeInsets.all(10.0),
-  child: Column(
-     crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    //  Padding(
-     //   padding: EdgeInsets.all(18.0),
-       // child: ClipRRect(
-         Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
+
+  textjacket() {
+    String rr = widget.catoryname;
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(padding: EdgeInsets.symmetric(horizontal: 5.0),
-        child: Text(
-          '$rr',
-          style: TextStyle(
-            color: Color.fromARGB(255, 101, 27, 27),
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+          //  Padding(
+          //   padding: EdgeInsets.all(18.0),
+          // child: ClipRRect(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.0),
+                child: Text(
+                  '$rr',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 101, 27, 27),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.0),
+                child: Text(
+                  'Color same as picture',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.0),
+                child: Text(
+                  'The jacket is light and sweet',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
           ),
-        
-        
-        
-        ),
-         ),
-         SizedBox(height: 5,),
-         Padding(padding: EdgeInsets.symmetric(horizontal: 5.0),
-        child: Text('Color same as picture', style: TextStyle(fontSize: 16
-        ),
-        
-        ),
-         ),
-         SizedBox(height: 5,),
-         Padding(padding: EdgeInsets.symmetric(horizontal: 5.0),
-        child:
-        Text('The jacket is light and sweet',style: TextStyle(fontSize: 16),),),
+
+          //),
         ],
-        ),
-    
-      //),
-    ],
-  ),
-  );
-}
+      ),
+    );
+  }
 }
 
 class DotWidget extends StatelessWidget {

@@ -22,8 +22,9 @@ class CatProduct extends StatelessWidget {
         // borderRadius: BorderRadius.circular(20),
         child: Container(
           child: Chip(
-            backgroundColor:
-                Color.fromARGB(255, 146, 190, 204), // Color.fromARGB(
+            backgroundColor: Color.fromARGB(
+                255, 95, 150, 168), // Color.fromARGB(255, 157, 158, 156),
+            // Color.fromARGB(255, 146, 190, 204), // Color.fromARGB(
             // 255, 95, 150, 168), //Color.fromARGB(255, 215, 215, 215),
             label: Row(
               mainAxisAlignment: MainAxisAlignment.center,
