@@ -17,118 +17,172 @@ class CategScreen extends StatefulWidget {
 }
 
 class CategState extends State<CategScreen> {
+  //////////////
+  String selectedCategory = 'Men';
+  String selectedType = 'New';
+
+  void updateCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+  }
+
+  void updateType(String category) {
+    setState(() {
+      selectedType = category;
+    });
+  }
+  ///////////////
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        //child: CustemAppBar(),
-        child: IconButton(
-          icon: Icon(Icons.exit_to_app),
-          onPressed: () async {
-            await FirebaseAuth.instance.signOut();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => Login()),
-            );
-          },
-        ),
-      ),
-      body: SafeArea(
-        //SingleChildScrollView(
-        child: ListView(
-          //padding: EdgeInsets.all(8),
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustemAppBar(
-              text: 'Home',
-            ),
-            SizedBox(
-              height: 10,
-              //  child:Carousel(),
-            ),
-            SearchAppBar(),
-            SizedBox(
-              height: 10,
-              //  child:Carousel(),
-            ),
-            Container(
-              height: 60,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  ProductType(
-                    press: () {},
-                    //  image: 'images/icon/new.png',
-                    name: 'New Product',
-                  ),
-                  ProductType(
-                    press: () {},
-                    //  image: 'images/icon/used.png',
-                    name: 'Used Product',
-                  ),
-                  ProductType(
-                    press: () {},
-                    // image: 'images/icon/donate.png',
-                    name: 'Donation Product',
-                  ),
-                ],
+        drawer: Drawer(
+          //child: CustemAppBar(),
+          child: Column(
+            children: [
+              IconButton(
+                icon: Icon(Icons.exit_to_app),
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                },
               ),
-            ),
-            SizedBox(
-              height: 10,
-              //  child:Carousel(),
-            ),
-            Container(
-              height: 70,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  CatProduct(
-                    press: () {},
-                    image: 'images/icon/jec_men.png',
-                    name: 'Men',
-                  ),
-                  CatProduct(
-                    press: () {},
-                    image: 'images/icon/woman.png',
-                    name: 'Women',
-                  ),
-                  CatProduct(
-                    press: () {},
-                    image: 'images/icon/shoes_A.png',
-                    name: 'Shoes',
-                  ),
-                  CatProduct(
-                    press: () {},
-                    image: 'images/icon/kids.png',
-                    name: 'Kids',
-                  ),
-                  CatProduct(
-                    press: () {},
-                    image: 'images/icon/bag.png',
-                    name: 'Bags',
-                  ),
-                  CatProduct(
-                    press: () {},
-                    image: 'images/icon/clock.png',
-                    name: 'Clock',
-                  ),
-                  CatProduct(
-                    press: () {},
-                    image: 'images/icon/glasses.png',
-                    name: 'Glasses',
-                  ),
-                ],
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pushReplacementNamed(
+                      "homepagee"); // This will pop the current route (Drawer)
+                },
               ),
-            ),
-            SizedBox(
-              height: 30,
-              //  child:Carousel(),
-            ),
-            Container(height: 1000, child: RecentProd()),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+        body: SafeArea(
+          //SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 6.0),
+            child: ListView(
+              //padding: EdgeInsets.all(8),
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustemAppBar(
+                  text: 'Fashion',
+                ),
+                SizedBox(
+                  height: 10,
+                  //  child:Carousel(),
+                ),
+                SearchAppBar(),
+                SizedBox(
+                  height: 10,
+                  //  child:Carousel(),
+                ),
+                Container(
+                  height: 60,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      ProductType(
+                        press: () {
+                          updateType('New');
+                        },
+                        //  image: 'images/icon/new.png',
+                        name: 'New',
+                      ),
+                      ProductType(
+                        press: () {
+                          updateType('Used');
+                        },
+                        //  image: 'images/icon/used.png',
+                        name: 'Used',
+                      ),
+                      ProductType(
+                        press: () {
+                          updateType('Free');
+                        },
+                        // image: 'images/icon/donate.png',
+                        name: 'Free',
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                  //  child:Carousel(),
+                ),
+                Container(
+                  height: 70,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      CatProduct(
+                        press: () {
+                          updateCategory('Men');
+                        },
+                        image: 'images/icon/jec_men.png',
+                        name: 'Men',
+                      ),
+                      CatProduct(
+                        press: () {
+                          updateCategory('Women');
+                        },
+                        image: 'images/icon/woman.png',
+                        name: 'Women',
+                      ),
+                      CatProduct(
+                        press: () {
+                          updateCategory('Shoes');
+                        },
+                        image: 'images/icon/shoes_A.png',
+                        name: 'Shoes',
+                      ),
+                      CatProduct(
+                        press: () {
+                          updateCategory('Kids');
+                        },
+                        image: 'images/icon/kids.png',
+                        name: 'Kids',
+                      ),
+                      CatProduct(
+                        press: () {
+                          updateCategory('Bags');
+                        },
+                        image: 'images/icon/bag.png',
+                        name: 'Bags',
+                      ),
+                      CatProduct(
+                        press: () {
+                          updateCategory('Clock');
+                        },
+                        image: 'images/icon/clock.png',
+                        name: 'Clock',
+                      ),
+                      CatProduct(
+                        press: () {
+                          updateCategory('Glasses');
+                        },
+                        image: 'images/icon/glasses.png',
+                        name: 'Glasses',
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                  //  child:Carousel(),
+                ),
+                Container(
+                  height: 750,
+                  child: RecentProd(
+                      category: selectedCategory, type: selectedType),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
