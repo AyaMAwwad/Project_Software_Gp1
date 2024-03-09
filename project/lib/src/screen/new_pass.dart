@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/button_2.dart';
