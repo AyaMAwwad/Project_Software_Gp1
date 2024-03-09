@@ -11,7 +11,8 @@ class NewPass extends StatefulWidget {
 
 class NewPassword extends State<NewPass> {
   bool valpass = false;
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordController1 = TextEditingController();
+  TextEditingController passwordController2 = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   textfield1() {
     return SingleChildScrollView(
@@ -29,7 +30,7 @@ class NewPassword extends State<NewPass> {
                   valpass = !valpass;
                 });
               },
-              controller: passwordController,
+              controller: passwordController1,
               obscureText: !valpass,
               icon: valpass ? Icons.visibility : Icons.visibility_off,
               hintText: 'New Password',
@@ -43,7 +44,7 @@ class NewPassword extends State<NewPass> {
                   valpass = !valpass;
                 });
               },
-              controller: passwordController,
+              controller: passwordController2,
               obscureText: !valpass,
               icon: valpass ? Icons.visibility : Icons.visibility_off,
               hintText: 'Confirm Password',
@@ -54,10 +55,18 @@ class NewPassword extends State<NewPass> {
             CustomeButton2(
                 text: 'Update',
                 onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login()),
-                  );
+                  if (formKey.currentState!.validate() &&
+                      passwordController2.text == passwordController1.text) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Login()),
+                    );
+                  } else if (passwordController2.text !=
+                      passwordController1.text) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("The password not same"),
+                    ));
+                  }
                 }),
           ],
         ),

@@ -55,14 +55,51 @@ class ForgetPass extends State<ForgetPassword> with ValidationMixin {
             CustomeButton2(
                 text: 'Send',
                 onPressed: () async {
-                  /// need to delete after update
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => OtpForm()),
-                  );
+                  if (formKey.currentState != null) {
+                    //formKey.currentState!.reset();
+
+                    if (formKey.currentState!.validate()) {
+                      formKey.currentState!.save();
+                      auth.setConfig(
+                        appEmail: "system@gmail.com",
+                        appName: "Trade Tryst, Your Verfication Code",
+                        userEmail: email.text,
+                        otpLength: 4,
+                        otpType: OTPType.digitsOnly,
+                        //otp
+                        //otpTemplate: "Your verification code is: {OTP}"
+                      );
+
+                      try {
+                        if (await auth.sendOTP() == true) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text("OTP has been sent"),
+                          ));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OtpForm(myauth: auth)),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text("Oops, OTP send failed"),
+                          ));
+                        }
+                      } catch (e) {
+                        print("Error sending OTP: $e");
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text(
+                              "Error sending OTP. Please try again later."),
+                        ));
+                      }
+                    }
+                  }
 
                   ///
-                  auth.setConfig(
+                  /*auth.setConfig(
                     appEmail: "contact@hdevcoder.com",
                     appName: "Email OTP",
                     userEmail: email.text,
@@ -81,7 +118,7 @@ class ForgetPass extends State<ForgetPassword> with ValidationMixin {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("OTP send failed"),
                     ));
-                  }
+                  }*/
                 }),
 
             /* CustomeButton(
