@@ -11,6 +11,8 @@ import 'package:project/src/screen/cat_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/app_bar.dart';
+import 'package:project/widgets/bottom_nav.dart';
+import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/search_app.dart';
 import 'package:project/widgets/slider.dart';
 import 'package:project/src/screen/detailpage.dart';
@@ -148,6 +150,9 @@ class HomePage extends StatelessWidget {
                 imagetablet, pricetablet),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavBar(
+        selectedMenu: MenuState.home,
       ),
     );
   }
@@ -350,7 +355,7 @@ class HomePage extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DetailPage(
-              categoryName: itemName, imagePaths: imagePath,
+              categoryName: itemName, imagePaths: imagePath, price: '30',
               //'lib/icon/tablet.jpg',
               //'lib/icon/fashion.jpg',
               //  ] ,// dots: [DotInfo(left: 50, top: 100
@@ -487,6 +492,7 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
 
 /*import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -1,18 +1,26 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_declarations, unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/widgets/enam.dart';
 
 class ProductType extends StatelessWidget {
   final String name;
   final VoidCallback press;
+  //final TypeState selectedtype;
+
   const ProductType({
     super.key,
     required this.name,
     required this.press,
+    // required this.selectedtype,
   });
   @override
   Widget build(BuildContext context) {
+    // final Color inactivecolor = Colors.grey;
+    // final Color activecolor = Color.fromARGB(255, 2, 92, 123);
+    //Color containerColor = inactivecolor;
+
     return Padding(
       padding: EdgeInsets.all(13),
       child: GestureDetector(

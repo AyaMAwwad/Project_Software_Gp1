@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 class SearchAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Padding(
       // height: 50,
       padding: EdgeInsets.all(10),
       child: Column(

@@ -49,6 +49,7 @@ dependencies:
   email_auth: ^1.1.1
   font_awesome_flutter: ^10.7.0
   another_carousel_pro: ^1.0.2
+  flutter_svg: ^2.0.10+1
   #carousel_pro: ^1.0.0
   #flutter_email_sender: ^6.0.2
   #mailer: ^6.1.0

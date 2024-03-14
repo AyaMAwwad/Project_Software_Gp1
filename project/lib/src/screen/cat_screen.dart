@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/cat_product.dart';
+import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/prod_type.dart';
 import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
@@ -92,6 +93,7 @@ class CategState extends State<CategScreen> {
                         },
                         //  image: 'images/icon/new.png',
                         name: 'New',
+                        //selectedtype: TypeState.newprod,
                       ),
                       ProductType(
                         press: () {
@@ -99,6 +101,7 @@ class CategState extends State<CategScreen> {
                         },
                         //  image: 'images/icon/used.png',
                         name: 'Used',
+                        //selectedtype: TypeState.usedprod,
                       ),
                       ProductType(
                         press: () {
@@ -106,6 +109,7 @@ class CategState extends State<CategScreen> {
                         },
                         // image: 'images/icon/donate.png',
                         name: 'Free',
+                        // selectedtype: TypeState.freeprod,
                       ),
                     ],
                   ),
