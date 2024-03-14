@@ -193,6 +193,192 @@ class RecentProd extends StatelessWidget {
       'category': 'Kids',
       'type': 'New',
     },
+    /////////////////////// used
+    {
+      'name': 'Pants & Shirt',
+      'image': 'images/icon/fash_use1.jpeg',
+      'price': 100,
+      'description': 'sjajsa',
+      'category': 'Women',
+      'type': 'Used',
+    },
+    {
+      'name': 'Dress',
+      'image': 'images/icon/fash_use2.jpeg',
+      'price': 90,
+      'description': 'sjajsa',
+      'category': 'Women',
+      'type': 'Used',
+    },
+    {
+      'name': 'Dress',
+      'image': 'images/icon/fash_use3.jpeg',
+      'price': 150,
+      'description': 'sjajsa',
+      'category': 'Women',
+      'type': 'Used',
+    },
+    {
+      'name': 'Dress',
+      'image': 'images/icon/fash_use4.jpeg',
+      'price': 70,
+      'description': 'sjajsa',
+      'category': 'Women',
+      'type': 'Used',
+    },
+    {
+      'name': 'Suit',
+      'image': 'images/icon/men_use1.jpeg',
+      'price': 170,
+      'description': 'dada',
+      'category': 'Men',
+      'type': 'Used',
+    },
+    {
+      'name': 'Suit',
+      'image': 'images/icon/men_use2.jpeg',
+      'price': 100,
+      'description': 'dada',
+      'category': 'Men',
+      'type': 'Used',
+    },
+    {
+      'name': 'Kids',
+      'image': 'images/icon/kids_use1.jpeg',
+      'price': 50,
+      'description': 'sjajsa',
+      'category': 'Kids',
+      'type': 'Used',
+    },
+    {
+      'name': 'Kids',
+      'image': 'images/icon/kids_use2.jpeg',
+      'price': 40,
+      'description': 'sjajsa',
+      'category': 'Kids',
+      'type': 'Used',
+    },
+    {
+      'name': ' Bag',
+      'image': 'images/icon/bag_use1.jpeg',
+      'price': 60,
+      'description': 'sjajsa',
+      'category': 'Bags',
+      'type': 'Used',
+    },
+    {
+      'name': 'Watch',
+      'image': 'images/icon/wat_use1.jpeg',
+      'price': 30,
+      'description': 'sjajsa',
+      'category': 'Clock',
+      'type': 'Used',
+    },
+    {
+      'name': 'Watch',
+      'image': 'images/icon/wat_use2.jpeg',
+      'price': 50,
+      'description': 'sjajsa',
+      'category': 'Clock',
+      'type': 'Used',
+    },
+    {
+      'name': 'Glasses',
+      'image': 'images/icon/glas_use1.jpeg',
+      'price': 60,
+      'description': 'sjajsa',
+      'category': 'Glasses',
+      'type': 'Used',
+    },
+    ////////////// free
+    {
+      'name': 'shirt',
+      'image': 'images/icon/wom_free1.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Women',
+      'type': 'Free',
+    },
+    {
+      'name': 'jacket',
+      'image': 'images/icon/wom_free2.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Women',
+      'type': 'Free',
+    },
+    {
+      'name': 'shirt',
+      'image': 'images/icon/men_free1.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Men',
+      'type': 'Free',
+    },
+    {
+      'name': 'jacket',
+      'image': 'images/icon/men_free2.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Men',
+      'type': 'Free',
+    },
+    {
+      'name': 'Watch',
+      'image': 'images/icon/clock_free1.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Clock',
+      'type': 'Free',
+    },
+    {
+      'name': 'Glasses',
+      'image': 'images/icon/glass_free1.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Glasses',
+      'type': 'Free',
+    },
+    {
+      'name': 'Bags',
+      'image': 'images/icon/bag_free1.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Bags',
+      'type': 'Free',
+    },
+    {
+      'name': 'Kids',
+      'image': 'images/icon/kids_free2.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Kids',
+      'type': 'Free',
+    },
+    {
+      'name': 'Kids',
+      'image': 'images/icon/kids_free1.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Kids',
+      'type': 'Free',
+    },
+    {
+      'name': 'shoes',
+      'image': 'images/icon/shoes_free2.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Shoes',
+      'type': 'Free',
+    },
+    {
+      'name': 'shoes ',
+      'image': 'images/icon/shoes_free1.jpeg',
+      'price': 'Free',
+      'description': 'sjajsa',
+      'category': 'Shoes',
+      'type': 'Free',
+    },
   ];
   @override
   Widget build(BuildContext context) {
@@ -241,6 +427,7 @@ class _RecentSingleProdState extends State<RecentSingleProd> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: EdgeInsets.all(10),
@@ -252,6 +439,7 @@ class _RecentSingleProdState extends State<RecentSingleProd> {
             ),
 
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width: 160,
@@ -271,6 +459,9 @@ class _RecentSingleProdState extends State<RecentSingleProd> {
                     ),
                   ),
                   //Image.asset(widget.recet_prod_image),
+                ),
+                SizedBox(
+                  height: 5,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
