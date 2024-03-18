@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,8 +22,8 @@ class CustemDesign extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          top: MediaQuery.of(context).size.height * -0.02,
-          left: MediaQuery.of(context).size.width * 0.05,
+          top: MediaQuery.of(context).size.height * -0.016,
+          left: MediaQuery.of(context).size.width * 0.04,
           right: MediaQuery.of(context).size.width * -0.05,
           child: Stack(
             children: [

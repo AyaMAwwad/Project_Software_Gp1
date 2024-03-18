@@ -15,6 +15,5 @@ void main() async {
               projectId: 'flutterproject-1a0ba'))
       : await Firebase.initializeApp();
   //  options: DefaultFirebaseOptions.currentPlatform,
-
   runApp(MyApp());
 }

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class RecentProd extends StatelessWidget {
   final String category;
-  final String type;
+  final String prodState;
 
-  RecentProd({required this.category, required this.type});
+  RecentProd({required this.category, required this.prodState});
 
   final prodList = [
     {
@@ -383,7 +383,7 @@ class RecentProd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> filteredType =
-        prodList.where((product) => product['type'] == type).toList();
+        prodList.where((product) => product['type'] == prodState).toList();
     final List<Map<String, dynamic>> filteredProducts = filteredType
         .where((product) => product['category'] == category)
         .toList();
@@ -427,10 +427,10 @@ class _RecentSingleProdState extends State<RecentSingleProd> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(top: 10, right: 10, left: 10, bottom: 10),
             width: 180,
             //height: 400,
             decoration: BoxDecoration(

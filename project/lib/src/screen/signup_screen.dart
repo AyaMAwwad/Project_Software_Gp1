@@ -275,17 +275,17 @@ class SignupScreen extends State<Signup> with ValidationMixin {
       body: Stack(
         children: [
           Positioned(
-            top: MediaQuery.of(context).size.height * -0.02, //-20,
-            left: MediaQuery.of(context).size.width * 0.05,
+            top: MediaQuery.of(context).size.height * -0.001, //-20,
+            left: MediaQuery.of(context).size.width * -0.05,
             right: MediaQuery.of(context).size.width * -0.05,
             child: Stack(
               children: [
                 Image.asset(
-                  'images/icon/designB.png',
+                  'images/icon/designB1.png',
                 ),
                 Positioned.fill(
-                  top: MediaQuery.of(context).size.height * -0.06,
-                  left: MediaQuery.of(context).size.width * -0.09,
+                  top: MediaQuery.of(context).size.height * -0.6,
+                  left: MediaQuery.of(context).size.width * -0.025,
                   child: Icon(
                     Icons.circle,
                     size: 50,
@@ -293,8 +293,8 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                   ),
                 ),
                 Positioned.fill(
-                  top: MediaQuery.of(context).size.height * -0.06,
-                  left: MediaQuery.of(context).size.width * -0.09,
+                  top: MediaQuery.of(context).size.height * -0.6,
+                  left: MediaQuery.of(context).size.width * -0.025,
                   child: Icon(Icons.account_circle,
                       size: 50, // Adjust the size of the icon as needed
                       color: const Color.fromARGB(255, 46, 120, 126)),

@@ -11,20 +11,28 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
 
   const CustemAppBar({super.key, required this.text});
+
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   @override
   Widget build(BuildContext context) {
+    double wid, wid1;
+    if (text == 'Smart devices') {
+      wid = MediaQuery.of(context).size.width * 0.14;
+      wid1 = MediaQuery.of(context).size.width * 0.13;
+    } else if (text == 'Houseware') {
+      wid = MediaQuery.of(context).size.width * 0.2;
+      wid1 = MediaQuery.of(context).size.width * 0.17;
+    } else {
+      wid = MediaQuery.of(context).size.width * 0.25;
+      wid1 = MediaQuery.of(context).size.width * 0.17;
+    }
     return
         // backgroundColor: Color.fromARGB(255, 201, 111, 111),
         Row(
       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
           child: Builder(
             builder: (context) => IconButton(
               icon: Icon(
@@ -39,7 +47,7 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         Container(
           padding: EdgeInsets.only(
-            right: MediaQuery.of(context).size.width * 0.27,
+            right: wid,
           ),
         ),
         Column(
@@ -68,7 +76,7 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         Container(
           padding: EdgeInsets.only(
-            right: MediaQuery.of(context).size.width * 0.15,
+            right: wid1,
           ),
         ),
         /* CircleAvatar(
