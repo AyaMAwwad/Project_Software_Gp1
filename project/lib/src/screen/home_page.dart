@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/cat_screen.dart';
+import 'package:project/src/screen/category_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/app_bar.dart';
@@ -219,7 +220,7 @@ class HomePage extends StatelessWidget {
           // Navigate to a new page when the image is tapped
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CategScreen()),
+            MaterialPageRoute(builder: (context) => ScreenCategory(category)),
           );
         },
         child: Column(

@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace
+// ignore_for_file: prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/cat_product.dart';
@@ -13,24 +14,92 @@ import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
 
 class CategScreen extends StatefulWidget {
+  final Category category;
+  CategScreen(this.category);
+
   @override
   CategState createState() => CategState();
 }
 
 class CategState extends State<CategScreen> {
-  //////////////
-  String selectedCategory = 'Men';
-  String selectedType = 'New';
+  Map<String, List<String>> categoryTypes = {
+    'Fashion': [
+      'Men',
+      'Women',
+      'Shoes',
+      'Kids',
+      'Bags',
+      'Clock',
+      'Glasses',
+    ],
+    'Smart devices': [
+      'Mobile',
+      'Laptob',
+      'iPad',
+      'AirPods',
+      'computer',
+      'Watch',
+      'cmputer',
+      'Tablet',
+      'TV',
+      'Wearable Fitness Trackers',
+      'speakers',
+    ],
+    'Books': ['Other'],
+    'Games': ['Other'],
+    'Houseware': ['Other'],
+    'Vehicles': ['Other'],
+    'Furniture': ['Other'],
+  };
+  Map<String, List<String>> categoryimage = {
+    'Fashion': [
+      'images/icon/jec_men.png',
+      'images/icon/woman.png',
+      'images/icon/shoes_A.png',
+      'images/icon/kids.png',
+      'images/icon/bag.png',
+      'images/icon/clock.png',
+      'images/icon/glasses.png',
+    ],
+    'Smart devices': [
+      'images/icon/woman.png',
+      'images/icon/woman.png',
+      'images/icon/woman.png',
+      'images/icon/woman.png',
+      'images/icon/woman.png',
+      'images/icon/woman.png',
+      'images/icon/woman.png',
+      'images/icon/woman.png',
+      'images/icon/woman.png',
+      'images/icon/woman.png',
+      'images/icon/woman.png',
+    ],
+    'Books': ['images/icon/jec_men.png'],
+    'Games': ['images/icon/jec_men.png'],
+    'Houseware': ['images/icon/jec_men.png'],
+    'Vehicles': ['images/icon/jec_men.png'],
+    'Furniture': ['images/icon/jec_men.png'],
+  };
+  String selectedType = 'Men';
+  String selectedProdState = 'New';
 
-  void updateCategory(String category) {
+  late String selectedCategory;
+  @override
+  void initState() {
+    super.initState();
+    selectedCategory = widget.category.name;
+    selectedType = categoryTypes[selectedCategory]![0];
+  }
+
+  void updateCategory(String type) {
     setState(() {
-      selectedCategory = category;
+      selectedType = type;
     });
   }
 
-  void updateType(String category) {
+  void updateType(String prodState) {
     setState(() {
-      selectedType = category;
+      selectedProdState = prodState;
     });
   }
   ///////////////
@@ -71,7 +140,7 @@ class CategState extends State<CategScreen> {
               // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustemAppBar(
-                  text: 'Fashion',
+                  text: selectedCategory,
                 ),
                 SizedBox(
                   height: 10,
@@ -87,7 +156,7 @@ class CategState extends State<CategScreen> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      ProductType(
+                      /* ProductType(
                         press: () {
                           updateType('New');
                         },
@@ -110,7 +179,7 @@ class CategState extends State<CategScreen> {
                         // image: 'images/icon/donate.png',
                         name: 'Free',
                         // selectedtype: TypeState.freeprod,
-                      ),
+                      ),*/
                     ],
                   ),
                 ),
@@ -120,15 +189,29 @@ class CategState extends State<CategScreen> {
                 ),
                 Container(
                   height: 70,
-                  child: ListView(
+                  child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    children: [
-                      CatProduct(
+                    // children: [
+                    itemCount: categoryTypes[selectedCategory]!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String type = categoryTypes[selectedCategory]![index];
+                      String image = categoryimage[selectedCategory]![index];
+                      return CatProduct(
+                        press: () {
+                          updateCategory(type);
+                        },
+                        image: image,
+
+                        ///getImageForType(type),
+                        name: type,
+                      );
+                    },
+                    /* CatProduct(
                         press: () {
                           updateCategory('Men');
                         },
                         image: 'images/icon/jec_men.png',
-                        name: 'Men',
+                        name: selectedType,
                       ),
                       CatProduct(
                         press: () {
@@ -171,8 +254,8 @@ class CategState extends State<CategScreen> {
                         },
                         image: 'images/icon/glasses.png',
                         name: 'Glasses',
-                      ),
-                    ],
+                      ),*/
+                    //],
                   ),
                 ),
                 SizedBox(
@@ -182,7 +265,7 @@ class CategState extends State<CategScreen> {
                 Container(
                   height: 750,
                   child: RecentProd(
-                      category: selectedCategory, type: selectedType),
+                      category: selectedType, prodState: selectedProdState),
                 ),
               ],
             ),

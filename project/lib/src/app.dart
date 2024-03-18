@@ -2,6 +2,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project/src/screen/category_screen.dart';
+import 'package:project/src/screen/categorylist.dart';
 
 import 'package:project/src/screen/home_page.dart';
 
@@ -44,10 +46,11 @@ class MyAppState extends State<MyApp> {
   Widget build(context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: //CustemAppBar(), // SliderPage(), //NewPass(),
+      home: //ScreenCategory(), //CustemAppBar(), // SliderPage(), //NewPass(),
           (FirebaseAuth.instance.currentUser == null)
               ? CoverStateScreen()
               : Login(),
+      ///////////////
       /*FirebaseAuth.instance.currentUser != null  &&
                       FirebaseAuth.instance.currentUser!.emailVerified)
                   ? Login()
@@ -75,6 +78,7 @@ class MyAppState extends State<MyApp> {
         "signup": (context) => Signup(),
         "login": (context) => Login(),
         "homepagee": (context) => HomePage(),
+        //"category": (context) => ScreenCategory(),
       },
       // Login(), // Signup(), //CoverStateScreen(), // Display SplashScreen initially
     );
