@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:project/src/screen/home_page.dart';
+import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/cart_shop.dart';
 import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/user_profile.dart';
@@ -49,6 +50,19 @@ class BottomNavBar extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => HomePage()));
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.add_circle_outline_rounded,
+              color: MenuState.addprod == selectedMenu
+                  ? Color.fromARGB(255, 2, 92, 123)
+                  : inactivecolor,
+              size: 30,
+            ),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddProduct()));
             },
           ),
           IconButton(

@@ -2,6 +2,7 @@
 
 // ignore_for_file: prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -152,9 +153,27 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
+      bottomNavigationBar: CurvedNavigationBar(
+          backgroundColor: Colors.white,
+          color: Colors.blueGrey.shade200,
+          height: 50,
+          items: [
+            Icon(
+              Icons.home_outlined,
+            ),
+            Icon(
+              Icons.add_circle_outline_rounded,
+            ),
+            Icon(
+              Icons.shopping_cart_outlined,
+            ),
+            Icon(
+              Icons.person_outline_outlined,
+            ),
+          ]),
+      /* BottomNavBar(
         selectedMenu: MenuState.home,
-      ),
+      ),*/
     );
   }
 

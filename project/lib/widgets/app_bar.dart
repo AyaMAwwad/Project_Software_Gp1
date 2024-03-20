@@ -20,7 +20,9 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
     if (text == 'Smart devices') {
       wid = MediaQuery.of(context).size.width * 0.14;
       wid1 = MediaQuery.of(context).size.width * 0.13;
-    } else if (text == 'Houseware') {
+    } else if (text == 'Houseware' ||
+        text == 'Wardrobes' ||
+        text == 'Shoe Racks') {
       wid = MediaQuery.of(context).size.width * 0.2;
       wid1 = MediaQuery.of(context).size.width * 0.17;
     } else {

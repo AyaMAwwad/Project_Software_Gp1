@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'dart:ui';
 
@@ -47,26 +47,6 @@ class ProductPageState extends State<ProductPage> {
       currentSelectedType = selectedType;
     });
   }
-
-  void handleProductTypeSelection(String typeName) {
-    switch (typeName) {
-      case 'New':
-        updateSelectedType(TypeProductState.newprod);
-        // Add functionality specific to 'New' product type
-        break;
-      case 'Used':
-        updateSelectedType(TypeProductState.usedprod);
-        // Add functionality specific to 'Used' product type
-        break;
-      case 'Free':
-        updateSelectedType(TypeProductState.freeprod);
-        // Add functionality specific to 'Free' product type
-        break;
-      default:
-        break;
-    }
-  }
-  ///////////////////////////////////////////////////
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +108,7 @@ class ProductPageState extends State<ProductPage> {
                   // borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black38,
+                      color: Color.fromARGB(95, 218, 218, 218),
                       blurRadius: 5,
                     ),
                   ],
@@ -211,7 +191,7 @@ class ProductPageState extends State<ProductPage> {
                 //  child:Carousel(),
               ),
               Container(
-                height: 750,
+                height: 500,
                 child: RecentProd(
                     category: selectedCategory, prodState: selectedProdState),
               ),

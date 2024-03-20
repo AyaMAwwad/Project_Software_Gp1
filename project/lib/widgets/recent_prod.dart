@@ -177,6 +177,7 @@ class RecentProd extends StatelessWidget {
       'category': 'Kids',
       'type': 'New',
     },
+
     {
       'name': 'Kids',
       'image': 'images/icon/kids3.jpeg',
@@ -379,7 +380,9 @@ class RecentProd extends StatelessWidget {
       'category': 'Shoes',
       'type': 'Free',
     },
+    //------------
   ];
+
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> filteredType =
@@ -387,20 +390,24 @@ class RecentProd extends StatelessWidget {
     final List<Map<String, dynamic>> filteredProducts = filteredType
         .where((product) => product['category'] == category)
         .toList();
-    return GridView.builder(
-      itemCount: filteredProducts.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, childAspectRatio: 0.70),
-      itemBuilder: (BuildContext context, int index) {
-        return SingleChildScrollView(
-          child: RecentSingleProd(
-            recet_prod_description: filteredProducts[index]['description'],
-            recet_prod_name: filteredProducts[index]['name'],
-            recet_prod_image: filteredProducts[index]['image'],
-            recet_prod_price: filteredProducts[index]['price'],
-          ),
-        );
-      },
+    return SingleChildScrollView(
+      child: GridView.builder(
+        itemCount: filteredProducts.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, childAspectRatio: 0.70),
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return SingleChildScrollView(
+            child: RecentSingleProd(
+              recet_prod_description: filteredProducts[index]['description'],
+              recet_prod_name: filteredProducts[index]['name'],
+              recet_prod_image: filteredProducts[index]['image'],
+              recet_prod_price: filteredProducts[index]['price'],
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -1,5 +1,8 @@
-// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_print, use_build_context_synchronously, unused_local_variable
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_print, use_build_context_synchronously, unused_local_variable, non_constant_identifier_names
 
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/mixins/valid_mixin.dart';
@@ -198,6 +201,9 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                       selectedGender != null) {
                     formKey.currentState!.save();
 
+                    await signupback(firstName.text, lastName.text, email.text,
+                        password.text, address.text, gender.text, phoneA.text);
+
                     //print('Time to post $email and $password to API');
 
                     try {
@@ -206,6 +212,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                         email: email.text,
                         password: password.text,
                       );
+
                       //FirebaseAuth.instance.currentUser!.sendEmailVerification();
                       // Navigator.of(context).pushReplacementNamed("login");
                       Navigator.push(
@@ -311,5 +318,48 @@ class SignupScreen extends State<Signup> with ValidationMixin {
         ],
       ),
     );
+  }
+
+  Future<void> signupback(
+      String first_name,
+      String last_name,
+      String email,
+      String password,
+      String address,
+      String birthday,
+      String phone_number) async {
+    final url = Uri.parse(
+        'http://192.168.0.114:3000/signup'); // Update with your server IP
+    try {
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'first_name': first_name,
+          'last_name': last_name,
+          'email': email,
+          'password': password,
+          'address': address,
+          'birthday': birthday,
+          'phone_number': phone_number,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Authentication successful
+        print('Signup successful');
+        // Navigate to the home page or perform any other actions
+      } else if (response.statusCode == 401) {
+        // Invalid email or password
+        print('Email already in use.');
+      } else {
+        // Other error occurred
+        print('Failed to authenticate. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }
