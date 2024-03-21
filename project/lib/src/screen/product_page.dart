@@ -6,12 +6,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/src/screen/category_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
+import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
+import 'package:project/widgets/cart_shop.dart';
 import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/prod_type.dart';
 import 'package:project/widgets/recent_prod.dart';
+import 'package:project/widgets/user_profile.dart';
 
 class ProductPage extends StatefulWidget {
   final Category category;
@@ -50,6 +54,7 @@ class ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    int selectedIndex = 0;
     return Scaffold(
       drawer: Drawer(
         //child: CustemAppBar(),
@@ -199,9 +204,43 @@ class ProductPageState extends State<ProductPage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavBar(
+      bottomNavigationBar: NavBar(
+        selectedIndex: selectedIndex,
+        onTabSelected: (index) {
+          setState(() {
+            selectedIndex = index;
+            switch (index) {
+              case 0:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                break;
+              case 1:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddProduct()),
+                );
+                break;
+              case 2:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartShop()),
+                );
+                break;
+              case 3:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfile()),
+                );
+                break;
+            }
+          });
+        },
+        context: context,
+      ), /*BottomNavBar(
         selectedMenu: MenuState.home,
-      ),
+      ),*/
     );
   }
 }

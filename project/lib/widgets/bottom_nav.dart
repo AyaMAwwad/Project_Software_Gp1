@@ -1,5 +1,47 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_declarations
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:project/src/screen/home_page.dart';
+import 'package:project/widgets/add_product.dart';
+import 'package:project/widgets/cart_shop.dart';
+import 'package:project/widgets/user_profile.dart';
 
+class NavBar extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onTabSelected;
+  final BuildContext context;
+
+  const NavBar({
+    Key? key,
+    required this.selectedIndex,
+    required this.onTabSelected,
+    required this.context,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CurvedNavigationBar(
+      backgroundColor: Colors.white.withOpacity(0.0003),
+      color: Color.fromARGB(255, 95, 150, 168),
+      animationDuration: Duration(microseconds: 300),
+      onTap: (index) {
+        onTabSelected(
+            index); // Call the callback function to update selected index
+      },
+      height: 50,
+      index: selectedIndex, // Set the selected index
+      items: [
+        Icon(Icons.home_outlined, color: Colors.white),
+        Icon(Icons.add_circle_outline_rounded, color: Colors.white),
+        Icon(Icons.shopping_cart_outlined, color: Colors.white),
+        Icon(Icons.person_outline_outlined, color: Colors.white),
+      ],
+    );
+  }
+}
+
+
+/*
 import 'package:flutter/material.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/widgets/add_product.dart';
@@ -96,3 +138,4 @@ class BottomNavBar extends StatelessWidget {
     );
   }
 }
+*/

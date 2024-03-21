@@ -17,8 +17,11 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     double wid, wid1;
-    if (text == 'Smart devices') {
+    if (text == 'Smart devices' || text == 'Shopping Cart') {
       wid = MediaQuery.of(context).size.width * 0.14;
+      wid1 = MediaQuery.of(context).size.width * 0.13;
+    } else if (text == 'Add Product') {
+      wid = MediaQuery.of(context).size.width * 0.19;
       wid1 = MediaQuery.of(context).size.width * 0.13;
     } else if (text == 'Houseware' ||
         text == 'Wardrobes' ||

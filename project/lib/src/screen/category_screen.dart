@@ -8,13 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/categorylist.dart';
+import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/product_page.dart';
+import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
+import 'package:project/widgets/cart_shop.dart';
 import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
+import 'package:project/widgets/user_profile.dart';
 
 class ScreenCategory extends StatefulWidget {
   final Category category;
@@ -25,6 +29,7 @@ class ScreenCategory extends StatefulWidget {
 }
 
 class _ScreenCategoryState extends State<ScreenCategory> {
+  int selectedIndex = 0;
   var height, width;
 
   Map<String, List<String>> categoryTypes = {
@@ -358,9 +363,43 @@ class _ScreenCategoryState extends State<ScreenCategory> {
           ],
         ),
       )),
-      bottomNavigationBar: BottomNavBar(
+      bottomNavigationBar: NavBar(
+        selectedIndex: selectedIndex,
+        onTabSelected: (index) {
+          setState(() {
+            selectedIndex = index;
+            switch (index) {
+              case 0:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                break;
+              case 1:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddProduct()),
+                );
+                break;
+              case 2:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartShop()),
+                );
+                break;
+              case 3:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfile()),
+                );
+                break;
+            }
+          });
+        },
+        context: context,
+      ), /*BottomNavBar(
         selectedMenu: MenuState.home,
-      ),
+      ),*/
     );
   }
 }

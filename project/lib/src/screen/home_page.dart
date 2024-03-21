@@ -12,39 +12,66 @@ import 'package:project/src/screen/cat_screen.dart';
 import 'package:project/src/screen/category_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
+import 'package:project/widgets/cart_shop.dart';
 import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/search_app.dart';
 import 'package:project/widgets/slider.dart';
 import 'package:project/src/screen/detailpage.dart';
+import 'package:project/widgets/user_profile.dart';
 
 // ignore: must_be_immutable
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int selectedIndex = 0;
   // jumbsute baby boy
   String namefashion = 'Jumpsuit boy';
+
   String pricefashion = 'Price: \$20.00';
+
   String imagefashion = 'images/icon/fashionbaby.webp';
+
   // game baby
   String namegame = 'Game';
-  String imagegame = 'images/icon/babygame.jpg'; //
+
+  String imagegame = 'images/icon/babygame.jpg';
+  //
   String pricegame = 'Price: \$20.00';
+
   // phone mobile
   String nameiphone = 'Iphone';
+
   String imageiphone = 'images/icon/iphone.webp';
+
   String pricephone = 'Price: \$50.00';
+
   // baby bajama
   String nameJumpsuit = 'Jumpsuit ';
+
   String imageJumpsuit = 'images/icon/sweetb.jpg';
+
   String priceJumpsuit = 'Price: \$20.00';
+
   // Sweatshirt  tablet.jpg
   String namebluse = 'Sweatshirt ';
+
   String imagebluse = 'images/icon/blusebaby.webp';
+
   String pricebluse = 'Price: \$30.00';
+
   // tablet
   String nametablet = 'Tablet ';
+
   String imagetablet = 'images/icon/galaxy.webp';
+
   String pricetablet = 'Price: \$100.00';
+
   final List<Category> categories = [
     Category(name: 'Fashion', imagePath: 'images/icon/fashion.jpg'),
     Category(name: 'Books', imagePath: 'images/icon/books.jpg'),
@@ -84,6 +111,7 @@ class HomePage extends StatelessWidget {
      */
 
     return Scaffold(
+      //backgroundColor: Colors.transparent,
       drawer: Drawer(
         //child: CustemAppBar(),
         child: IconButton(
@@ -153,24 +181,41 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor: Colors.white,
-          color: Colors.blueGrey.shade200,
-          height: 50,
-          items: [
-            Icon(
-              Icons.home_outlined,
-            ),
-            Icon(
-              Icons.add_circle_outline_rounded,
-            ),
-            Icon(
-              Icons.shopping_cart_outlined,
-            ),
-            Icon(
-              Icons.person_outline_outlined,
-            ),
-          ]),
+      bottomNavigationBar: NavBar(
+        selectedIndex: selectedIndex,
+        onTabSelected: (index) {
+          setState(() {
+            selectedIndex = index;
+            switch (index) {
+              case 0:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                break;
+              case 1:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddProduct()),
+                );
+                break;
+              case 2:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartShop()),
+                );
+                break;
+              case 3:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfile()),
+                );
+                break;
+            }
+          });
+        },
+        context: context,
+      ),
       /* BottomNavBar(
         selectedMenu: MenuState.home,
       ),*/
@@ -512,6 +557,7 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
 
 
 /*import 'package:firebase_auth/firebase_auth.dart';
