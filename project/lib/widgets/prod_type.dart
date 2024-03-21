@@ -27,8 +27,8 @@ class ProductType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color inactivecolor =
-        Color.fromARGB(255, 157, 156, 156).withOpacity(0.9);
-    final Color activeColor = Color.fromARGB(255, 59, 83, 92).withOpacity(0.6);
+        Color.fromARGB(255, 197, 196, 196).withOpacity(0.9);
+    final Color activeColor = Color.fromARGB(255, 2, 46, 62).withOpacity(0.6);
     // final Color inactivecolor = Colors.grey;
     // final Color activecolor = Color.fromARGB(255, 2, 92, 123);
     //Color containerColor = inactivecolor;
@@ -75,7 +75,7 @@ class ProductType extends StatelessWidget {
                     child: Center(
                       child: Text(
                         name,
-                        style: GoogleFonts.aBeeZee(
+                        style: GoogleFonts.abyssinicaSil(
                           textStyle: TextStyle(
                             color: Color.fromARGB(255, 255, 255,
                                 255), // Color.fromARGB(255, 4, 51, 67),

@@ -1,18 +1,24 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/categorylist.dart';
+import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/product_page.dart';
+import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
+import 'package:project/widgets/cart_shop.dart';
 import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
+import 'package:project/widgets/user_profile.dart';
 
 class ScreenCategory extends StatefulWidget {
   final Category category;
@@ -23,6 +29,7 @@ class ScreenCategory extends StatefulWidget {
 }
 
 class _ScreenCategoryState extends State<ScreenCategory> {
+  int selectedIndex = 0;
   var height, width;
 
   Map<String, List<String>> categoryTypes = {
@@ -37,22 +44,32 @@ class _ScreenCategoryState extends State<ScreenCategory> {
     ],
     'Smart devices': [
       'Mobile',
-      'Laptob',
+      'Laptop',
       'iPad',
       'AirPods',
       'computer',
       'Watch',
-      'cmputer',
-      'Tablet',
       'TV',
-      'Wearable Fitness Trackers',
       'speakers',
     ],
     'Books': ['Other'],
     'Games': ['Other'],
     'Houseware': ['Other'],
     'Vehicles': ['Other'],
-    'Furniture': ['Other'],
+    'Furniture': [
+      'Sofas',
+      'Carpets',
+      'Chairs',
+      'Tables ',
+      'Beds',
+      'Wardrobes',
+      'Cabinets',
+      'Desks',
+      'Mirrors',
+      'Lamps',
+      'Wall art',
+      'Shoe Racks'
+    ],
   };
 
   Map<String, List<String>> categoryimage = {
@@ -66,23 +83,33 @@ class _ScreenCategoryState extends State<ScreenCategory> {
       'images/icon/glass1_back.png',
     ],
     'Smart devices': [
-      'images/icon/woman.png',
-      'images/icon/woman.png',
-      'images/icon/woman.png',
-      'images/icon/woman.png',
-      'images/icon/woman.png',
-      'images/icon/woman.png',
-      'images/icon/woman.png',
-      'images/icon/woman.png',
-      'images/icon/woman.png',
-      'images/icon/woman.png',
-      'images/icon/woman.png',
+      'images/icon/iphone_ic.png',
+      'images/icon/laptop_ic.png',
+      'images/icon/ipad_ic.png',
+      'images/icon/airpods_ic.png',
+      'images/icon/computer_ic.png',
+      'images/icon/appleWat_ic.png',
+      'images/icon/tv_ic.png',
+      'images/icon/speakers_ic.png',
     ],
     'Books': ['images/icon/jec_men.png'],
     'Games': ['images/icon/jec_men.png'],
     'Houseware': ['images/icon/jec_men.png'],
     'Vehicles': ['images/icon/jec_men.png'],
-    'Furniture': ['images/icon/jec_men.png'],
+    'Furniture': [
+      'images/icon/sofa_ic.png',
+      'images/icon/carp_ic.png',
+      'images/icon/chair_ic.png',
+      'images/icon/table_ic.png',
+      'images/icon/bed_ic.png',
+      'images/icon/warddr_ic.png',
+      'images/icon/cr_ic.png',
+      'images/icon/desk_ic.png',
+      'images/icon/mir_ic.png',
+      'images/icon/lamp_ic.png',
+      'images/icon/wall_ic.png',
+      'images/icon/shoe_ic.png',
+    ],
   };
   late String selectedCategory;
   @override
@@ -235,12 +262,144 @@ class _ScreenCategoryState extends State<ScreenCategory> {
                 },
               ),
             ),
+
+            /* Container(
+              padding: EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 255, 251, 254),
+              ),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.1,
+                  mainAxisSpacing: 25,
+                ),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: categoryTypes[selectedCategory]!.length,
+                itemBuilder: (context, index) {
+                  String type = categoryTypes[selectedCategory]![index];
+                  String image = categoryimage[selectedCategory]![index];
+
+                  return InkWell(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ProductPage(type, widget.category)),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        //color: Colors.transparent,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black38,
+                            blurRadius: 4,
+                            spreadRadius: 1,
+                            //  blurRadius: 6,
+                          ),
+                        ],
+                      ),
+                      /* child: Container(
+                        width: 50,
+                        height: 50,
+                        //margin:
+                        //  EdgeInsets.symmetric(vertical: 40, horizontal: 38),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(60),
+                          color:
+                              Color.fromARGB(255, 2, 92, 123).withOpacity(0.3),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              spreadRadius: 1,
+                              blurRadius: 6,
+                            ),
+                          ],
+                        ),*/
+
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ClipOval(
+                            child: Container(
+                              width: 80, // Set the desired size of the circle
+                              height: 80, // Set the desired size of the circle
+                              color: Color.fromARGB(255, 95, 150, 168),
+
+                              child: Container(
+                                margin: EdgeInsets.all(10.0),
+                                child: Image.asset(
+                                  image,
+                                  width: 50,
+                                  //height: 30,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            type,
+                            style: GoogleFonts.aDLaMDisplay(
+                              textStyle: TextStyle(
+                                color: Color.fromARGB(255, 95, 150, 168),
+                                // Color.fromARGB(255, 4, 51, 67),
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // ),
+                    ),
+                  );
+                },
+              ),
+            ),*/
           ],
         ),
       )),
-      bottomNavigationBar: BottomNavBar(
+      bottomNavigationBar: NavBar(
+        selectedIndex: selectedIndex,
+        onTabSelected: (index) {
+          setState(() {
+            selectedIndex = index;
+            switch (index) {
+              case 0:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                break;
+              case 1:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddProduct()),
+                );
+                break;
+              case 2:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartShop()),
+                );
+                break;
+              case 3:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfile()),
+                );
+                break;
+            }
+          });
+        },
+        context: context,
+      ), /*BottomNavBar(
         selectedMenu: MenuState.home,
-      ),
+      ),*/
     );
   }
 }
