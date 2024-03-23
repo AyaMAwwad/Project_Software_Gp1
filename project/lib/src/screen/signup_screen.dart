@@ -6,12 +6,15 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/mixins/valid_mixin.dart';
+import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/verify_email.dart';
 import 'package:project/widgets/button.dart';
 import 'package:project/widgets/date_field.dart';
 import 'package:project/widgets/form_field.dart';
+import 'package:project/widgets/have_account.dart';
 import 'package:project/widgets/pass_field.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -201,8 +204,16 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                       selectedGender != null) {
                     formKey.currentState!.save();
 
-                    await signupback(firstName.text, lastName.text, email.text,
-                        password.text, address.text, gender.text, phoneA.text);
+                    await signupback(
+                        firstName.text,
+                        lastName.text,
+                        email.text,
+                        password.text,
+                        address.text,
+                        selectedDate != null
+                            ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+                            : '',
+                        phoneA.text);
 
                     //print('Time to post $email and $password to API');
 
@@ -215,10 +226,6 @@ class SignupScreen extends State<Signup> with ValidationMixin {
 
                       //FirebaseAuth.instance.currentUser!.sendEmailVerification();
                       // Navigator.of(context).pushReplacementNamed("login");
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => VerifyEmail()));
                     } on FirebaseAuthException catch (e) {
                       if (e.code == 'weak-password') {
                         print('The password provided is too weak.');
@@ -233,6 +240,14 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               },
               borderRadius: BorderRadius.all(Radius.circular(40)),
               // loginButton(),
+            ),
+            HaveAccount(
+              name1: "Do Have An Account? ",
+              press: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Login()));
+              },
+              name2: 'Login',
             ),
           ],
         ),
@@ -311,7 +326,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
           ),
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.only(top: 120, right: 50, left: 55),
+              padding: EdgeInsets.only(top: 100, right: 50, left: 55),
               child: textfield1(),
             ),
           ),
@@ -329,7 +344,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
       String birthday,
       String phone_number) async {
     final url = Uri.parse(
-        'http://192.168.0.114:3000/signup'); // Update with your server IP
+        'http://192.168.0.114:3000/tradetryst/user/signup'); // Update with your server IP
     try {
       final response = await http.post(
         url,
@@ -347,14 +362,22 @@ class SignupScreen extends State<Signup> with ValidationMixin {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => VerifyEmail()));
         // Authentication successful
         print('Signup successful');
         // Navigate to the home page or perform any other actions
       } else if (response.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Email already in use."),
+        ));
         // Invalid email or password
         print('Email already in use.');
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Failed to authenticate.'),
+        ));
         // Other error occurred
         print('Failed to authenticate. Status code: ${response.statusCode}');
       }

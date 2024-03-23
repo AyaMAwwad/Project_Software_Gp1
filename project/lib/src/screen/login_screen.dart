@@ -26,6 +26,7 @@ import 'package:project/widgets/button.dart';
 import 'package:project/widgets/button_2.dart';
 import 'package:project/widgets/design.dart';
 import 'package:project/widgets/form_field.dart';
+import 'package:project/widgets/have_account.dart';
 import 'package:project/widgets/pass_field.dart';
 
 //import 'package:awesome_dialog/awesome_dialog.dart';
@@ -136,7 +137,6 @@ class LoginScreen extends State<Login> with ValidationMixin {
                   email: emailController.text,
                   password: passwordController.text,
                 );
-                Navigator.of(context).pushReplacementNamed("homepagee");
 
                 /* if (credential.user!.emailVerified) {
                   Navigator.of(context).pushReplacementNamed("login");
@@ -170,11 +170,6 @@ class LoginScreen extends State<Login> with ValidationMixin {
                 }
               }
 
-              // aya
-
-              // Navigator.push(
-              //   context, MaterialPageRoute(builder: (context) => HomePage()));
-
 //
 
               //
@@ -186,7 +181,14 @@ class LoginScreen extends State<Login> with ValidationMixin {
           SizedBox(
             height: 25.0,
           ),
-          accountfunction(),
+          HaveAccount(
+            name1: "Don't Have An Account? ",
+            press: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Signup()));
+            },
+            name2: 'Sign up',
+          ),
           // SizedBox(height: 25.0,),
           SizedBox(height: 25.0), // Add this line for spacing
 
@@ -282,55 +284,6 @@ class LoginScreen extends State<Login> with ValidationMixin {
     }
   }
 
-// function have account ???
-  accountfunction() {
-    return Padding(
-      padding: EdgeInsets.all(5.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Don't Have an Account? ",
-            style: GoogleFonts.aBeeZee(
-              textStyle: TextStyle(
-                color: Color.fromARGB(255, 1, 3, 4),
-                fontSize: 14,
-
-                // decoration: TextDecoration.underline,
-                decorationThickness: 1,
-                // fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-////
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Signup()));
-            },
-            child: Text(
-              "Sign Up",
-              //  body: :
-              style: GoogleFonts.aBeeZee(
-                textStyle: TextStyle(
-                  color: Color.fromARGB(255, 2, 92, 123),
-                  fontSize: 14,
-
-                  // decoration: TextDecoration.underline,
-                  decorationThickness: 1,
-                  fontWeight: FontWeight.bold,
-                  //padding: 10,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    //return  ;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -404,10 +357,6 @@ class LoginScreen extends State<Login> with ValidationMixin {
       });
       if (isemailvalid && iscoorectpass()) {
         // Both email and password are valid, navigate to HomePage
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
       } else {
         // Either email or password is invalid, handle accordingly
         print('Invalid email or password');
@@ -420,8 +369,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
 
 //// new
   Future<void> loginnn(String email, String password) async {
-    final url = Uri.parse(
-        'http://192.168.0.114:3000/login'); // Update with your server IP
+    final url = Uri.parse('http://192.168.0.114:3000/tradetryst/user/login');
     try {
       final response = await http.post(
         url,
@@ -434,14 +382,23 @@ class LoginScreen extends State<Login> with ValidationMixin {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Navigator.of(context).pushReplacementNamed("homepagee");
         // Authentication successful
         print('Login successful');
         // Navigate to the home page or perform any other actions
       } else if (response.statusCode == 401) {
         // Invalid email or password
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Invalid email or password"),
+        ));
+        //
         print('Invalid email or password');
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Failed to authenticate."),
+        ));
+        //
         // Other error occurred
         print('Failed to authenticate. Status code: ${response.statusCode}');
       }
