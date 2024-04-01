@@ -31,6 +31,7 @@ import 'package:project/widgets/pass_field.dart';
 
 //import 'package:awesome_dialog/awesome_dialog.dart';
 class Login extends StatefulWidget {
+  static String Email = '';
   // @override
   //LoginScreen Login.createState({super.key}) => LoginScreen();
 
@@ -125,6 +126,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
               // Add the action the button should perform
               onFormSubmitted();
               String ii = emailController.text;
+              Login.Email = emailController.text;
               String jj = passwordController.text;
               print("hi $ii\n");
               print("hi $jj\n");
@@ -295,6 +297,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
             right: MediaQuery.of(context).size.width * -0.05, //-20,
             child: Image.asset(
               'images/icon/designB.png', // Path to your image asset
+              //'images/icon/svg.png',
               // Adjust height as needed
               fit: BoxFit.cover, // Adjust BoxFit as needed
             ),

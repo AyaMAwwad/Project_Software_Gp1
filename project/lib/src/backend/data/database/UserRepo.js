@@ -10,48 +10,6 @@ const db = mysql.createConnection({
 
 class UserRepository {
 
-  /* get example 
-   const { userId } = req.session;
-
-    // Retrieve the interests and location of the current user
-    db.query(
-      'SELECT interests, location FROM User WHERE userID = ?',
-      [userId],
-      (userError, userResults) => {
-        if (userError) {
-          return res.status(500).json({ message: 'Internal server error.' });
-        }
-
-        if (userResults.length === 0) {
-          return res
-            .status(404)
-            .json({ message: 'User not found or not active.' });
-        }
-
-        const currentUser = userResults[0];
-        const userInterests = currentUser.interests;
-        const userLocation = currentUser.location;
-
-        // Retrieve users with similar interests or the same location
-        db.query(
-          'SELECT userID, username, interests, location FROM User WHERE userID <> ? AND (JSON_UNQUOTE(JSON_EXTRACT(interests, "$.key")) = ? OR interests IS NULL) AND location = ?',
-          [userId, '123', userLocation],
-          (similarUsersError, similarUsersResults) => {
-            if (similarUsersError) {
-              console.error('Similar users query error:', similarUsersError);
-              return res
-                .status(500)
-                .json({ message: 'Failed to retrieve similar users.' });
-            }
-
-            // Return the similar users as JSON response
-            return res.json({ similarUsers: similarUsersResults });
-          },
-        );
-      },
-    );
-  }
-  */
   registerUser(req, res) {
     const { firstname,lastname, email, password,address,birthday,phone } = req.body;
 
@@ -59,7 +17,7 @@ class UserRepository {
       // Check if the user already exists (Checking the email)
       db.query(
         'SELECT * FROM User WHERE email = ? ',
-        [email, firstname],
+        [email],
         (error, results) => {
           if (error) {
             return reject('Internal server error.');
@@ -138,6 +96,9 @@ class UserRepository {
       
     
   }
+
+  /// product home page 
+
 
 }
 module.exports = UserRepository;

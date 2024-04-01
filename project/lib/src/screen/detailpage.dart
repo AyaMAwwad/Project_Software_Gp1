@@ -1,5 +1,9 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables, library_private_types_in_public_api
 
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +17,15 @@ import 'package:project/widgets/button.dart';
 
 class DetailPage extends StatefulWidget {
   final String categoryName;
-  final List<String> imagePaths;
+  final Map<String, dynamic> imagePaths;
   final String price;
+  final int productid;
+
   DetailPage(
       {required this.categoryName,
       required this.imagePaths,
-      required this.price});
+      required this.price,
+      required this.productid});
   //Category.name = categoryName;
   String get catoryname => categoryName;
   String get pricename => price;
@@ -29,11 +36,71 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   int selectedDotIndex = 0;
-//String name = DetailPage.getname() ;
+  int selectedDotIndex1 = 0;
 
+//String name = DetailPage.getname() ;
+  late Future<List<Map<String, dynamic>>> _imageDataFuture;
+  late String _price;
+  late List<Map<String, dynamic>> _imagePaths = []; // Store fetched image paths
+
+  late String _categoryName;
+
+  @override
+  void initState() {
+    super.initState();
+    _price = widget.price;
+    _categoryName = widget.categoryName;
+    _imageDataFuture = fetchImageData(widget.productid);
+    // _imageDataFuture = fetchImageData(widget.productId);
+  }
+
+  /////
+  Future<List<Map<String, dynamic>>> fetchImageData(int productId) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://192.168.0.114:3000/tradetryst/product/productImages?productId=$productId'));
+//?productId=$productId
+      if (response.statusCode == 200) {
+        List<dynamic> responseData = json.decode(response.body);
+        List<Map<String, dynamic>> imageList =
+            responseData.cast<Map<String, dynamic>>();
+        setState(() {
+          _imagePaths = imageList;
+        });
+        print({imageList});
+        return imageList;
+      } else {
+        throw Exception('Failed to load product images');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch product images: $e');
+    }
+  }
+
+  void selectImage(int index) {
+    setState(() {
+      selectedDotIndex = index;
+    });
+  }
+
+  void selectImage1(int index) {
+    setState(() {
+      selectedDotIndex1 = index;
+    });
+  }
+
+  ////
   @override
   Widget build(BuildContext context) {
     //double screenHeight = MediaQuery.of(context).size.height;
+    List<int> bytes = List<int>.from(
+        widget.imagePaths['data']); // Access image data from the map
+    List<int> bytes1 = _imagePaths.isNotEmpty
+        ? List<int>.from(_imagePaths[selectedDotIndex]['image_data']['data'])
+        : [];
+
+//List<int> bytes1 = _imagePaths.isNotEmpty ? List<int>.from((_imagePaths[selectedDotIndex]['image_data']['data'] as List)) : [];
+//List<int> bytes1 = _imagePaths.isNotEmpty ? List<int>.from((_imagePaths[selectedDotIndex]['image_data']['data'] as List<dynamic>).cast<int>()) : [];
 
     return Scaffold(
       drawer: Drawer(
@@ -76,23 +143,81 @@ class _DetailPageState extends State<DetailPage> {
                   //  child:Carousel(),
                 ),
                 // SearchAppBar(),
-
+                //if (_imagePaths != null && _imagePaths.isNotEmpty)
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(40),
-                    child: Image.asset(
-                      widget.imagePaths[selectedDotIndex],
+                    child:
+                        // Image.asset(
+                        //  widget.imagePaths[selectedDotIndex]!,
+                        // print('$selectedDotIndex');
+                        Image.memory(
+                      selectedDotIndex == 0
+                          ? Uint8List.fromList(bytes)
+                          : Uint8List.fromList(bytes1),
+                      // selectedDotIndex == 0 ? Uint8List.fromList(bytes) : (selectedDotIndex1 == 0 ? Uint8List.fromList(bytes1) : Uint8List.fromList(bytes1)),
+
+                      // selectedDotIndex1 == 0 ? Uint8List.fromList(bytes1) : Uint8List.fromList(bytes1),
+
+                      //  selectedDotIndex == 0 ? Uint8List.fromList(bytes) : (selectedDotIndex1 == 0 ? Uint8List.fromList(bytes1) : null),
+                      //selectedDotIndex == 0 ? Uint8List.fromList(bytes) : (selectedDotIndex1 == 0 ? Uint8List.fromList(bytes1) : Uint8List(0)),
+
                       fit: BoxFit.cover,
                       height: 400,
                     ),
+                    /*
+
+                      bytes1.isNotEmpty
+                        ?   Image.memory( // Use Image.memory for Uint8List
+                        // Uint8List.fromList(bytes),// bytes
+                      Uint8List.fromList(bytes1),// bytes
+                      fit: BoxFit.cover,
+                      height: 400,
+                    ) : CircularProgressIndicator(),
+
+                      */
                   ),
                 ),
                 SizedBox(height: 5),
                 // Text('hiiiiiiiii'),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
+
+                  children: [
+                    //
+                    for (int i = 0; i < _imagePaths.length; i++)
+                      DotWidget(
+                        dotIndex: i,
+
+                        isSelected: selectedDotIndex ==
+                            (i == 0
+                                ? 0
+                                : i), // Adjust isSelected condition based on i
+
+                        onTap: () {
+                          selectImage(i);
+                        },
+                      ),
+                  ],
+
+                  /*neww
+                  children:[
+                     DotWidget(
+
+                       dotIndex: 0,
+                      isSelected: true,
+                     onTap: () {
+                        setState(() {
+                       //   selectedDotIndex = index;
+                        });
+                      },
+                     ),
+
+
+                  ],*/ // neww
+                  /* main
+                   List.generate(
                     widget.imagePaths.length,
                     (index) => DotWidget(
                       dotIndex: index,
@@ -104,6 +229,8 @@ class _DetailPageState extends State<DetailPage> {
                       },
                     ),
                   ),
+
+                  */
                 ),
                 SizedBox(height: 5),
                 // Row(mainAxisAlignment: MainAxisAlignment.start,
@@ -261,12 +388,14 @@ class DotWidget extends StatelessWidget {
   final int dotIndex;
   final bool isSelected;
   final VoidCallback onTap;
-
+  //final List<int> imageData;
   DotWidget({
     required this.dotIndex,
     required this.isSelected,
     required this.onTap,
+    // required this.imageData,
   });
+  //bool isSelected1 = isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -280,6 +409,8 @@ class DotWidget extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         margin: EdgeInsets.symmetric(horizontal: 5),
+        //   child: isSelected && dotIndex == 0 ? Image.memory(Uint8List.fromList(bytes)) : null,
+        //  child: isSelected1 = isSelected,
       ),
     );
   }

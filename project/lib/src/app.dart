@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors, avoid_print
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/src/screen/category_screen.dart';

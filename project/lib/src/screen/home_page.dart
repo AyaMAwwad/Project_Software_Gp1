@@ -2,6 +2,10 @@
 
 // ignore_for_file: prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +32,157 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+String Priceeneww = '';
+
 class _HomePageState extends State<HomePage> {
+  List<Product> products = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProducts();
+  }
+
+  Future<void> fetchProducts() async {
+    try {
+      final List<Product> products = await ProductService().fetchProducts();
+      setState(() {
+        this.products = products;
+      });
+    } catch (e) {
+      print('Failed to fetch products: $e');
+      // Handle error appropriately
+    }
+  }
+
+  Widget productItem(Product product) {
+    print('Product Name: ${product.name}\n');
+    print('Product price : ${product.price}\n');
+
+    print('Product id: ${product.productId}\n');
+    print('Product id: ${product.product_type}\n');
+
+//product.price = await  newproductt(product);
+/*String rrr =  newproductt(product) ;
+  
+  return buildItem(
+          context,
+          product.name,
+          product.imageData,
+          'Price: \$${rrr}',
+          product.productId,
+        );
+      }*/
+    return FutureBuilder<String>(
+      future: newproductt(product),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          print('Error: ${snapshot.error}');
+          return Text('Error: ${snapshot.error}');
+        } else {
+          // Use the fetched price
+          String newPrice = snapshot.data!;
+          Priceeneww = newPrice;
+          print('Priceenew:::: $Priceeneww\n');
+
+          return buildItem(
+            context,
+            product.name,
+            product.imageData,
+            'Price: \$${newPrice}',
+            product.productId,
+          );
+        }
+      },
+    );
+  }
+
+  ///
+  //product.price = newproductt(product); // Debug print // Debug print// Debug print
+  /*
+    return buildItem(
+      context,
+      product.name,
+      product.imageData ,
+      'Price: \$${product.price}',
+      product.productId,
+    );
+  }
+
+*/
+
+  ibtisamproduct() {
+    return Row(
+      children: products.map((product) => productItem(product)).toList(),
+    );
+  }
+
+  Future<String> newproductt(Product product) async {
+    String productType = product.product_type;
+    // If product is new, fetch price from New_Product table
+    if (productType == 'new') {
+      return await fetchPriceFromNewProduct(product.productId);
+    } else {
+      return product.price; // Return original price
+    }
+  }
+
+//
+  Widget buildItem33(BuildContext context, String itemName,
+      Map<String, dynamic> image, String price) {
+    List<int> bytes = List<int>.from(image['data']);
+
+    return GestureDetector(
+      onTap: () {
+        // Do whatever action you want when the item is tapped
+        // For example, show a dialog or navigate to another page
+      },
+      child: Card(
+        elevation: 5,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Image.memory(
+                  // Use Image.memory for Uint8List
+                  Uint8List.fromList(bytes),
+                  width: 200,
+                  height: 230,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(height: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    itemName,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    price,
+                    style: TextStyle(fontSize: 16, color: Colors.green),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+//
+  String pricedata = '';
   int selectedIndex = 0;
   // jumbsute baby boy
   String namefashion = 'Jumpsuit boy';
@@ -167,6 +321,9 @@ class _HomePageState extends State<HomePage> {
             // SizedBox(height: 16),
             textfunction2(),
             SizedBox(height: 16),
+            // productItem(products);
+            // ibtisamproduct(),
+            // SizedBox(height: 50),
             buildBottom(context), //openSans
             SizedBox(height: 16),
 
@@ -353,6 +510,8 @@ class _HomePageState extends State<HomePage> {
   }
 
 /////////////////////////
+  ///
+
   Widget buildBottom(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -360,9 +519,31 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.all(8.0),
         child: Row(
           children: [
-            buildItem(
-                context, 'Jacket', ['images/icon/goat.jpg'], 'Price: \$50.00'),
+            SizedBox(
+              height: 16,
+            ),
+
+            ibtisamproduct(),
+
+            // ibtisamproduct(),
+
+            /*
+          products.map<Widget>((product) {
+         
+          return buildItem(
+              context,
+              product['name'],
+              //[Uint8List.fromList(product['image'])], // Assuming 'image' is the key for the image URL
+               [ product['image']], 
+              'Price: \$${product['price']}',
+            );
+            }).toList(),
+           
+           */
             SizedBox(width: 16),
+
+            /*
+            
             buildItem(
                 context, 'shoes', ['images/icon/shoes.jpg'], 'Price: \$80.00'),
             buildItem(context, 'Iphone', ['images/icon/iphone.webp'],
@@ -381,7 +562,7 @@ class _HomePageState extends State<HomePage> {
                 context,
                 'CLOCK',
                 ['images/icon/clockhand.jpeg', 'images/icon/clockhand2.jpeg'],
-                'Price: \$200.00'),
+                'Price: \$200.00'),*/
           ],
         ),
       ),
@@ -411,8 +592,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   ///
+  ///
+  ///
+
   Widget buildItem(BuildContext context, String itemName,
-      List<String> imagePath, String price) {
+      Map<String, dynamic> imagePath, String price, int productId) {
+    List<int> bytes = List<int>.from(imagePath['data']);
+
     return GestureDetector(
       onTap: () {
         // Navigate to the new page here
@@ -420,11 +606,14 @@ class _HomePageState extends State<HomePage> {
           context,
           MaterialPageRoute(
             builder: (context) => DetailPage(
-              categoryName: itemName, imagePaths: imagePath, price: '30',
-              //'lib/icon/tablet.jpg',
-              //'lib/icon/fashion.jpg',
-              //  ] ,// dots: [DotInfo(left: 50, top: 100
-            ),
+                categoryName: itemName,
+                imagePaths: imagePath,
+                price: '30',
+                productid: productId
+                //'lib/icon/tablet.jpg',
+                //'lib/icon/fashion.jpg',
+                //  ] ,// dots: [DotInfo(left: 50, top: 100
+                ),
 //DotInfo(left: 150, top: 200),],),
           ),
         );
@@ -442,8 +631,11 @@ class _HomePageState extends State<HomePage> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(14),
-                child: Image.asset(
-                  imagePath[0],
+                child: // Image.asset(
+                    // imagePath[0],
+                    Image.memory(
+                  // Use Image.memory for Uint8List
+                  Uint8List.fromList(bytes),
                   width: 200,
                   height: 230, // 200
                   fit: BoxFit.cover,
@@ -557,6 +749,119 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+class ProductService {
+  Future<List<Product>> fetchProducts() async {
+    try {
+      final response = await http
+          .get(Uri.parse('http://192.168.0.114:3000/tradetryst/home/products'));
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        print('Response Body: $jsonResponse'); // Print API response
+        //var pricedata;
+/*
+ List<Product> products = [];
+        for (var data in jsonResponse) {
+          // Check product type
+          String productType = data['product_type'];
+          // If product is new, fetch price from New_Product table
+          String price = productType == 'new' ? await fetchPriceFromNewProduct(data['product_id']) : data['price'];
+          
+          products.add(Product(
+            productId: data['product_id'],
+            name: data['name'],
+            description: data['description'],
+            price: price,
+            quantity: data['quantity'],
+            categoryId: data['category_id'],
+            userId: data['user_id'],
+            imageData: data['image'], // Assuming 'image' is a Uint8List
+          ));
+        }*/
+
+        List<Product> products = jsonResponse
+            .map((data) => Product(
+                  productId: data['product_id'],
+                  name: data['name'],
+                  description: data['description'],
+                  price: Priceeneww, //data['price'],
+                  // price: pricedata,
+                  product_type: data['product_type'],
+                  quantity: data['quantity'],
+                  categoryId: data['category_id'],
+                  userId: data['user_id'],
+                  imageData: data['image'], // Assuming 'image' is a Uint8List
+                  //imageData1: data['image1'],
+                ))
+            .toList();
+        return products;
+      } else {
+        throw Exception(
+            'Failed to load products. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching products: $e'); // Print error message
+      throw Exception('Failed to load products: $e');
+    }
+  }
+}
+
+Future<String> fetchPriceFromNewProduct(int productId) async {
+  http.Response? response;
+  try {
+    response = await http.get(Uri.parse(
+        'http://192.168.0.114:3000/tradetryst/productnew/pricenew?id=$productId'));
+    if (response.statusCode == 200) {
+      dynamic responseData = jsonDecode(response.body);
+      if (responseData is List && responseData.isNotEmpty) {
+        // Extract price from the first item in the list
+        dynamic firstItem = responseData.first;
+        if (firstItem is Map<String, dynamic> &&
+            firstItem.containsKey('price')) {
+          return firstItem['price'].toString();
+        } else {
+          throw Exception('Invalid response data format for price');
+        }
+      } else {
+        throw Exception('Empty or invalid response data format for price');
+      }
+    } else {
+      throw Exception(
+          'Failed to fetch price for product $productId. Status code: ${response?.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e, Response body: ${response?.body}');
+    throw Exception('Failed to fetch price for product $productId: $e');
+  }
+}
+
+class Product {
+  final int productId;
+  final String name;
+  final String description;
+  String price;
+  final int quantity;
+  final int categoryId;
+  final int userId;
+  final String product_type;
+  final Map<String, dynamic> imageData;
+  //final Map<String, dynamic> imageData1;
+
+  Product({
+    required this.productId,
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.quantity,
+    required this.categoryId,
+    required this.userId,
+    required this.imageData,
+    required this.product_type,
+  });
+}
+
+
+
 
 
 
