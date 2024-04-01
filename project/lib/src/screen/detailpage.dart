@@ -20,15 +20,19 @@ class DetailPage extends StatefulWidget {
   final Map<String, dynamic> imagePaths;
   final String price;
   final int productid;
+  final String Typeproduct;
 
   DetailPage(
       {required this.categoryName,
       required this.imagePaths,
       required this.price,
-      required this.productid});
+      required this.productid,
+      required this.Typeproduct});
   //Category.name = categoryName;
   String get catoryname => categoryName;
   String get pricename => price;
+  int get productid1 => productid;
+  String get Typeproduct1 => Typeproduct;
 
   @override
   _DetailPageState createState() => _DetailPageState();
@@ -258,6 +262,8 @@ class _DetailPageState extends State<DetailPage> {
   textjacket() {
     String rr = widget.catoryname;
     String Price = widget.price;
+    int idproduct = widget.productid1;
+    String Typeproduct = widget.Typeproduct1;
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Column(
@@ -303,7 +309,7 @@ class _DetailPageState extends State<DetailPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Text(
-                  'The price is::  $Price ',
+                  'The $Price ',
                   style: GoogleFonts.aBeeZee(fontSize: 17),
                 ),
               ),
@@ -312,8 +318,9 @@ class _DetailPageState extends State<DetailPage> {
               ),
             ],
           ),
-          buildDetailsRow(" Condition", "used", FontAwesomeIcons.grip),
-          buildDetailsRow(" Item ID", "7333", FontAwesomeIcons.circleInfo),
+          buildDetailsRow(" Condition", "$Typeproduct", FontAwesomeIcons.grip),
+          buildDetailsRow(
+              " Item ID", "$idproduct", FontAwesomeIcons.circleInfo),
           SizedBox(height: 20),
           buybutton(),
           /*

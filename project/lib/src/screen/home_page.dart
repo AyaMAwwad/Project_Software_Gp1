@@ -93,6 +93,7 @@ class _HomePageState extends State<HomePage> {
             product.imageData,
             'Price: \$${newPrice}',
             product.productId,
+            product.product_type,
           );
         }
       },
@@ -595,8 +596,13 @@ class _HomePageState extends State<HomePage> {
   ///
   ///
 
-  Widget buildItem(BuildContext context, String itemName,
-      Map<String, dynamic> imagePath, String price, int productId) {
+  Widget buildItem(
+      BuildContext context,
+      String itemName,
+      Map<String, dynamic> imagePath,
+      String price,
+      int productId,
+      String type) {
     List<int> bytes = List<int>.from(imagePath['data']);
 
     return GestureDetector(
@@ -606,14 +612,15 @@ class _HomePageState extends State<HomePage> {
           context,
           MaterialPageRoute(
             builder: (context) => DetailPage(
-                categoryName: itemName,
-                imagePaths: imagePath,
-                price: '30',
-                productid: productId
-                //'lib/icon/tablet.jpg',
-                //'lib/icon/fashion.jpg',
-                //  ] ,// dots: [DotInfo(left: 50, top: 100
-                ),
+              categoryName: itemName,
+              imagePaths: imagePath,
+              price: price,
+              productid: productId,
+              Typeproduct: type,
+              //'lib/icon/tablet.jpg',
+              //'lib/icon/fashion.jpg',
+              //  ] ,// dots: [DotInfo(left: 50, top: 100
+            ),
 //DotInfo(left: 150, top: 200),],),
           ),
         );
