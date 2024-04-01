@@ -5,6 +5,7 @@ const mysql = require('mysql2');
 
 const path = require('path');
 const fs = require('fs');
+const { Console } = require('console');
 
 // Inside your addProduct function
 
@@ -71,11 +72,10 @@ addProduct(req, res) {
 
   console.log(email,name, category, state, description, price, quantity,image,numberofimage,detailsOfState,typeOfCategory,productFreeCond,imagedata);
   
- 
+ let prodID=0;
   return new Promise((resolve, reject) => {
    
    
-
 
     db.query(
       'SELECT user_id FROM user WHERE email = ? ',
@@ -103,7 +103,7 @@ addProduct(req, res) {
                   return reject('Error reading file');
                 }
              
-              
+                if(i==0) {
              db.query(
               'INSERT INTO product (name, description, quantity, category_id, user_id,image) VALUES ( ?, ?, ?, ?, ?,?)',
               [name, description, quantity, categoryid, userid, data
@@ -117,7 +117,8 @@ addProduct(req, res) {
                
             
                 const productId = results2.insertId;
-                if(i==0) {
+                prodID=results2.insertId;
+              
           if (state === 'New') {
           
            
@@ -169,11 +170,45 @@ addProduct(req, res) {
             );
             
           }
-        }
+       /////////////
+        
 
               }
-
+////////////////////////
              );
+            }
+            else {
+              console.log('aaaaaaaaaaaaaaaa');
+              console.log(prodID);
+              console.log(data);
+              db.query(
+                'SELECT product_id FROM product WHERE category_id = ? ',
+                [categoryid],
+                (error6, results) => {
+                  if (error6) {
+                    return reject('you are not user');
+                  }
+                  const IDOfProd=results[0].product_id;
+                  console.log(IDOfProd);
+                  //console.log(data);
+              
+              db.query(
+            
+                'INSERT INTO productimage (product_id, image_data ) VALUES (?, ?)',
+                 [IDOfProd, data],
+                (error5, results3) => {
+                 
+                   if (error5) {
+                     return reject('Failed to insert Sub Image product ');
+                   }
+     
+                   return resolve('inserted Sub Image successfully.');
+                 }
+   
+   
+               );});
+
+            }
             });}
             }
 
