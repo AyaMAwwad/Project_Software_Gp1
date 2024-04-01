@@ -27,9 +27,13 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
-dependencies:
+dependencies: 
   flutter:
     sdk: flutter
+    
+     
+  
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -51,6 +55,15 @@ dependencies:
   another_carousel_pro: ^1.0.2
   flutter_svg: ^2.0.10+1
   curved_navigation_bar: ^1.0.3
+  image_picker: ^0.8.4+4
+  flutter_easyloading: ^3.0.5
+  image_cropper: ^5.0.1
+  responsive_sizer: ^3.3.1
+  dio: ^5.4.2
+  http_parser: ^4.0.2
+  dropdown_button2: ^2.3.9
+  cool_dropdown: ^2.1.0
+  
   #carousel_pro: ^1.0.0
   #flutter_email_sender: ^6.0.2
   #mailer: ^6.1.0

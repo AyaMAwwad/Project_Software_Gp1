@@ -17,15 +17,3 @@ exports.loginUser = (req, res) => {
   userRepository.loginUser(req, res);
 };
 
-/*
-get
-exports.getSameUsers = (req, res) => {
-  userRepository.getSameUsers(req, res);
-};
-
-
-//get
-exports.getUsersContributions = (req, res) => {
-  userRepository.getUsersContributions(req, res);
-};
-*/
