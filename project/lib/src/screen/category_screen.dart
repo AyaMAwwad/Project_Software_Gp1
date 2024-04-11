@@ -52,10 +52,39 @@ class _ScreenCategoryState extends State<ScreenCategory> {
       'TV',
       'speakers',
     ],
-    'Books': ['Other'],
-    'Games': ['Other'],
-    'Houseware': ['Other'],
-    'Vehicles': ['Other'],
+    'Books': [
+      'Mystery',
+      'Religious',
+      'Thriller',
+      'History',
+      'Self-help',
+      'Philosophy',
+      'Poetry',
+      'Drama',
+      'Cook',
+      'Health',
+    ],
+    'Games': [
+      'PlayStation',
+      'XBox',
+      'Scooter',
+      'Skate Shoes',
+      'VR Headsets',
+      'Headsets',
+    ],
+    'Houseware': [
+      'Robot cleaner',
+      'Vacuum cleaner',
+      'Air fryer',
+      'Refrigerator',
+      'Washing ',
+      'Dishwasher',
+      'Oven',
+      'Electrical Tools',
+      'Humidifier',
+      'Coffee Machine'
+    ],
+    'Vehicles': ['Car', 'Electric', 'Motorcycles', 'Bicycles', 'Commercial'],
     'Furniture': [
       'Sofas',
       'Carpets',
@@ -92,10 +121,45 @@ class _ScreenCategoryState extends State<ScreenCategory> {
       'images/icon/tv_ic.png',
       'images/icon/speakers_ic.png',
     ],
-    'Books': ['images/icon/jec_men.png'],
-    'Games': ['images/icon/jec_men.png'],
-    'Houseware': ['images/icon/jec_men.png'],
-    'Vehicles': ['images/icon/jec_men.png'],
+    'Books': [
+      'images/icon/books1.png',
+      'images/icon/books6.png',
+      'images/icon/books2.png',
+      'images/icon/books5.png',
+      'images/icon/books3.png',
+      'images/icon/books10.png',
+      'images/icon/books4.png',
+      'images/icon/books7.png',
+      'images/icon/books8.png',
+      'images/icon/books9.png',
+    ],
+    'Games': [
+      'images/icon/games4.png',
+      'images/icon/games2.png',
+      'images/icon/games3.png',
+      'images/icon/games1.png',
+      'images/icon/games6.png',
+      'images/icon/games5.png',
+    ],
+    'Houseware': [
+      'images/icon/house1.png',
+      'images/icon/house2.png',
+      'images/icon/house4.png',
+      'images/icon/house5.png',
+      'images/icon/house6.png',
+      'images/icon/house10.png',
+      'images/icon/house7.png',
+      'images/icon/house8.png',
+      'images/icon/house3.png',
+      'images/icon/house9.png',
+    ],
+    'Vehicles': [
+      'images/icon/vec2.png',
+      'images/icon/vec3.png',
+      'images/icon/vec4.png',
+      'images/icon/vec5.png',
+      'images/icon/vec1.png',
+    ],
     'Furniture': [
       'images/icon/sofa_ic.png',
       'images/icon/carp_ic.png',
@@ -115,7 +179,8 @@ class _ScreenCategoryState extends State<ScreenCategory> {
   @override
   void initState() {
     super.initState();
-    selectedCategory = widget.category.name;
+    selectedCategory =
+        widget.category.name; // category name need in in parameter
     //selectedType = categoryTypes[selectedCategory]![0];
   }
 
@@ -180,7 +245,8 @@ class _ScreenCategoryState extends State<ScreenCategory> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: categoryTypes[selectedCategory]!.length,
                 itemBuilder: (context, index) {
-                  String type = categoryTypes[selectedCategory]![index];
+                  String type = categoryTypes[selectedCategory]![
+                      index]; //type selected need it
                   String image = categoryimage[selectedCategory]![index];
 
                   return InkWell(
@@ -231,8 +297,35 @@ class _ScreenCategoryState extends State<ScreenCategory> {
                             child: Container(
                               width: 80, // Set the desired size of the circle
                               height: 80, // Set the desired size of the circle
-                              color: Color.fromARGB(255, 95, 150, 168),
-
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(
+                                        0, 3), // changes position of shadow
+                                  ),
+                                ],
+                                gradient: LinearGradient(
+                                  colors: [
+                                    // Color.fromARGB(255, 95, 150, 168),
+                                    Color.fromARGB(255, 147, 198, 215),
+                                    Color.fromARGB(255, 95, 150, 168),
+                                    Color.fromARGB(255, 66, 119, 138),
+                                    Color.fromARGB(255, 95, 150, 168),
+                                    Color.fromARGB(255, 147, 198, 215),
+                                    /* Color.fromARGB(255, 147, 198, 215),
+                                    Color.fromARGB(255, 95, 150, 168),
+                                    Color.fromARGB(255, 66, 119, 138),
+                                    Color.fromARGB(255, 95, 150, 168),
+                                    Color.fromARGB(255, 147, 198, 215),*/
+                                    // Color.fromARGB(255, 95, 150, 168),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
                               child: Container(
                                 margin: EdgeInsets.all(10.0),
                                 child: Image.asset(
@@ -243,11 +336,29 @@ class _ScreenCategoryState extends State<ScreenCategory> {
                               ),
                             ),
                           ),
+
+                          /*  ClipOval(
+                            child: Container(
+                              width: 80, // Set the desired size of the circle
+                              height:
+                                  80, // Set the desired size of the circle Color.fromARGB(255, 95, 150, 168),
+                              color: Color.fromARGB(255, 95, 149, 164),
+
+                              child: Container(
+                                margin: EdgeInsets.all(10.0),
+                                child: Image.asset(
+                                  image,
+                                  width: 50,
+                                  //height: 30,
+                                ),
+                              ),
+                            ),
+                          ),*/
                           Text(
                             type,
                             style: GoogleFonts.aDLaMDisplay(
                               textStyle: TextStyle(
-                                color: Color.fromARGB(255, 95, 150, 168),
+                                color: Color.fromARGB(255, 78, 130, 147),
                                 // Color.fromARGB(255, 4, 51, 67),
                                 fontSize: 20,
                               ),
@@ -396,7 +507,7 @@ class _ScreenCategoryState extends State<ScreenCategory> {
             }
           });
         },
-        context: context,
+        //  context: context,
       ), /*BottomNavBar(
         selectedMenu: MenuState.home,
       ),*/

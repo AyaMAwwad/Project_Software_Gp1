@@ -56,4 +56,21 @@ exports.getnewprice = (req, res) => {
         res.status(400).json({ message: error }); 
       });
     }
+
+    // new gettypeofproduct
+    exports.gettypeofproduct = (req, res) => {
+      const { category,type,state } = req.query;//req.query;
+      
+  //substring(1)
+      prod.gettypeofproduct(category,type,state)
+          .then((res1) => {
+              console.log({res1});
+             // console.log('Price:', price);
+              res.status(200).json(res1);
+          })
+          .catch((error) => {
+              console.error({error});
+              res.status(500).json({ message: 'Not have data in database to retrieve' });
+          });
+  };
   

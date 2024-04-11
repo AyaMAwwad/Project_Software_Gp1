@@ -480,7 +480,7 @@ class AddProductState extends State<AddProductPageTwo> {
             }
           });
         },
-        context: context,
+        // context: context,
       ), /*BottomNavBar(
         selectedMenu: MenuState.profile,
       ),*/

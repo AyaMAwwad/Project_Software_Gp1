@@ -2,6 +2,8 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,13 +17,17 @@ import 'package:project/widgets/have_account.dart';
 import 'package:project/widgets/pass_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
+  static String EmailSignup = '';
   @override
   SignupScreen createState() => SignupScreen();
 }
 
 class SignupScreen extends State<Signup> with ValidationMixin {
+  static final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //////////
   String? selectedGender;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -203,7 +209,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                   if (formKey.currentState!.validate() &&
                       selectedGender != null) {
                     formKey.currentState!.save();
-
+                    Signup.EmailSignup = email.text;
                     await signupback(
                         firstName.text,
                         lastName.text,
@@ -216,7 +222,8 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                         phoneA.text);
 
                     //print('Time to post $email and $password to API');
-
+                    //  signInWithEmailAndPassword();
+/*
                     try {
                       final credential = await FirebaseAuth.instance
                           .createUserWithEmailAndPassword(
@@ -234,7 +241,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                       }
                     } catch (e) {
                       print(e);
-                    }
+                    }*/
                   }
                 }
               },
@@ -363,6 +370,29 @@ class SignupScreen extends State<Signup> with ValidationMixin {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          UserCredential credential =
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+          firestore.collection('Theusers').doc(credential.user!.uid).set({
+            'uid': credential.user!.uid,
+            'email': email,
+            'first_name': first_name,
+            'last_name': last_name,
+          });
+          //FirebaseAuth.instance.currentUser!.sendEmailVerification();
+          // Navigator.of(context).pushReplacementNamed("login");
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'weak-password') {
+            print('The password provided is too weak.');
+          } else if (e.code == 'email-already-in-use') {
+            print('The account already exists for that email.');
+          }
+        } catch (e) {
+          print(e);
+        }
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => VerifyEmail()));
         // Authentication successful

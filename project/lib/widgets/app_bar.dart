@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/src/screen/chat_screen.dart';
 import 'package:project/src/screen/login_screen.dart';
 
 class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -16,18 +17,53 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   @override
   Widget build(BuildContext context) {
-    double wid, wid1;
-    if (text == 'Smart devices' || text == 'Shopping Cart') {
+    double wid,
+        wid1; /*
+        ,
+      '',
+      
+      '',
+      'Washing Machine',
+    
+      
+      'Electrical Tools',
+      
+      'Coffee Machine'
+      text == 'Coffee Machine',
+      'Motorcycles', 'Bicycles', 'Commercial'
+*/
+    if (text == 'Smart devices' ||
+        text == 'Shopping Cart' ||
+        text == 'Robot cleaner') {
       wid = MediaQuery.of(context).size.width * 0.14;
       wid1 = MediaQuery.of(context).size.width * 0.13;
-    } else if (text == 'Add Product') {
-      wid = MediaQuery.of(context).size.width * 0.19;
-      wid1 = MediaQuery.of(context).size.width * 0.13;
+    } else if (text == 'Add Product' ||
+        text == 'PlayStation' ||
+        text == 'Skate Shoes' ||
+        text == 'Refrigerator') {
+      wid = MediaQuery.of(context).size.width * 0.2;
+      wid1 = MediaQuery.of(context).size.width * 0.14;
     } else if (text == 'Houseware' ||
         text == 'Wardrobes' ||
-        text == 'Shoe Racks') {
+        text == 'Shoe Racks' ||
+        text == 'Philosophy' ||
+        text == 'Humidifier') {
       wid = MediaQuery.of(context).size.width * 0.2;
       wid1 = MediaQuery.of(context).size.width * 0.17;
+    } else if (text == 'Self-help' || text == 'computer') {
+      wid = MediaQuery.of(context).size.width * 0.27;
+      wid1 = MediaQuery.of(context).size.width * 0.13;
+    } else if (text == 'VR Headsets' ||
+        text == 'Motorcycles' ||
+        text == 'Commercial' ||
+        text == 'Dishwasher') {
+      wid = MediaQuery.of(context).size.width * 0.23;
+      wid1 = MediaQuery.of(context).size.width * 0.1;
+    } else if (text == 'Vacuum cleaner' ||
+        text == 'Electrical Tools' ||
+        text == 'Coffee Machine') {
+      wid = MediaQuery.of(context).size.width * 0.18;
+      wid1 = MediaQuery.of(context).size.width * 0.05;
     } else {
       wid = MediaQuery.of(context).size.width * 0.25;
       wid1 = MediaQuery.of(context).size.width * 0.17;
@@ -42,7 +78,8 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
             builder: (context) => IconButton(
               icon: Icon(
                 Icons.dashboard,
-                color: Color.fromARGB(255, 2, 92, 123),
+                color: Color.fromARGB(
+                    255, 2, 92, 123), //Color.fromARGB(255, 3, 94, 124),
               ),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
@@ -97,10 +134,11 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),*/
         CircleAvatar(
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: Color.fromARGB(255, 255, 251, 254),
           child: IconButton(
             icon: Icon(
-              FontAwesomeIcons.bell,
+              // FontAwesomeIcons.bell,
+              Icons.notifications,
               color: Color.fromARGB(255, 2, 92, 123),
               // size: 30,
               //  color: kTextColor,
@@ -109,15 +147,22 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         CircleAvatar(
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: Color.fromARGB(255, 255, 251, 254),
           child: IconButton(
             icon: Icon(
-              FontAwesomeIcons.message,
+              FontAwesomeIcons.facebookMessenger,
               color: Color.fromARGB(255, 2, 92, 123),
               // size: 30,
               //  color: kTextColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatScreen(),
+                ),
+              );
+            },
           ),
         ),
       ],

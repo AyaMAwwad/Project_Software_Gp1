@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
-
+/*
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -265,7 +265,8 @@ class CategState extends State<CategScreen> {
                 Container(
                   height: 750,
                   child: RecentProd(
-                      category: selectedType, prodState: selectedProdState),
+                      TypeOfCategory: selectedType,
+                      prodState: selectedProdState),
                 ),
               ],
             ),
@@ -273,3 +274,4 @@ class CategState extends State<CategScreen> {
         ));
   }
 }
+*/
