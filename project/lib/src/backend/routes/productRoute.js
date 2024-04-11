@@ -41,4 +41,7 @@ router.get('/productImages', productController.getProductImages);
 
 router.get('/pricenew', productController.getnewprice);
 
+//new
+router.get('/typeofproduct', productController.gettypeofproduct);
+
 module.exports = router;

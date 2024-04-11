@@ -17,9 +17,16 @@ app.use('/tradetryst/user', user);
 app.use('/tradetryst/user', user);
 app.use('/tradetryst/home', product);
 app.use('/tradetryst/product', product); 
-
+app.use('/tradetryst/edit', user);
 app.use('/tradetryst/productnew', product); 
 app.use('/tradetryst/Product',product);
+
+//new 
+app.use('/tradetryst/user',user);
+app.use('/tradetryst/user',user);
+app.use('/tradetryst/getNameOfUser',user);
+app.use('/tradetryst/Product',product);
+
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server is listening on port ${port}`);
 });

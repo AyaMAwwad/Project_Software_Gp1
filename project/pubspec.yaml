@@ -63,6 +63,8 @@ dependencies:
   http_parser: ^4.0.2
   dropdown_button2: ^2.3.9
   cool_dropdown: ^2.1.0
+  flutter_chat_bubble: ^2.0.2
+  provider: 
   
   #carousel_pro: ^1.0.0
   #flutter_email_sender: ^6.0.2

@@ -54,10 +54,39 @@ class AddProductState extends State<AddProduct> {
       'TV',
       'Speakers'
     ],
-    'Books': ['Other'],
-    'Games': ['Other'],
-    'Houseware': ['Other'],
-    'Vehicles': ['Other'],
+    'Books': [
+      'Mystery',
+      'Religious',
+      'Thriller',
+      'History',
+      'Self-help',
+      'Philosophy',
+      'Poetry',
+      'Drama',
+      'Cook',
+      'Health',
+    ],
+    'Games': [
+      'PlayStation',
+      'XBox',
+      'Scooter',
+      'Skate Shoes',
+      'VR Headsets',
+      'Headsets',
+    ],
+    'Houseware': [
+      'Robot cleaner',
+      'Vacuum cleaner',
+      'Air fryer',
+      'Refrigerator',
+      'Washing Machine',
+      'Dishwasher',
+      'Oven',
+      'Electrical Tools',
+      'Humidifier',
+      'Coffee Machine'
+    ],
+    'Vehicles': ['Car', 'Electric', 'Motorcycles', 'Bicycles', 'Commercial'],
     'Furniture': [
       'Sofas',
       'Carpets',
@@ -411,7 +440,7 @@ class AddProductState extends State<AddProduct> {
             }
           });
         },
-        context: context,
+        //  context: context,
       ),
     );
   }

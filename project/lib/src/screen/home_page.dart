@@ -1,9 +1,11 @@
 //import 'dart:html';
 
-// ignore_for_file: prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, prefer_interpolation_to_compose_strings
 
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -15,7 +17,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/cat_screen.dart';
 import 'package:project/src/screen/category_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
+import 'package:project/src/screen/chat_page.dart';
+import 'package:project/src/screen/chat_screen.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -29,14 +34,14 @@ import 'package:project/widgets/user_profile.dart';
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
 String Priceeneww = '';
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   List<Product> products = [];
-
+  static String CategorySelected = '';
   @override
   void initState() {
     super.initState();
@@ -372,7 +377,7 @@ class _HomePageState extends State<HomePage> {
             }
           });
         },
-        context: context,
+        //  context: context,
       ),
       /* BottomNavBar(
         selectedMenu: MenuState.home,
@@ -439,6 +444,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
         onTap: () {
+          CategorySelected = category.name;
           // Navigate to a new page when the image is tapped
           Navigator.push(
             context,
@@ -656,9 +662,26 @@ class _HomePageState extends State<HomePage> {
                     itemName,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    price,
-                    style: TextStyle(fontSize: 16, color: Colors.green),
+                  Row(
+                    children: [
+                      Text(
+                        price,
+                        style: TextStyle(fontSize: 16, color: Colors.green),
+                      ),
+                      SizedBox(
+                        width: 80,
+                      ),
+                      GestureDetector(
+                        child: Icon(
+                          FontAwesomeIcons.facebookMessenger,
+                          size: 18,
+                          color: Color.fromARGB(255, 2, 92, 123),
+                        ),
+                        onTap: () async {
+                          OpenChatWithSellar.functionForChar(itemName, context);
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -699,9 +722,26 @@ class _HomePageState extends State<HomePage> {
                   itemName,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  price,
-                  style: TextStyle(fontSize: 16, color: Colors.green),
+                Row(
+                  children: [
+                    Text(
+                      price,
+                      style: TextStyle(fontSize: 16, color: Colors.green),
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    GestureDetector(
+                      child: Icon(
+                        FontAwesomeIcons.facebookMessenger,
+                        size: 18,
+                        color: Color.fromARGB(255, 2, 92, 123),
+                      ),
+                      onTap: () async {
+                        OpenChatWithSellar.functionForChar(itemName, context);
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

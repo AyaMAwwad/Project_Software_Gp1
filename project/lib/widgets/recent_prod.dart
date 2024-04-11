@@ -1,12 +1,102 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unnecessary_brace_in_string_interps
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unnecessary_brace_in_string_interps, prefer_interpolation_to_compose_strings
 
+import 'dart:typed_data';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:project/src/screen/open_chat_with_sellar.dart';
+import 'package:project/src/screen/product_page.dart';
+import 'package:project/widgets/cart_shop.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class RecentProd extends StatelessWidget {
-  final String category;
+  final String TypeOfCategory;
   final String prodState;
+  static String? thestate;
+  final List<Map<String, dynamic>> prod;
+  final List<Map<String, dynamic>> detail;
 
-  RecentProd({required this.category, required this.prodState});
+  RecentProd(
+      {required this.TypeOfCategory,
+      required this.prodState,
+      required this.prod,
+      required this.detail});
+
+  @override
+  Widget build(BuildContext context) {
+    thestate = prodState;
+    print(prodState);
+    print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+    return FutureBuilder(
+      future: Future.delayed(Duration(milliseconds: 300)), // Simulating a delay
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // If still waiting, show CircularProgressIndicator
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  Color.fromARGB(255, 2, 92, 123)),
+            ),
+          );
+        } else {
+          // After waiting, check if there is data
+          if (prod.isEmpty) {
+            // If no data available, show "Product not available" text
+            return Center(
+              child: Text(
+                'Product is not available',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 2, 92, 123),
+                  fontSize: 20,
+                  decorationThickness: 1,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          } else {
+            // If data available, display the product grid
+            return SingleChildScrollView(
+              child: GridView.builder(
+                itemCount: prod.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, childAspectRatio: 0.70),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return SingleChildScrollView(
+                    child: RecentSingleProd(
+                      recet_prod_description: prod[index]['description'],
+                      recet_prod_name: prod[index]['name'],
+                      recet_prod_image: prod[index]['image'], //bytes,
+                      recet_prod_price: detail[index]['price'],
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+        }
+      },
+    );
+  }
+}
+
+/*
+class RecentProd extends StatelessWidget {
+  final String TypeOfCategory;
+  final String prodState;
+  static String? thestate;
+  final List<Map<String, dynamic>> prod;
+  final List<Map<String, dynamic>> detail;
+
+  RecentProd(
+      {required this.TypeOfCategory,
+      required this.prodState,
+      required this.prod,
+      required this.detail});
 
   final prodList = [
     {
@@ -382,35 +472,57 @@ class RecentProd extends StatelessWidget {
     },
     //------------
   ];
-
+  // static List<Map<String, dynamic>> allProductData = [];
+  // static List<Map<String, dynamic>> allProductDetails = [];
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> filteredType =
-        prodList.where((product) => product['type'] == prodState).toList();
-    final List<Map<String, dynamic>> filteredProducts = filteredType
-        .where((product) => product['category'] == category)
-        .toList();
-    return SingleChildScrollView(
-      child: GridView.builder(
-        itemCount: filteredProducts.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: 0.70),
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemBuilder: (BuildContext context, int index) {
-          return SingleChildScrollView(
-            child: RecentSingleProd(
-              recet_prod_description: filteredProducts[index]['description'],
-              recet_prod_name: filteredProducts[index]['name'],
-              recet_prod_image: filteredProducts[index]['image'],
-              recet_prod_price: filteredProducts[index]['price'],
+    thestate = prodState;
+    print(prodState);
+    print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+    if (prod.length == 0) {
+      return Center(
+        child: Text(
+          'This Product is not available',
+          style: GoogleFonts.aBeeZee(
+            textStyle: TextStyle(
+              color: Color.fromARGB(255, 2, 92, 123),
+              fontSize: 20,
+
+              // decoration: TextDecoration.underline,
+              decorationThickness: 1,
+              fontWeight: FontWeight.bold,
+              //padding: 10,
             ),
-          );
-        },
-      ),
-    );
+          ),
+        ),
+      );
+    } else {
+      /* final List<Map<String, dynamic>> filteredProducts = RecentProd.allProductData
+        .where((product) => product['category'] == 'Fashion' && product['type'] == 'Women' && product['state'] == 'New')
+        .toList();*/
+
+      return SingleChildScrollView(
+        child: GridView.builder(
+          itemCount: prod.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, childAspectRatio: 0.70),
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+            return SingleChildScrollView(
+              child: RecentSingleProd(
+                recet_prod_description: prod[index]['description'],
+                recet_prod_name: prod[index]['name'],
+                recet_prod_image: prod[index]['image'], //bytes,
+                recet_prod_price: detail[index]['price'],
+              ),
+            );
+          },
+        ),
+      );
+    }
   }
-}
+}*/
 
 class RecentSingleProd extends StatefulWidget {
   final recet_prod_name;
@@ -432,6 +544,18 @@ class RecentSingleProd extends StatefulWidget {
 class _RecentSingleProdState extends State<RecentSingleProd> {
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> imageData = widget.recet_prod_image;
+    List<int> bytes = List<int>.from(imageData['data']);
+    String textP = '';
+    double? width = 0.0;
+
+    if (RecentProd.thestate == 'Free') {
+      textP = 'Free';
+      width = 100;
+    } else {
+      textP = 'Price:\$${widget.recet_prod_price}';
+      width = 40;
+    }
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -449,23 +573,38 @@ class _RecentSingleProdState extends State<RecentSingleProd> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 160,
+                  width: 180,
                   height: 180,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Color.fromARGB(255, 255, 255, 255),
+                    // color: Color.fromARGB(255, 255, 255, 255),
                   ),
                   // child: Text(recet_prod_name), //
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(14),
-                    child: Image.asset(
-                      widget.recet_prod_image,
+                    child: // Image.asset(
+                        // imagePath[0],
+                        Image.memory(
+                      // Use Image.memory for Uint8List
+                      Uint8List.fromList(bytes),
+                      // 200
+                      fit: BoxFit.cover,
+                    ),
+                    /*child: Image.asset(
+                      //Image.memory(
+                      'images/icon/kids_free1.jpeg',
+                      // Use Image.memory for Uint8List
+                      // Uint8List.fromList('images/icon/kids_free1.jpeg' ),//(widget.recet_prod_image),
                       width: 150,
                       height: 200, // 200
                       fit: BoxFit.cover,
-                    ),
+                    ),*/
+
+                    /*child: Image.asset(
+                      'images/icon/kids_free1.jpeg',
+                      fit: BoxFit.cover,
+                    ),*/
                   ),
-                  //Image.asset(widget.recet_prod_image),
                 ),
                 SizedBox(
                   height: 5,
@@ -478,9 +617,27 @@ class _RecentSingleProdState extends State<RecentSingleProd> {
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      'Price:\$${widget.recet_prod_price}',
-                      style: TextStyle(fontSize: 16, color: Colors.green),
+                    Row(
+                      children: [
+                        Text(
+                          '${textP}',
+                          style: TextStyle(fontSize: 16, color: Colors.green),
+                        ),
+                        SizedBox(
+                          width: width,
+                        ),
+                        GestureDetector(
+                          child: Icon(
+                            FontAwesomeIcons.facebookMessenger,
+                            size: 18,
+                            color: Color.fromARGB(255, 2, 92, 123),
+                          ),
+                          onTap: () async {
+                            OpenChatWithSellar.functionForChar(
+                                widget.recet_prod_name, context);
+                          },
+                        ),
+                      ],
                     ),
                     /* Text(
                       widget.recet_prod_description,
@@ -509,4 +666,90 @@ class _RecentSingleProdState extends State<RecentSingleProd> {
       ),
     );
   }
+
+//getProductTypeState('Fashion', 'Women', 'New');
+  /* static Future<Map<String, dynamic>?> getProductTypeState(
+      String category, String type, String state) async {
+    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+    http.Response? response;
+
+    try {
+      response = await http.get(Uri.parse(
+          'http://192.168.0.114:3000/tradetryst/Product/typeofproduct?category=$category&type=$type&state=$state'));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
+        dynamic responseData = jsonDecode(response.body);
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('allProductData') &&
+            responseData.containsKey('allProductDetails')) {
+          // Extract allProductData and allProductDetails from the response
+          RecentProd.allProductData =
+              List<Map<String, dynamic>>.from(responseData['allProductData']);
+          RecentProd.allProductDetails = List<Map<String, dynamic>>.from(
+              responseData['allProductDetails']);
+
+          print(RecentProd.allProductData);
+          print(RecentProd.allProductDetails);
+          print(RecentProd.allProductData[0]['name']);
+          print("LALALALALALLALALLALLALLLALALLAAL");
+          // print(RecentProd.allProductData[1]);
+          // Use allProductData and allProductDetails as needed
+          // For example:
+          // for (var productData in allProductData) {
+          //   print('Product Name: ${productData['name']}');
+          // }
+        } else {
+          throw Exception('Invalid response data format');
+        }
+      } else {
+        throw Exception(
+            'Failed to fetch data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e, Response body: ${response?.body}');
+      throw Exception('Failed to fetch data: $e');
+    }
+    return null;
+  }
+*/
+/*
+  Future<Map<String, dynamic>?> getProductTypeState(
+      String category, String type, String state) async {
+    http.Response? response;
+
+    // print(Login.Email);
+    try {
+      response = await http.get(Uri.parse(
+          'http://192.168.0.114:3000/tradetryst/Product/typeofproduct?category=$category&type=$type&state=$state'));
+      if (response.statusCode == 200) {
+        dynamic responseData = jsonDecode(response.body);
+        if (responseData is List && responseData.isNotEmpty) {
+          // Extract price from the first item in the list
+
+          dynamic user = responseData;
+          /* if (email == Login.Email) {
+            FirstNameSender = user['first_name'];
+            LastNameSender = user['last_name'];
+            dynamic userId = user['user_id'].toString();
+          } else {
+            FirstNameReceiver = user['first_name'];
+            LastNameReceiver = user['last_name'];
+            dynamic userId = user['user_id'].toString();
+          }*/
+
+          //  dynamic userId = responseData[2];
+
+          //print(FirstName + LastName + userId);
+        } else {
+          throw Exception('Empty or invalid response data format for price');
+        }
+      } else {
+        throw Exception(
+            'Failed to fetch price for product . Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e, Response body: ${response?.body}');
+      throw Exception('Failed to fetch price for product : $e');
+    }
+  }*/
 }

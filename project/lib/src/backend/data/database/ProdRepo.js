@@ -105,8 +105,8 @@ addProduct(req, res) {
              
                 if(i==0) {
              db.query(
-              'INSERT INTO product (name, description, quantity, category_id, user_id,image) VALUES ( ?, ?, ?, ?, ?,?)',
-              [name, description, quantity, categoryid, userid, data
+              'INSERT INTO product (name, description, quantity, category_id, user_id,image,product_type) VALUES ( ?, ?, ?, ?, ?,?,?)',
+              [name, description, quantity, categoryid, userid, data,state
         
 
               ],
@@ -119,9 +119,8 @@ addProduct(req, res) {
                 const productId = results2.insertId;
                 prodID=results2.insertId;
               
-          if (state === 'New') {
-          
-           
+          if (state == 'New') {
+        
             db.query(
               'INSERT INTO new_product (product_id, warranty_period,price) VALUES (?, ?, ?)',
               [productId,detailsOfState,price],
@@ -136,7 +135,7 @@ addProduct(req, res) {
             );
 
           } 
-          else if (state === 'Used'){
+          else if (state == 'Used'){
               db.query(
                 'INSERT INTO used_product (product_id, product_condition, price) VALUES (?, ?, ?)',
                 [productId, detailsOfState,price],
@@ -151,7 +150,7 @@ addProduct(req, res) {
             );
 
           }
-          else if (state === 'Free'){
+          else if (state == 'Free'){
            
             db.query(
              
@@ -225,6 +224,95 @@ addProduct(req, res) {
  //});
 }
 
+//new gettypeofproduct
+gettypeofproduct(category,type,state) {
+  console.log(category);
+  console.log(type);
+  console.log(state);
+  return new Promise((resolve, reject) => {
+    db.query('SELECT category_id FROM category WHERE name = ? AND type = ?', [category,type], (error, results) => {
+      if (error || results.length==0) {
+        console.error(error);
+        reject('Failed to retrive category');
+      } else {
+        const theRes= results;
+        console.log(theRes);
+        const allProductData = [];
+        const allProductDetails = [];
+
+        // Iterate over each category ID
+        theRes.forEach(categoryRow => {
+          const categoryId = categoryRow.category_id; // Assuming your category ID column name is category_id
+          // Perform a query to retrieve product data for the current category ID
+          db.query('SELECT product_id,name,description,quantity,user_id,image FROM product WHERE category_id = ? AND product_type = ?', [categoryId,state], (error1, res1) => {
+            if (error1) {
+              console.error(error1);
+              reject('Failed to retrieve product data');
+            } else {
+              // Add the product data for the current category ID to the array
+              allProductData.push(...res1);
+              console.log(allProductData);
+              // Check if this was the last category ID, then resolve the promise with all product data
+             // if (allProductData.length === theRes.length) {
+             //   resolve(allProductData);
+             // }
+             
+             if (allProductData.length <= theRes.length) {
+             let Query='';
+              if(state== 'New'){
+                Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
+              }
+              else if(state=='Used'){
+                Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
+              }
+              else if(state=='Free'){
+                Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
+              }
+             
+             // Iterate over each product in allProductData
+            allProductData.forEach(product => {
+          //  console.log(allProductData[0]['product_id']); =allProductData[0]['product_id']; 
+                 const productId =product.product_id;
+                 db.query(Query, [productId], (error2, res2) => {
+                  if (error2) {
+                      console.error(error2);
+                      reject('Failed to retrieve data from new_product table');
+                  } else {
+                      // Add the retrieved data to allProductDetails
+                      res2.forEach(entry => {
+                        const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
+                        if (!found) {
+                            allProductDetails.push(entry);
+                        }
+                    });
+                     // allProductDetails.push(...res2);
+                     
+                      console.log(allProductDetails);
+                      // Check if all products have been processed
+                    if (allProductDetails.length == allProductData.length) {
+                        resolve({ allProductData, allProductDetails });// resolve(allProductDetails);
+                      }
+                      else if(allProductDetails.length==0) {
+                        reject('Not have data to retrieve ');
+                      }
+                    
+                  }
+              });
+             });
+
+            }
+            else if(allProductData.length==0) {
+              reject('Not have data to retrieve ');
+            }
+            }
+          });
+        });
+    
+      }
+    }); 
+   
+  });
+}
 }
    
 module.exports = ProductRepository;

@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
+import 'dart:convert';
 import 'dart:ui';
-
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/src/screen/category_screen.dart';
@@ -29,32 +30,66 @@ class ProductPage extends StatefulWidget {
 class ProductPageState extends State<ProductPage> {
   late String selectedCategory;
   String selectedProdState = 'New';
+  static String TypeGlobal = '';
+  static String StateGlobal = '';
+  static String CategoryGlobal = '';
+  List<Map<String, dynamic>> allProductData = [];
+  List<Map<String, dynamic>> allProductDetails = [];
 
   @override
   void initState() {
     super.initState();
+
     selectedCategory = widget.type;
-    //selectedType = categoryTypes[selectedCategory]![0];
+    fetchProducts();
   }
 
-  void updateType(String prodState) {
-    setState(() {
+  void fetchProducts() async {
+    allProductData.clear();
+    await getProductTypeState(
+        widget.category.name, widget.type, selectedProdState);
+    setState(() {});
+  }
+
+  void updateType(String prodState) async {
+    setState(() async {
       selectedProdState = prodState;
+      StateGlobal = prodState;
+      await getProductTypeState(widget.category.name, widget.type, prodState);
+      setState(() {});
     });
   }
+  /*void updateType(String prodState) async {
+  setState(() async {
+    selectedProdState = prodState;
+    StateGlobal = prodState;
+    await getProductTypeState(widget.category.name, widget.type, prodState);
+    setState(() {});
+  });
+} */
 
-  //////////////////////////////////////////////////
   TypeProductState currentSelectedType = TypeProductState.newprod;
-
   void updateSelectedType(TypeProductState selectedType) {
     setState(() {
       currentSelectedType = selectedType;
+      fetchProducts(); // Fetch products based on the selected type
     });
   }
 
+/*
+  void updateSelectedType(TypeProductState selectedType) {
+    setState(() {
+      currentSelectedType = selectedType;
+
+      TypeGlobal = selectedCategory;
+    });
+  }
+*/
   @override
   Widget build(BuildContext context) {
+    // getProductTypeState(widget.category.name, widget.type, selectedProdState);
     int selectedIndex = 0;
+    CategoryGlobal = widget.category.name;
     return Scaffold(
       drawer: Drawer(
         //child: CustemAppBar(),
@@ -132,8 +167,16 @@ class ProductPageState extends State<ProductPage> {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                Colors.white.withOpacity(0.15),
-                                Colors.white.withOpacity(0.05),
+                                Color.fromARGB(255, 147, 198, 215),
+                                // .withOpacity(0.15),
+                                Color.fromARGB(255, 95, 150, 168),
+                                // .withOpacity(0.1),
+                                Color.fromARGB(255, 66, 119, 138),
+                                //  .withOpacity(0.05),
+                                Color.fromARGB(255, 95, 150, 168),
+                                // .withOpacity(0.1),
+                                Color.fromARGB(255, 147, 198, 215),
+                                // .withOpacity(0.15),
                               ]),
                         ),
                         child: ListView(
@@ -153,6 +196,16 @@ class ProductPageState extends State<ProductPage> {
                               updateSelectedType: updateSelectedType,
                               //selectedtype: TypeState.newprod,
                             ),
+                            /**ProductType(
+  press: () {
+    updateType('Used'); // Update to 'Used' product type
+    updateSelectedType(TypeProductState.usedprod); // Update the selected type state
+  },
+  name: 'Used',
+  selectedType: TypeProductState.usedprod,
+  currentSelectedType: currentSelectedType,
+  updateSelectedType: updateSelectedType,
+), */
                             ProductType(
                               press: () {
                                 updateType('Used');
@@ -198,7 +251,11 @@ class ProductPageState extends State<ProductPage> {
               Container(
                 height: 500,
                 child: RecentProd(
-                    category: selectedCategory, prodState: selectedProdState),
+                  TypeOfCategory: selectedCategory,
+                  prodState: selectedProdState,
+                  prod: allProductData,
+                  detail: allProductDetails,
+                ),
               ),
             ],
           ),
@@ -237,10 +294,50 @@ class ProductPageState extends State<ProductPage> {
             }
           });
         },
-        context: context,
+        // context: context,
       ), /*BottomNavBar(
         selectedMenu: MenuState.home,
       ),*/
     );
+  }
+
+  Future<Map<String, dynamic>?> getProductTypeState(
+      String category, String type, String state) async {
+    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+    print(category);
+    print(type);
+    print(state);
+    http.Response? response;
+
+    try {
+      response = await http.get(Uri.parse(
+          'http://192.168.0.114:3000/tradetryst/Product/typeofproduct?category=$category&type=$type&state=$state'));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
+        dynamic responseData = jsonDecode(response.body);
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('allProductData') &&
+            responseData.containsKey('allProductDetails')) {
+          // Extract allProductData and allProductDetails from the response
+          allProductData =
+              List<Map<String, dynamic>>.from(responseData['allProductData']);
+          allProductDetails = List<Map<String, dynamic>>.from(
+              responseData['allProductDetails']);
+
+          print(allProductData);
+          print(allProductDetails);
+          print(allProductData[0]['name']);
+          print("LALALALALALLALALLALLALLLALALLAAL");
+        } else {
+          print('Failed to fetch data. ');
+        }
+      } else {
+        print('Failed to fetch data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print(' Response body: ${response?.body}');
+      // throw Exception('Failed to fetch data: $e');
+    }
+    return null;
   }
 }
