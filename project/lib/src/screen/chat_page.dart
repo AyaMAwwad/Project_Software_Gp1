@@ -61,7 +61,7 @@ class ChatpageState extends State<ChatPage> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_new,
-            color: Color.fromARGB(255, 2, 92, 123),
+            color: Colors.white, // Color.fromARGB(255, 2, 92, 123),
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -70,15 +70,16 @@ class ChatpageState extends State<ChatPage> {
         title: Text(
           '${widget.firstNameReceiver} ${widget.lastNameReceiver}',
           style: TextStyle(
-            color: Color.fromARGB(255, 2, 92, 123),
-            fontSize: 23,
+            color: Colors.white, // Color.fromARGB(255, 2, 92, 123),
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
         flexibleSpace: Container(
           //height: 30,
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 95, 150, 168),
+            color: Color.fromARGB(255, 2, 92,
+                123), // Color.fromARGB(255, 2, 92, 123),// Color.fromARGB(255, 95, 150, 168),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20),

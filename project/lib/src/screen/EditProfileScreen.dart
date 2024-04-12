@@ -101,7 +101,46 @@ class EditProfileScreen extends State<editprofile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Profile"),
+        backgroundColor: Color.fromARGB(255, 95, 150, 168),
+        elevation: 40,
+        automaticallyImplyLeading: false,
+        title: Center(
+          child: Text(
+            'Edit Profile',
+            style: TextStyle(
+              color: Colors.white, // Color.fromARGB(255, 2, 92, 123),
+              fontSize: 23,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        flexibleSpace: Container(
+          //height: 30,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 95, 150, 168),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 4,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.only(top: kToolbarHeight),
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(height: 20),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         // Wrap the Column with SingleChildScrollView

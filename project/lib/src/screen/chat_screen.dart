@@ -103,7 +103,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: Text(
                 'R E C E N T',
                 style: TextStyle(
-                  color: Color.fromARGB(255, 150, 150, 150),
+                  color: Color.fromARGB(255, 185, 184, 184),
                   fontSize: 12,
                   decorationThickness: 1,
                   fontWeight: FontWeight.bold,
@@ -168,8 +168,8 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(
-                    255, 95, 150, 168), //Color.fromARGB(255, 95, 150, 168),
+                color: Colors.white, // Color.fromARGB(
+                // 255, 134, 174, 187), //Color.fromARGB(255, 95, 150, 168),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(40),
                   topRight: Radius.circular(40),
@@ -273,7 +273,7 @@ class ChatScreenState extends State<ChatScreen> {
       j++;
 
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
         child: InkWell(
           onTap: () async {
             await getName(Login.Email);
@@ -293,7 +293,7 @@ class ChatScreenState extends State<ChatScreen> {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.only(left: 15.0, top: 10, right: 15),
+            padding: const EdgeInsets.only(left: 15.0, top: 6, right: 15),
             child: Row(
               children: [
                 ClipRRect(
@@ -311,24 +311,29 @@ class ChatScreenState extends State<ChatScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // for (int i = j; i < j + 1; i++)
-                      Text(
-                        '${data['first_name']} ${data['last_name']}',
-                        style: GoogleFonts.aBeeZee(
-                          textStyle: TextStyle(
-                            color: Colors.white,
-                            //Color.fromARGB(255, 0, 0, 0), // Colors.white,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 7.0),
+                        child: Text(
+                          '${data['first_name']} ${data['last_name']}',
+                          style: GoogleFonts.aBeeZee(
+                            textStyle: TextStyle(
+                              color:
+                                  Color.fromARGB(255, 0, 0, 0), // Colors.white,
+                              //Color.fromARGB(255, 0, 0, 0), // Colors.white,
+                              fontSize: 16,
+                              decorationThickness: 1,
+                              //   fontWeight: FontWeight.bold,
+                            ),
+                          ), /*TextStyle(
                             fontSize: 16,
-                            decorationThickness: 1,
-                          ),
-                        ), /*TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),*/
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),*/
+                        ),
                       ),
                       //CustomChatBubble
                       SizedBox(
-                        height: 5,
+                        height: 3,
                       ),
                       buildMessageList(data['uid']),
                     ],
@@ -352,13 +357,12 @@ class ChatScreenState extends State<ChatScreen> {
           return Text('Error${snapshot.error}');
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: Text(
+          return Text(
             'Loading...',
             style: GoogleFonts.aBeeZee(
               textStyle: TextStyle(
                 color: Color.fromARGB(255, 2, 92, 123),
-                fontSize: 20,
+                fontSize: 10,
 
                 // decoration: TextDecoration.underline,
                 decorationThickness: 1,
@@ -366,7 +370,7 @@ class ChatScreenState extends State<ChatScreen> {
                 //padding: 10,
               ),
             ),
-          ));
+          );
         }
         var messages = snapshot.data!.docs as List<DocumentSnapshot>;
         if (messages.isNotEmpty) {
@@ -396,7 +400,8 @@ class ChatScreenState extends State<ChatScreen> {
           msg,
           style: GoogleFonts.aBeeZee(
             textStyle: TextStyle(
-              color: Color.fromARGB(255, 191, 189, 189),
+              color: Color.fromARGB(
+                  255, 87, 87, 87), // Color.fromARGB(255, 191, 189, 189),
               fontSize: 12,
               decorationThickness: 1,
             ),
@@ -406,7 +411,8 @@ class ChatScreenState extends State<ChatScreen> {
           theDate,
           style: GoogleFonts.aBeeZee(
             textStyle: TextStyle(
-              color: Color.fromARGB(255, 191, 189, 189),
+              color: Color.fromARGB(
+                  255, 87, 87, 87), //Color.fromARGB(255, 191, 189, 189),
               fontSize: 12,
               decorationThickness: 1,
             ),
