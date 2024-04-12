@@ -738,6 +738,10 @@ class HomePageState extends State<HomePage> {
                         color: Color.fromARGB(255, 2, 92, 123),
                       ),
                       onTap: () async {
+                        print('aege');
+                        print(itemName);
+                        print(context);
+                        print('aege');
                         OpenChatWithSellar.functionForChar(itemName, context);
                       },
                     ),

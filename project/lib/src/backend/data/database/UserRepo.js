@@ -127,10 +127,12 @@ sellarChat(productName) {
   return new Promise((resolve, reject) => {
     console.log('YYYYYYYYYYY'+productName);
     db.query('SELECT user_id FROM product WHERE name = ?', [productName], (error, results) => {
-      if (error) {
+      if (error || results.length==0) {
         console.error(error);
+        console.log('aya');
         reject(' not found');
       } 
+      else{
       const userid=results[0].user_id;
     db.query('SELECT first_name, last_name,email  FROM user WHERE user_id = ?', [userid], (error, results) => {
       if (error) {
@@ -141,7 +143,7 @@ sellarChat(productName) {
      
         resolve(results);
       }
-    });
+    });}
   });
   });
 }
