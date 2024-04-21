@@ -1,11 +1,14 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unnecessary_brace_in_string_interps, prefer_interpolation_to_compose_strings
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unnecessary_brace_in_string_interps, prefer_interpolation_to_compose_strings, unnecessary_string_interpolations
 
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/src/screen/product_page.dart';
 import 'package:project/widgets/cart_shop.dart';
@@ -28,7 +31,7 @@ class RecentProd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     thestate = prodState;
-    print(prodState);
+    print(prodState + TypeOfCategory);
     print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
     return FutureBuilder(
       future: Future.delayed(Duration(milliseconds: 300)), // Simulating a delay
@@ -538,10 +541,10 @@ class RecentSingleProd extends StatefulWidget {
       this.recet_prod_description});
 
   @override
-  State<RecentSingleProd> createState() => _RecentSingleProdState();
+  State<RecentSingleProd> createState() => RecentSingleProdState();
 }
 
-class _RecentSingleProdState extends State<RecentSingleProd> {
+class RecentSingleProdState extends State<RecentSingleProd> {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> imageData = widget.recet_prod_image;
@@ -617,14 +620,14 @@ class _RecentSingleProdState extends State<RecentSingleProd> {
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
+                    Text(
+                      '${textP}',
+                      style: TextStyle(fontSize: 16, color: Colors.green),
+                    ),
                     Row(
                       children: [
-                        Text(
-                          '${textP}',
-                          style: TextStyle(fontSize: 16, color: Colors.green),
-                        ),
                         SizedBox(
-                          width: width,
+                          width: 110,
                         ),
                         GestureDetector(
                           child: Icon(
@@ -637,28 +640,30 @@ class _RecentSingleProdState extends State<RecentSingleProd> {
                                 widget.recet_prod_name, context);
                           },
                         ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          child: Icon(
+                            Icons.shopping_cart_checkout,
+                            //FontAwesomeIcons.cartShopping,
+                            size: 20,
+                            color: Color.fromARGB(255, 2, 92, 123),
+                          ),
+                          onTap: () async {
+                            DateTime now = DateTime.now();
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd – kk:mm').format(
+                                    now); // Format the date as per your requirement
+
+                            await shoppingCartStore('1', formattedDate,
+                                widget.recet_prod_name, RecentProd.thestate!);
+                          },
+                        ),
                       ],
                     ),
-                    /* Text(
-                      widget.recet_prod_description,
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),*/
                   ],
                 ),
-                /* ListTile(
-                  title: Text(
-                    widget.recet_prod_name,
-                    //  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(widget.recet_prod_description),
-                  trailing: Text(
-                    'Price:\$${widget.recet_prod_price}',
-                    style: TextStyle(fontSize: 16, color: Colors.green),
-                  ),
-                  //subtitle: Text('\$${recet_prod_price}'),
-                ),*/
               ],
             ),
           ),
@@ -667,89 +672,45 @@ class _RecentSingleProdState extends State<RecentSingleProd> {
     );
   }
 
-//getProductTypeState('Fashion', 'Women', 'New');
-  /* static Future<Map<String, dynamic>?> getProductTypeState(
-      String category, String type, String state) async {
-    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-    http.Response? response;
-
+  static Future<void> shoppingCartStore(
+    String numberItem,
+    String date,
+    String name,
+    String state,
+  ) async {
+    final url =
+        Uri.parse('http://192.168.0.114:3000/tradetryst/shoppingcart/add');
     try {
-      response = await http.get(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/Product/typeofproduct?category=$category&type=$type&state=$state'));
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<dynamic, dynamic>{
+          'id': Login.idd,
+          'Number_Item': numberItem,
+          'date': date,
+          'name': name,
+          'state': state,
+        }),
+      );
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
-        dynamic responseData = jsonDecode(response.body);
-        if (responseData is Map<String, dynamic> &&
-            responseData.containsKey('allProductData') &&
-            responseData.containsKey('allProductDetails')) {
-          // Extract allProductData and allProductDetails from the response
-          RecentProd.allProductData =
-              List<Map<String, dynamic>>.from(responseData['allProductData']);
-          RecentProd.allProductDetails = List<Map<String, dynamic>>.from(
-              responseData['allProductDetails']);
-
-          print(RecentProd.allProductData);
-          print(RecentProd.allProductDetails);
-          print(RecentProd.allProductData[0]['name']);
-          print("LALALALALALLALALLALLALLLALALLAAL");
-          // print(RecentProd.allProductData[1]);
-          // Use allProductData and allProductDetails as needed
-          // For example:
-          // for (var productData in allProductData) {
-          //   print('Product Name: ${productData['name']}');
-          // }
-        } else {
-          throw Exception('Invalid response data format');
-        }
+        // Authentication successful
+        print('store to cart  successful');
+        // Navigate to the home page or perform any other actions
+      } else if (response.statusCode == 401) {
+        //  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        // content: Text("not store"),
+        // ));
+        // Invalid email or password
+        print('not store');
       } else {
-        throw Exception(
-            'Failed to fetch data. Status code: ${response.statusCode}');
+        // Other error occurred
+        print('failed to store Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e, Response body: ${response?.body}');
-      throw Exception('Failed to fetch data: $e');
+      print('Error: $e');
     }
-    return null;
   }
-*/
-/*
-  Future<Map<String, dynamic>?> getProductTypeState(
-      String category, String type, String state) async {
-    http.Response? response;
-
-    // print(Login.Email);
-    try {
-      response = await http.get(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/Product/typeofproduct?category=$category&type=$type&state=$state'));
-      if (response.statusCode == 200) {
-        dynamic responseData = jsonDecode(response.body);
-        if (responseData is List && responseData.isNotEmpty) {
-          // Extract price from the first item in the list
-
-          dynamic user = responseData;
-          /* if (email == Login.Email) {
-            FirstNameSender = user['first_name'];
-            LastNameSender = user['last_name'];
-            dynamic userId = user['user_id'].toString();
-          } else {
-            FirstNameReceiver = user['first_name'];
-            LastNameReceiver = user['last_name'];
-            dynamic userId = user['user_id'].toString();
-          }*/
-
-          //  dynamic userId = responseData[2];
-
-          //print(FirstName + LastName + userId);
-        } else {
-          throw Exception('Empty or invalid response data format for price');
-        }
-      } else {
-        throw Exception(
-            'Failed to fetch price for product . Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e, Response body: ${response?.body}');
-      throw Exception('Failed to fetch price for product : $e');
-    }
-  }*/
 }

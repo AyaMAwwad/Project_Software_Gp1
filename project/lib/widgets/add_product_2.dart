@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_app_dialog/flutter_app_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -425,12 +426,51 @@ class AddProductState extends State<AddProductPageTwo> {
                                       conditionOfFreeProduct,
                                     );
 */
-                                    Navigator.push(
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return SuccessDialog(
+                                            message:
+                                                'Thank you for adding the product!');
+                                      },
+                                    );
+                                    /* showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return BaseDialogWidget(
+                                            child: PaymentDialog(
+                                              icon: Icon(
+                                                Icons.check_circle_outline,
+                                                color: Color.fromRGBO(
+                                                    126, 211, 33, 1),
+                                                size: 50,
+                                              ),
+                                              iconColor: Color.fromRGBO(
+                                                  126, 211, 33, 1),
+                                              iconSize: 50,
+                                              paymentStatus: 'SUCCESSFUL',
+                                              message:
+                                                  'Thank you for Add Product',
+                                              buttonName: 'OK',
+                                              onPressButton: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        HomePage(),
+                                                  ),
+                                                );
+                                                print('On Press!');
+                                              },
+                                            ),
+                                          );
+                                        });*/
+                                    /*  Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => CartShop(),
                                       ),
-                                    );
+                                    );*/
                                   }
                                 }
                               },
@@ -923,5 +963,52 @@ class AddProductState extends State<AddProductPageTwo> {
       print('Error: $e');
       // Handle error
     }
+  }
+}
+
+class SuccessDialog extends StatelessWidget {
+  final String message;
+
+  const SuccessDialog({Key? key, required this.message}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.check_circle_outline,
+            color: Color.fromRGBO(126, 211, 33, 1),
+            size: 50,
+          ),
+          SizedBox(height: 20),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePage(),
+                ),
+              );
+            },
+            child: Text(
+              'OK',
+              style: GoogleFonts.aBeeZee(
+                textStyle: TextStyle(
+                  color: Colors.black,
+                ),
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

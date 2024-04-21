@@ -384,7 +384,7 @@ class _DetailPageState extends State<DetailPage> {
         // Text('Buy Now'
         //style: Color.white,
         //),
-        text: 'Buy Now', borderRadius: BorderRadius.circular(30.0),
+        text: 'ADD TO CART', borderRadius: BorderRadius.circular(30.0),
       ),
     );
   }

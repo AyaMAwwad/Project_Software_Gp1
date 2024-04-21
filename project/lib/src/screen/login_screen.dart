@@ -63,7 +63,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 100.0,
+            height: 80.0,
           ),
           Image.asset(
             'images/icon/logo3.png',

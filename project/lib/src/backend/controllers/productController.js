@@ -73,4 +73,47 @@ exports.getnewprice = (req, res) => {
               res.status(500).json({ message: 'Not have data in database to retrieve' });
           });
   };
+  //// neeeeeew addToShopCart
+  exports.addToShopCart = (req, res) => {
+    prod
+      .addToShopCart(req, res)
+      .then((message) => {
+        res.status(201).json({ message }); 
+      })
+      .catch((error) => {
+        res.status(400).json({ message: error }); 
+      });
+    }
+
+    //getToShopCart
+    exports.getToShopCart = (req, res) => {
+      prod.getToShopCart()
+      .then((res1) => {
+        console.log({res1});
+       // console.log('Price:', price);
+        res.status(200).json(res1);
+    })
+    .catch((error) => {
+        console.error({error});
+        res.status(500).json({ message: 'Not have data in database to retrieve' });
+    });
+      };
+    ///deleteFromShopCart
+    exports.deleteFromShopCart = (req, res) => {
+      const productId = req.query.product_id; // Extracting product_id from query parameters
+      if (!productId) {
+          return res.status(400).json({ message: 'Product ID is required' });
+      }
   
+      // Call the function to delete the item from the shopping cart based on the product_id
+      // Replace `deleteFromShopCart` with your actual function to delete the item from the database
+      prod.deleteFromShopCart(productId)
+          .then((result) => {
+              console.log('Item deleted successfully');
+              res.status(200).json({ message: 'Item deleted successfully' });
+          })
+          .catch((error) => {
+              console.error('Error deleting item:', error);
+              res.status(500).json({ message: 'Internal server error' });
+          });
+  };

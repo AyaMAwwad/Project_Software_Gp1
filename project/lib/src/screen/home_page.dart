@@ -26,6 +26,7 @@ import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
 import 'package:project/widgets/cart_shop.dart';
 import 'package:project/widgets/enam.dart';
+import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
 import 'package:project/widgets/slider.dart';
 import 'package:project/src/screen/detailpage.dart';
@@ -531,6 +532,7 @@ class HomePageState extends State<HomePage> {
             ),
 
             ibtisamproduct(),
+            // SizedBox(width: 5),
 
             // ibtisamproduct(),
 
@@ -547,7 +549,6 @@ class HomePageState extends State<HomePage> {
             }).toList(),
            
            */
-            SizedBox(width: 16),
 
             /*
             
@@ -638,7 +639,7 @@ class HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(14),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -649,7 +650,7 @@ class HomePageState extends State<HomePage> {
                     Image.memory(
                   // Use Image.memory for Uint8List
                   Uint8List.fromList(bytes),
-                  width: 200,
+                  width: 210,
                   height: 230, // 200
                   fit: BoxFit.cover,
                 ),
@@ -662,7 +663,43 @@ class HomePageState extends State<HomePage> {
                     itemName,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
+                  Text(
+                    price,
+                    style: TextStyle(fontSize: 16, color: Colors.green),
+                  ),
                   Row(
+                    children: [
+                      SizedBox(
+                        width: 160,
+                      ),
+                      GestureDetector(
+                        child: Icon(
+                          FontAwesomeIcons.facebookMessenger,
+                          size: 18,
+                          color: Color.fromARGB(255, 2, 92, 123),
+                        ),
+                        onTap: () async {
+                          OpenChatWithSellar.functionForChar(itemName, context);
+                        },
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      GestureDetector(
+                        child: Icon(
+                          Icons.shopping_cart_checkout,
+                          //FontAwesomeIcons.cartShopping,
+                          size: 20,
+                          color: Color.fromARGB(255, 2, 92, 123),
+                        ),
+                        onTap: () async {
+                          RecentSingleProdState.shoppingCartStore(
+                              '1', '', itemName, type);
+                        },
+                      ),
+                    ],
+                  ),
+                  /*  Row(
                     children: [
                       Text(
                         price,
@@ -682,7 +719,7 @@ class HomePageState extends State<HomePage> {
                         },
                       ),
                     ],
-                  ),
+                  ),*/
                 ],
               ),
             ],
@@ -722,14 +759,14 @@ class HomePageState extends State<HomePage> {
                   itemName,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
+                Text(
+                  price,
+                  style: TextStyle(fontSize: 16, color: Colors.green),
+                ),
                 Row(
                   children: [
-                    Text(
-                      price,
-                      style: TextStyle(fontSize: 16, color: Colors.green),
-                    ),
                     SizedBox(
-                      width: 30,
+                      width: 100,
                     ),
                     GestureDetector(
                       child: Icon(
@@ -738,11 +775,22 @@ class HomePageState extends State<HomePage> {
                         color: Color.fromARGB(255, 2, 92, 123),
                       ),
                       onTap: () async {
-                        print('aege');
-                        print(itemName);
-                        print(context);
-                        print('aege');
                         OpenChatWithSellar.functionForChar(itemName, context);
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    GestureDetector(
+                      child: Icon(
+                        Icons.shopping_cart_checkout,
+                        //FontAwesomeIcons.cartShopping,
+                        size: 20,
+                        color: Color.fromARGB(255, 2, 92, 123),
+                      ),
+                      onTap: () async {
+                        RecentSingleProdState.shoppingCartStore('1', '',
+                            itemName, 'New'); /////////////// need to update
                       },
                     ),
                   ],
@@ -910,11 +958,6 @@ class Product {
     required this.product_type,
   });
 }
-
-
-
-
-
 
 /*import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
