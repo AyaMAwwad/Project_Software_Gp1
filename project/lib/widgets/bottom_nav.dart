@@ -30,7 +30,8 @@ class NavBar extends StatelessWidget {
       items: [
         Icon(Icons.home, color: Colors.white),
         Icon(Icons.add_circle_outline_rounded, color: Colors.white),
-        Icon(Icons.shopping_cart_outlined, color: Colors.white),
+        Icon(Icons.shopping_cart_outlined,
+            color: Colors.white), //shopping_cart_outlined
         Icon(Icons.person_outline_outlined, color: Colors.white),
       ],
       animationCurve: Curves.easeInOutBack, //easeInQuart,

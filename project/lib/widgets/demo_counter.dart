@@ -1,35 +1,40 @@
+// ignore_for_file: use_super_parameters, unused_import, use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CounterItem extends StatefulWidget {
+class CountItem extends StatefulWidget {
   final int count;
   final VoidCallback increment;
   final VoidCallback decrement;
   final String? Function(String?)? validator;
-  const CounterItem({
+  // final int index;
+  const CountItem({
     Key? key,
     required this.count,
     required this.increment,
     required this.decrement,
+    // required this.index,
     this.validator,
   });
 
   @override
-  CounterItemState createState() => CounterItemState();
+  CountItemState createState() => CountItemState();
 }
 
-class CounterItemState extends State<CounterItem> {
+class CountItemState extends State<CountItem> {
   String? _errorText;
 
   @override
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
-        right: 10,
-      ),
+      //width: 60,
+      height: 27,
+      //  padding: EdgeInsets.only(right: 80),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
         border: Border.all(color: Color.fromARGB(255, 2, 46, 82)),
       ),
       child: Row(
@@ -44,7 +49,7 @@ class CounterItemState extends State<CounterItem> {
             widget.count > 0,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            padding: EdgeInsets.symmetric(horizontal: 1.0),
             child: Text(
               widget.count.toString(),
               style: GoogleFonts.aBeeZee(
@@ -73,6 +78,14 @@ class CounterItemState extends State<CounterItem> {
 
   InkWell _buildCounterButton(bool left, IconData icon, VoidCallback onTap,
       [bool active = true]) {
+    double d1, d2;
+    if (icon == Icons.add_outlined) {
+      d1 = 7.5;
+      d2 = 1;
+    } else {
+      d1 = 1;
+      d2 = 7.5;
+    }
     return InkWell(
       onTap: !active
           ? null
@@ -93,28 +106,35 @@ class CounterItemState extends State<CounterItem> {
       child: Container(
         //padding: EdgeInsets.symmetric(horizontal: 4),
         height: 30,
-        width: 60,
+        width: 20,
         decoration: BoxDecoration(
-          color: active
-              ? Color.fromARGB(255, 95, 150, 168)
-              : const Color.fromARGB(255, 211, 211, 211),
+          border: Border(
+            left: BorderSide(
+                color: Color.fromARGB(255, 2, 46, 82),
+                width: 1.0), // Adjust width as needed
+            right: BorderSide(
+                color: Color.fromARGB(255, 2, 46, 82),
+                width: 1.0), // Adjust width as needed
+          ),
           borderRadius: BorderRadius.horizontal(
-            left: Radius.circular(4),
-            right: Radius.circular(4),
+            left: Radius.circular(d2),
+            right: Radius.circular(d1),
           ),
         ),
         child: Icon(
           icon,
-          color: active
+          size: 19,
+          color: /*active
               ? Color.fromARGB(255, 255, 255, 255)
-              : Color.fromARGB(255, 0, 0, 0),
+              :*/
+              Color.fromARGB(255, 0, 0, 0),
         ),
       ),
     );
   }
 }
 
-CounterRepo repo = CounterRepo();
+CounterRepo repos = CounterRepo();
 
 class CounterRepo {
   int getCount(context, index) {
@@ -129,9 +149,5 @@ class CounterRepo {
   decrementCounter(context, index) {
     SharedAppData.setValue(
         context, "count-$index", getCount(context, index) - 1);
-  }
-
-  resetCounter(BuildContext context, int index) {
-    SharedAppData.setValue(context, "count-$index", 0);
   }
 }

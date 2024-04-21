@@ -7,6 +7,7 @@ import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
+import 'package:project/widgets/cart_item.dart';
 import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/user_profile.dart';
 
@@ -45,10 +46,20 @@ class CartShopState extends State<CartShop> {
         ),
       ),
       body: SafeArea(
-        child: ListView(
+        child: Column(
           children: [
             CustemAppBar(
               text: 'Shopping Cart',
+            ),
+            Expanded(
+              child: Container(
+                //height: 1500,
+                padding: EdgeInsets.only(
+                  top: 20,
+                ),
+
+                child: CartItem(),
+              ),
             ),
           ],
         ),

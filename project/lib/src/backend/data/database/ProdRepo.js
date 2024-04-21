@@ -169,11 +169,10 @@ addProduct(req, res) {
             );
             
           }
-       /////////////
-        
+   
 
               }
-////////////////////////
+
              );
             }
             else {
@@ -252,10 +251,7 @@ gettypeofproduct(category,type,state) {
               // Add the product data for the current category ID to the array
               allProductData.push(...res1);
               console.log(allProductData);
-              // Check if this was the last category ID, then resolve the promise with all product data
-             // if (allProductData.length === theRes.length) {
-             //   resolve(allProductData);
-             // }
+           
              
              if (allProductData.length <= theRes.length) {
              let Query='';
@@ -313,6 +309,170 @@ gettypeofproduct(category,type,state) {
    
   });
 }
+
+////// nnneeeeew addToShopCart
+addToShopCart(req, res) {
+  
+  //numberofimage
+    const { id,Number_Item,date,name,state } = req.body;
+  
+    //console.log(id,Number_Item,date,name,state );
+    return new Promise((resolve, reject) => {
+
+      db.query('SELECT product_id FROM product WHERE name = ? AND product_type = ?', [name,state], (error1, res1) => {
+        if (error1) {
+         // console.error(error1);
+          reject('Failed to store to cart ');
+        } else {
+          const productid=res1[0].product_id;
+          const theDate = new Date();
+
+          console.log(productid);
+          db.query(
+            'SELECT * FROM shopping_cart WHERE product_id = ?',
+            [productid],
+            (error3, results3) => {
+                if (error3) {
+                    return reject('Failed to store to cart ');
+                }
+                else if (results3.length > 0) {
+                    return reject('This item is already in the cart');
+                }
+                else {
+                    // Proceed with inserting into the shopping_cart table
+                    db.query(
+                        'INSERT INTO shopping_cart (item, date_cart, user_id, product_id) VALUES (?, ?, ?, ?)',
+                        [Number_Item, theDate, id, productid],
+                        (error2, results2) => {
+                            if (error2) {
+                                return reject('Failed to store to cart');
+                            }
+                            return resolve('Stored to cart successfully');
+                        }
+                    );
+                }
+            }
+        );
+        
+
+     
+
+          
+
+        }
+      });
+   
+ } );
+  
+    
+}
+//getToShopCart
+getToShopCart(req, res) {
+
+  return new Promise((resolve, reject) => {
+
+    
+    db.query('SELECT * FROM shopping_cart ', (error, results) => {
+      if (error) {
+        console.error(error);
+        reject('Failed to retrive from cart ');
+      } else {
+        const theRes= results;
+        const allProductData = [];
+        const allProductDetails = [];
+        console.log(theRes);
+      
+
+        // Iterate over each category ID
+        theRes.forEach(cartRow => {
+          const prodId = cartRow.product_id; 
+          console.log(prodId);
+          db.query('SELECT * FROM product WHERE product_id = ?', [prodId], (error1, res1) => {
+            if (error1) {
+              console.error(error1);
+              reject('Failed to retrieve product data');
+            } else {
+              // Add the product data for the current category ID to the array
+              allProductData.push(...res1);
+              console.log(allProductData);
+            
+              
+             if (allProductData.length == theRes.length) {
+             
+             
+             // Iterate over each product in allProductData
+            allProductData.forEach(product => {
+          //  console.log(allProductData[0]['product_id']); =allProductData[0]['product_id']; 
+                 const productId =product.product_id;
+                 const state= product.product_type;
+                 console.log(state);
+                 let Query='';
+                 if(state== 'New' || state== 'new'){
+                   Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
+                 }
+                 else if(state=='Used'|| state== 'used'){
+                   Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
+                 }
+                 else if(state=='Free'|| state== 'free'){
+                   Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
+                 }
+                 db.query(Query, [productId], (error2, res2) => {
+                  if (error2) {
+                      console.error(error2);
+                      reject('Failed to retrieve data from new_product table');
+                  } else {
+                      // Add the retrieved data to allProductDetails
+                      res2.forEach(entry => {
+                        const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
+                        if (!found) {
+                            allProductDetails.push(entry);
+                        }
+                    });
+                     // allProductDetails.push(...res2);
+                     
+                      console.log(allProductDetails);
+                      // Check if all products have been processed
+                    if (allProductDetails.length == allProductData.length) {
+                        resolve({theRes, allProductData, allProductDetails });
+                      }
+                      else if(allProductDetails.length==0) {
+                        reject('Not have data to retrieve ');
+                      }
+                    
+                  }
+              });
+             });
+
+            }
+            else if(allProductData.length==0) {
+              reject('Not have data to retrieve ');
+            }
+             // resolve({theRes,allProductData});
+             //}
+            }
+          });
+        });
+
+      }
+    });
+  });
+}
+//////deleteFromShopCart
+deleteFromShopCart(productId) {
+  return new Promise((resolve, reject) => {
+
+    
+    db.query('DELETE FROM shopping_cart WHERE product_id = ?',[productId], (error, results) => {
+      if (error) {
+        console.error(error);
+        reject('Failed to Delete ');
+      } else {
+        resolve("success deleted");
+      }
+    });
+  });
+  
+};
 }
    
 module.exports = ProductRepository;

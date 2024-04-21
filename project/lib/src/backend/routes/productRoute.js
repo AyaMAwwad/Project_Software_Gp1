@@ -40,8 +40,9 @@ router.get('/products' , productController.getproduct);
 router.get('/productImages', productController.getProductImages);
 
 router.get('/pricenew', productController.getnewprice);
-
-//new
 router.get('/typeofproduct', productController.gettypeofproduct);
-
+//new new 
+router.post('/add', productController.addToShopCart);
+router.get('/getCartItem', productController.getToShopCart);
+router.delete('/deleteCartItem', productController.deleteFromShopCart);
 module.exports = router;

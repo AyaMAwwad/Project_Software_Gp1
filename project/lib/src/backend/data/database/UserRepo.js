@@ -125,7 +125,7 @@ class UserRepository {
 //sellarChat
 sellarChat(productName) {
   return new Promise((resolve, reject) => {
-    console.log('YYYYYYYYYYY'+productName);
+    console.log('YYYYYYYYYYY'+ productName);
     db.query('SELECT user_id FROM product WHERE name = ?', [productName], (error, results) => {
       if (error || results.length==0) {
         console.error(error);
