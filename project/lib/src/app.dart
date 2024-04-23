@@ -1,20 +1,20 @@
+// ignore_for_file: use_key_in_widget_constructors, avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'package:project/src/screen/category_screen.dart';
-import 'package:project/src/screen/categorylist.dart';
-
+import 'package:get/get.dart';
+import 'package:project/locale/locale.dart';
+import 'package:project/locale/locale_controller.dart';
+import 'package:project/src/screen/notification_page.dart';
 import 'package:project/src/screen/home_page.dart';
 
 import 'package:project/src/screen/login_screen.dart';
-import 'package:project/src/screen/new_pass.dart';
-import 'package:project/src/screen/otp_form.dart';
+
 import 'package:project/src/screen/screen_state.dart';
 
 import 'package:project/src/screen/signup_screen.dart';
-import 'package:project/widgets/app_bar.dart';
-import 'package:project/widgets/slider.dart';
-import 'package:project/src/screen/verify_email.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatefulWidget {
   @override
@@ -43,15 +43,13 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(context) {
-    return MaterialApp(
+    Get.put(mylocalcontroller());
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-
-      home: //AuthGate(),
+      home: //CustemAppBar(), // SliderPage(), //NewPass(),
           (FirebaseAuth.instance.currentUser == null)
               ? CoverStateScreen()
               : Login(),
-      ////////////******************************************** */
-      ///////////////
       /*FirebaseAuth.instance.currentUser != null  &&
                       FirebaseAuth.instance.currentUser!.emailVerified)
                   ? Login()
@@ -75,10 +73,14 @@ class MyAppState extends State<MyApp> {
       //  VerifyEmail(),
       // OtpForm(),
       //FirebaseAuth.instance.currentUser == null ? Login() : HomePage(),
+      locale: Get.deviceLocale,
+      translations: mylocale(),
+      navigatorKey: navigatorKey,
       routes: {
         "signup": (context) => Signup(),
         "login": (context) => Login(),
         "homepagee": (context) => HomePage(),
+        "notification": (context) => NotificationPage(),
         //"category": (context) => ScreenCategory(),
       },
       // Login(), // Signup(), //CoverStateScreen(), // Display SplashScreen initially

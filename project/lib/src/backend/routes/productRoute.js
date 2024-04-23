@@ -41,8 +41,9 @@ router.get('/productImages', productController.getProductImages);
 
 router.get('/pricenew', productController.getnewprice);
 router.get('/typeofproduct', productController.gettypeofproduct);
-//new new 
 router.post('/add', productController.addToShopCart);
 router.get('/getCartItem', productController.getToShopCart);
 router.delete('/deleteCartItem', productController.deleteFromShopCart);
+
+router.get('/retriveWordOfsearch', productController.retriveWordOfsearch);
 module.exports = router;

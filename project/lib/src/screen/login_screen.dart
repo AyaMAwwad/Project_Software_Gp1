@@ -50,6 +50,7 @@ class Login extends StatefulWidget {
 
 class LoginScreen extends State<Login> with ValidationMixin {
   // get kHintTextStyle => null;
+  static bool isUserLog = false;
   bool valpass = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -424,6 +425,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
             print('Wrong password provided for that user.');
           }
         }
+        isUserLog = true;
         Navigator.of(context).pushReplacementNamed("homepagee");
         // Authentication successful
         print('Login successful');

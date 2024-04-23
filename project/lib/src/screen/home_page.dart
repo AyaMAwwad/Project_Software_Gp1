@@ -20,6 +20,8 @@ import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/chat_page.dart';
 import 'package:project/src/screen/chat_screen.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/notification.dart';
+import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
@@ -41,11 +43,15 @@ class HomePage extends StatefulWidget {
 String Priceeneww = '';
 
 class HomePageState extends State<HomePage> {
+  String firsttname = Login.first_name;
+  String lastttname = Login.last_name;
+  String emailbefore = Login.Email;
   List<Product> products = [];
   static String CategorySelected = '';
   @override
   void initState() {
     super.initState();
+    FirebaseNotification.getDiveceToken();
     fetchProducts();
   }
 
@@ -270,12 +276,150 @@ class HomePageState extends State<HomePage> {
 
       );
      */
-
+    // bool isSearching = false;
     return Scaffold(
       //backgroundColor: Colors.transparent,
       drawer: Drawer(
         //child: CustemAppBar(),
-        child: IconButton(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: Text('$firsttname $lastttname'),
+              accountEmail: Text('$emailbefore'),
+              currentAccountPicture: CircleAvatar(
+                radius: 300,
+                child: ClipOval(
+                  child: Image.asset('images/icon/userprofile.png'),
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 2, 92, 123),
+              ),
+            ),
+
+/*
+UserAccountsDrawerHeader(
+  accountName: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        '$firsttname $lastttname',
+        style: TextStyle(
+          fontSize: 18, // Adjust the font size of the account name
+          color: Colors.white,
+        ),
+      ),
+      SizedBox(height: 10), // Adjust the height of the SizedBox
+    ],
+  ),
+  accountEmail: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        '$emailbefore',
+        style: TextStyle(
+          fontSize: 18, // Adjust the font size of the account email
+          color: Colors.white,
+        ),
+      ),
+      SizedBox(height: 10), // Adjust the height of the SizedBox
+    ],
+  ),
+  currentAccountPicture: Column(
+    crossAxisAlignment: CrossAxisAlignment.center, // Adjusted the crossAxisAlignment to center
+    children: [
+      CircleAvatar(
+        radius: 60, // Reduce the radius of the CircleAvatar
+        child: ClipOval(
+          child: Image.asset(
+            'images/icon/userprofile.png',
+            fit: BoxFit.cover, // Ensure the image covers the entire circular area
+          ),
+        ),
+      ),
+      SizedBox(height: 10), // Adjust the height of the SizedBox
+    ],
+  ),
+  decoration: BoxDecoration(
+    color: Color.fromARGB(255, 2, 92, 123),
+  ),
+),
+*/
+//
+            SizedBox(height: 20),
+            ListTile(
+              leading: Icon(Icons.account_circle,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                'Profile',
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    //   color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () async {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfile()),
+                );
+              },
+            ),
+
+            ListTile(
+              leading: Icon(Icons.settings,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                'Settings',
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    // color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () => print('setting'),
+            ),
+            ListTile(
+              leading: Icon(Icons.notifications,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                'Notifications',
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    //  color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () => print('Notifications'),
+            ),
+            ListTile(
+              leading: Icon(Icons.logout,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                'Sign Out',
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    //  color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () async {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
+              },
+            ),
+          ],
+        ),
+
+        /*
+        IconButton(
           icon: Icon(Icons.exit_to_app),
           onPressed: () async {
             await FirebaseAuth.instance.signOut();
@@ -284,8 +428,9 @@ class HomePageState extends State<HomePage> {
               MaterialPageRoute(builder: (context) => Login()),
             );
           },
-        ),
+        ),*/
       ),
+
       //appBar: buildAppBar(context),
 
       body: SafeArea(

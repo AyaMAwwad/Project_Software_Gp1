@@ -6,9 +6,13 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project/src/screen/aboutus.dart';
 import 'package:project/src/screen/home_page.dart';
+import 'package:project/src/screen/information.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -104,7 +108,7 @@ class UserProfileState extends State<UserProfile> {
         child: ListView(
           children: [
             CustemAppBar(
-              text: 'Profile',
+              text: '8'.tr,
               // child: Column()
             ),
 
@@ -194,7 +198,7 @@ class UserProfileState extends State<UserProfile> {
                     }
                   });
                 },
-                text: 'Edit Profile',
+                text: '7'.tr,
                 borderRadius: BorderRadius.circular(30),
                 // width : 50,
                 //child: Text('Edit Profile'),
@@ -204,7 +208,7 @@ class UserProfileState extends State<UserProfile> {
             SizedBox(height: 30),
             const Divider(),
             const SizedBox(height: 10),
-            buildListTile('Multi Language', Icons.language), // settings
+            buildListTile('1'.tr, Icons.language), // settings  'Multi Language'
 
             /// adding
             /* 
@@ -259,16 +263,16 @@ class UserProfileState extends State<UserProfile> {
             //const Divider(),
             // SizedBox(height: 10),
             // listtt(),
-            buildListTile('Informations', Icons.info),
+            buildListTile('6'.tr, Icons.info),
             SizedBox(height: 10),
-            buildListTile('About Us', Icons.info_outline),
+            buildListTile('4'.tr, Icons.info_outline),
             // SizedBox(height: 10),
             //  buildListTile('Contact', Icons.info),
             // SizedBox(height: 10),
             SizedBox(
               height: 10,
             ),
-            buildListTile('LogOut', Icons.exit_to_app),
+            buildListTile('5'.tr, Icons.exit_to_app),
           ],
         ),
 
@@ -369,50 +373,79 @@ class UserProfileState extends State<UserProfile> {
 
   /// function i need
   Widget buildListTile(String title, IconData iconData) {
-    return ListTile(
-      leading: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(width: 40), // Add an empty space to increase the distance
-          Container(
-            width: 45,
-            height: 45,
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: Color.fromARGB(255, 124, 137, 125).withOpacity(0.1),
+    return GestureDetector(
+      onTap: () {
+        // Navigate to the About Us page here
+        if (title == "4".tr) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AboutUsPage()),
+          );
+        } else if (title == "6".tr) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => InformationsPage()),
+          );
+        } else if (title == "5".tr) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Login()),
+          );
+        }
+        // Multi Language
+        else if (title == "1".tr) {
+          // title == "1".tr  title == "Multi Language" || title == "تعدد اللغات"
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MultiLanguage()),
+          );
+        }
+      },
+      child: ListTile(
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(width: 40), // Add an empty space to increase the distance
+            Container(
+              width: 45,
+              height: 45,
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Color.fromARGB(255, 124, 137, 125).withOpacity(0.1),
+              ),
+              child: Icon(iconData, color: Color.fromARGB(255, 2, 92, 123)),
             ),
-            child: Icon(iconData, color: Color.fromARGB(255, 2, 92, 123)),
-          ),
-        ],
-      ),
-      title: Text(
-        title,
-        style: Theme.of(context).textTheme.bodyText2?.copyWith(
-              fontSize: 18, // Set the font size as desired
-              //fontWeight: FontWeight.bold, // Set the font weight as desired
-              color: Colors.black, // Set the text color as desired
+          ],
+        ),
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                fontSize: 18, // Set the font size as desired
+                //fontWeight: FontWeight.bold, // Set the font weight as desired
+                color: Colors.black, // Set the text color as desired
+              ),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          // Ensure the Row takes minimum space
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              // width: 30,height: 30,
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.1),
+                // Specify the color with opacity
+                borderRadius: BorderRadius.circular(100),
+                // Adjust the border radius as needed
+              ),
+              child: Icon(Icons.arrow_forward, size: 20, color: Colors.grey),
+              // Add the icon
+              //  SizedBox(width: 40),
             ),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        // Ensure the Row takes minimum space
-        children: [
-          Container(
-            padding: EdgeInsets.all(10),
-            // width: 30,height: 30,
-            decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.1),
-              // Specify the color with opacity
-              borderRadius: BorderRadius.circular(100),
-              // Adjust the border radius as needed
-            ),
-            child: Icon(Icons.arrow_forward, size: 20, color: Colors.grey),
-            // Add the icon
-            //  SizedBox(width: 40),
-          ),
-          SizedBox(width: 20),
-        ],
+            SizedBox(width: 20),
+          ],
+        ),
       ),
     );
   }

@@ -26,8 +26,9 @@ app.use('/tradetryst/Product',product);
 //app.use('/tradetryst/user',user);
 app.use('/tradetryst/getNameOfUser',user);
 app.use('/tradetryst/Product',product);
-// new new 
 app.use('/tradetryst/shoppingcart',product);
+// newwwwwwwww
+app.use('/tradetryst/search',product);
 
 
 
