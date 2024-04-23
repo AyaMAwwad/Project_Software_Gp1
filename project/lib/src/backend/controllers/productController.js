@@ -117,3 +117,20 @@ exports.getnewprice = (req, res) => {
               res.status(500).json({ message: 'Internal server error' });
           });
   };
+
+  ///////retriveWordOfsearch
+  exports.retriveWordOfsearch = (req, res) => {
+    const { name } = req.query;//req.query;
+    
+
+    prod.retriveWordOfsearch(name)
+        .then((res1) => {
+            console.log({res1});
+          
+            res.status(200).json(res1);
+        })
+        .catch((error) => {
+            console.error({error});
+            res.status(500).json({ message: 'Not have thing to retrieve' });
+        });
+};

@@ -473,6 +473,32 @@ deleteFromShopCart(productId) {
   });
   
 };
+
+
+
+/////////////////// nneeeeeeeeeeew  retriveWordOfsearch
+retriveWordOfsearch(name) {
+  return new Promise((resolve, reject) => {
+//p.image AS image,
+    const query = `
+    SELECT p.name AS product_name, p.description AS product_description, c.name AS category_name, c.type AS category_type
+    FROM Product p
+    JOIN Category c ON p.category_id = c.category_id
+    WHERE p.name LIKE CONCAT('%', ?, '%') OR c.name LIKE CONCAT('%', ?, '%')
+  `;
+    db.query(query, [name, name],  (error, results) => {
+      if (error || results.length==0) {
+        console.error(error);
+        reject('Failed to Search ');
+      } else {
+        console.log('Search results:', results);
+        resolve(results);
+      }
+    });
+  });}
+
 }
    
+
+
 module.exports = ProductRepository;
