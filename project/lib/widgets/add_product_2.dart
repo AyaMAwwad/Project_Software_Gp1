@@ -811,9 +811,10 @@ class AddProductState extends State<AddProductPageTwo> {
     }
   }
 
+/*
   Future<void> uploadimageAyosh(
     String name,
-    String category,
+    String category,s
     String state,
     String description,
     String price,
@@ -894,7 +895,7 @@ class AddProductState extends State<AddProductPageTwo> {
       print('Error: $e');
     }
   }
-
+*/
   bool isNumeric(String? value) {
     if (value == null) {
       return false;
