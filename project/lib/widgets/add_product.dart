@@ -11,7 +11,7 @@ import 'package:project/widgets/bottom_nav.dart';
 import 'package:project/widgets/cart_shop.dart';
 import 'package:project/widgets/list_for_add.dart';
 import 'package:project/widgets/textfield_add_prod.dart';
-
+import 'package:get/get.dart';
 import 'package:project/widgets/user_profile.dart';
 
 class AddProduct extends StatefulWidget {
@@ -40,6 +40,15 @@ class AddProductState extends State<AddProduct> {
     'Houseware',
     'Vehicles',
     'Furniture'
+  ];
+  List<String> listItem1 = [
+    'الموضة',
+    'الأجهزة الذكية',
+    'كتب',
+    'ألعاب',
+    'أدوات منزلية',
+    'مركبات',
+    'أثاث'
   ];
 
   final Map<String, List<String>> categoryTypes = {
@@ -102,7 +111,73 @@ class AddProductState extends State<AddProduct> {
       'Shoe Racks'
     ],
   };
-
+  final Map<String, List<String>> categoryTypes1 = {
+    /*'الموضة',
+    'الأجهزة الذكية',
+    'كتب',
+    'ألعاب',
+    'أدوات منزلية',
+    'مركبات',
+    'أثاث'*/
+    'الموضة': ['رجال', 'نساء', 'أحذية', 'أطفال', 'حقائب', 'ساعات', 'نظارات'],
+    'الأجهزة الذكية': [
+      'هاتف',
+      'حاسوب محمول',
+      'ايباد',
+      'سماعات',
+      'حاسوب',
+      'ساعات ذكية',
+      'تلفاز',
+      'مكبر صوت'
+    ],
+    'كتب': [
+      'ألغاز',
+      'دينية',
+      'إثارة وتشويق',
+      'تاريخ',
+      'مساعدة ذاتية',
+      'فلسفة',
+      'شعر',
+      'دراما',
+      'طبخ',
+      'صحة',
+    ],
+    'ألعاب': [
+      'بلايستيشن',
+      'إكس بوكس',
+      'سكوتر',
+      'أحذية تزلج',
+      'نظارات الواقع الإفتراضي',
+      'سماعات الراس',
+    ],
+    'أدوات منزلية': [
+      'روبوت التنظيف',
+      'مكنسة كهربائية',
+      'مقلاة هوائية',
+      'ثلاجة',
+      'غسالة',
+      'جلاية',
+      'فرن',
+      'أدوات كهربائية',
+      'مرطب الجو ',
+      'ألة القهوة'
+    ],
+    'مركبات': ['Car', 'Electric', 'Motorcycles', 'Bicycles', 'Commercial'],
+    'أثاث': [
+      'الأرائك',
+      'سجاد',
+      'كراسي',
+      'طاولة',
+      'سرير',
+      'خزانة',
+      'خزائن المطبح',
+      'مكاتب',
+      'مرايا',
+      'مصابيح',
+      'جداريات',
+      'رفوف الأحذية'
+    ],
+  };
   @override
   void initState() {
     super.initState();
@@ -116,6 +191,11 @@ class AddProductState extends State<AddProduct> {
     'Used',
     'Free',
   ];
+  List<String> ListState1 = [
+    'جديد',
+    'مستعمل',
+    'مجاني',
+  ];
 
   bool isNumeric(String? value) {
     if (value == null) {
@@ -126,6 +206,10 @@ class AddProductState extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> listItem2 = ("11".tr == 'Add Product') ? listItem : listItem1;
+    Map<String, List<String>> categoryTypes2 =
+        ("11".tr == 'Add Product') ? categoryTypes : categoryTypes1;
+    List<String> ListState2 = "11".tr == 'Add Product' ? ListState : ListState1;
     return Scaffold(
       drawer: Drawer(
         //child: CustemAppBar(),
@@ -157,9 +241,8 @@ class AddProductState extends State<AddProduct> {
           key: _formKey,
           child: ListView(
             children: [
-              CustemAppBar(
-                text: 'Add Product',
-              ),
+              CustemAppBar(text: "11".tr //'Add Product',
+                  ),
               SizedBox(
                 height: 20,
               ),
@@ -171,7 +254,7 @@ class AddProductState extends State<AddProduct> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Category',
+                        "12".tr,
                         style: GoogleFonts.aBeeZee(
                           textStyle: TextStyle(
                             color: Color.fromARGB(255, 2, 92, 123),
@@ -188,7 +271,7 @@ class AddProductState extends State<AddProduct> {
                         height: 10,
                       ),
                       ListStateAndCat(
-                        item: listItem
+                        item: listItem2
                             .map((String item) => DropdownMenuItem<String>(
                                   value: item,
                                   child: Text(
@@ -201,18 +284,18 @@ class AddProductState extends State<AddProduct> {
                                   ),
                                 ))
                             .toList(),
-                        hintText: 'Select Category',
+                        hintText: "13".tr,
                         value: valueChoose, // Set initial value to null
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select a category';
+                            return "14".tr;
                           }
                           return null;
                         },
                         onChanged: (newVal) {
                           setState(() {
                             valueChoose = newVal;
-                            selectedType = categoryTypes[valueChoose]!.first;
+                            selectedType = categoryTypes2[valueChoose]!.first;
                           });
                         },
                       ),
@@ -220,7 +303,7 @@ class AddProductState extends State<AddProduct> {
                         height: 20,
                       ),
                       Text(
-                        'Type',
+                        "15".tr,
                         style: GoogleFonts.aBeeZee(
                           textStyle: TextStyle(
                             color: Color.fromARGB(255, 2, 92, 123),
@@ -238,7 +321,7 @@ class AddProductState extends State<AddProduct> {
                       ),
                       ListStateAndCat(
                         item: selectedType != null
-                            ? categoryTypes[valueChoose!]!
+                            ? categoryTypes2[valueChoose!]!
                                 .map((String item) => DropdownMenuItem<String>(
                                       value: item,
                                       child: Text(
@@ -253,11 +336,11 @@ class AddProductState extends State<AddProduct> {
                                     ))
                                 .toList()
                             : [],
-                        hintText: 'Select Type',
+                        hintText: "16".tr,
                         value: selectedType,
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select a Type';
+                            return "17".tr;
                           }
                           return null;
                         },
@@ -271,7 +354,7 @@ class AddProductState extends State<AddProduct> {
                         height: 20,
                       ),
                       Text(
-                        'State',
+                        "18".tr,
                         style: GoogleFonts.aBeeZee(
                           textStyle: TextStyle(
                             color: Color.fromARGB(255, 2, 92, 123),
@@ -288,7 +371,7 @@ class AddProductState extends State<AddProduct> {
                         height: 10,
                       ),
                       ListStateAndCat(
-                        item: ListState.map(
+                        item: ListState2.map(
                             (String item) => DropdownMenuItem<String>(
                                   value: item,
                                   child: Text(
@@ -301,11 +384,11 @@ class AddProductState extends State<AddProduct> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 )).toList(),
-                        hintText: 'Select State',
+                        hintText: "19".tr,
                         value: valueState,
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select a state of product';
+                            return "20".tr;
                           }
                           return null;
                         },
@@ -316,42 +399,44 @@ class AddProductState extends State<AddProduct> {
                         },
                       ),
                       custemFieldforProductPage(
-                        hintText: 'Enter Name of Product',
+                        hintText: "21".tr,
                         controller: nameContr,
-                        text: 'Name',
+                        text: "22".tr,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Name of Product';
+                            return "23".tr;
                           }
                           final RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
                           if (!regex.hasMatch(value)) {
-                            return 'Name must contain only alphabetic characters';
+                            return "24".tr;
                           }
                           return null;
                         },
                       ),
                       custemFieldforProductPage(
-                        hintText: 'Enter Description of Product',
+                        hintText: "25".tr,
                         controller: descContr,
-                        text: 'Description',
+                        text: "26".tr,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter Description ';
+                            return "27".tr;
                           }
                           final RegExp regex =
                               RegExp(r'^[a-zA-Z0-9\s]*[a-zA-Z][a-zA-Z0-9\s]*$');
                           if (!regex.hasMatch(value)) {
-                            return 'Description must contain alphabetic character';
+                            return "28".tr;
                           }
                           return null;
                         },
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 260, top: 35),
+                        padding: ("11".tr == 'Add Product')
+                            ? const EdgeInsets.only(left: 260, top: 35)
+                            : const EdgeInsets.only(right: 260, top: 35),
                         child: Row(
                           children: [
                             Text(
-                              'Next',
+                              "29".tr,
                               style: GoogleFonts.aBeeZee(
                                 textStyle: TextStyle(
                                   color: Color.fromARGB(255, 2, 92, 123),
