@@ -57,7 +57,7 @@ class ProductRepository {
           console.error(error);
           reject('Failed to fetch product images');
         } else {
-        //  console.log({results});
+          console.log({results});
           resolve(results);
         }
       });
@@ -119,7 +119,7 @@ addProduct(req, res) {
                 const productId = results2.insertId;
                 prodID=results2.insertId;
               
-          if (state == 'New') {
+          if (state == 'New' || state == 'جديد') {
         
             db.query(
               'INSERT INTO new_product (product_id, warranty_period,price) VALUES (?, ?, ?)',
@@ -135,7 +135,7 @@ addProduct(req, res) {
             );
 
           } 
-          else if (state == 'Used'){
+          else if (state == 'Used'|| state == 'مستعمل'){
               db.query(
                 'INSERT INTO used_product (product_id, product_condition, price) VALUES (?, ?, ?)',
                 [productId, detailsOfState,price],
@@ -150,7 +150,7 @@ addProduct(req, res) {
             );
 
           }
-          else if (state == 'Free'){
+          else if (state == 'Free'|| state == 'مجاني'){
            
             db.query(
              
@@ -255,13 +255,13 @@ gettypeofproduct(category,type,state) {
              
              if (allProductData.length <= theRes.length) {
              let Query='';
-              if(state== 'New'){
+              if(state== 'New'||state== 'جديد'){
                 Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
               }
-              else if(state=='Used'){
+              else if(state=='Used'||state== 'مستعمل'){
                 Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
               }
-              else if(state=='Free'){
+              else if(state=='Free'||state== 'مجاني'){
                 Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
               }
              
@@ -407,13 +407,13 @@ getToShopCart(req, res) {
                  const state= product.product_type;
                  console.log(state);
                  let Query='';
-                 if(state== 'New' || state== 'new'){
+                 if(state== 'New' || state== 'new'|| state== 'جديد'){
                    Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
                  }
-                 else if(state=='Used'|| state== 'used'){
+                 else if(state=='Used'|| state== 'used'|| state== 'مستعمل'){
                    Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
                  }
-                 else if(state=='Free'|| state== 'free'){
+                 else if(state=='Free'|| state== 'free'|| state== 'مجاني'){
                    Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
                  }
                  db.query(Query, [productId], (error2, res2) => {

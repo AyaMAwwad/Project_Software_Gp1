@@ -7,6 +7,614 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/widgets/button_2.dart';
 import 'package:project/widgets/demo_counter.dart';
+import 'package:get/get.dart';
+
+class CartItem extends StatefulWidget {
+  @override
+  State<CartItem> createState() => _CartItemState();
+}
+
+class _CartItemState extends State<CartItem> {
+  List<Map<String, dynamic>> cartShopContain = [];
+  List<Map<String, dynamic>> productInCart = [];
+  List<Map<String, dynamic>> allProductDetails = [];
+  List<int?> selectedRadioValues = [];
+  static List<int> productCount = [];
+  String? valueState;
+  String? theValueState;
+  int? theValueState1;
+  bool colorEnabled = false;
+  Color? activeColor;
+  static List<bool> selectedCheckboxes = [];
+  static bool allCheckboxChecked = false;
+  double calculateTotalPrice() {
+    double totalPrice = 0.0;
+    if (productInCart != null &&
+        selectedCheckboxes != null &&
+        productCount != null) {
+      for (int i = 0; i < productInCart.length; i++) {
+        if (i < selectedCheckboxes.length &&
+            i < productCount.length &&
+            selectedCheckboxes[i]) {
+          if (i < allProductDetails.length && productCount[i] != null) {
+            Map<String, dynamic> details = allProductDetails[i];
+            double price = double.tryParse(details['price'] ?? '0.0') ?? 0.0;
+
+            int count = productCount[i] ?? 0; // Ensure count is not null
+            totalPrice += price * count;
+          }
+        }
+      }
+    }
+    return totalPrice;
+  }
+
+/*
+  double calculateTotalPrice() {
+    double totalPrice = 0.0;
+    for (int i = 0; i < productInCart.length; i++) {
+      if (selectedCheckboxes[i]) {
+        Map<String, dynamic> details = allProductDetails[i];
+        double price = double.parse(details['price']);
+
+        int count = productCount[i];
+
+        totalPrice += price * count;
+      }
+    }
+    return totalPrice;
+  }
+*/
+  void deleteProduct(int index) {
+    setState(() {
+      productInCart.removeAt(index);
+      allProductDetails.removeAt(index);
+      cartShopContain.removeAt(index);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    fetchCart();
+  }
+
+  void fetchCart() async {
+    await getProductCart();
+
+    setState(() {
+      if (selectedCheckboxes.isEmpty ||
+          selectedCheckboxes.length != productInCart.length) {
+        selectedCheckboxes =
+            List.generate(productInCart.length, (index) => false);
+      }
+
+      if (productCount == null ||
+          productCount.isEmpty ||
+          productCount.length != productInCart.length) {
+        productCount = List.filled(productInCart.length, 1);
+      }
+
+      // Ensure that selectedCheckboxes has the same length as productInCart
+      selectedCheckboxes.length = productInCart.length;
+
+      // Update selectedCheckboxes based on the current length of the list
+      for (int i = 0; i < selectedCheckboxes.length; i++) {
+        if (i >= productCount.length || selectedCheckboxes[i] == null) {
+          selectedCheckboxes[i] = false; // Set new items to false by default
+        }
+      }
+    });
+  }
+/*
+void fetchCart() async {
+  await getProductCart();
+
+  setState(() {
+    if (selectedCheckboxes.isEmpty) {
+      selectedCheckboxes = List.generate(productInCart.length, (index) => false);
+    }
+
+
+    if (productCount == null) {
+      productCount = List.filled(productInCart.length, 1);
+    } else if (productCount.isEmpty) {
+      productCount = List.generate(productInCart.length, (index) => 1);
+    } else if (productInCart != null) { // Add null check here
+      productCount = List.filled(productInCart.length, 1);
+       // Set a default value if productInCart is null
+      
+    }
+  });
+}
+*/
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      //   height: MediaQuery.of(context).size.height,
+      body: Column(
+        children: [
+          Container(
+            height: 60,
+            color: const Color.fromARGB(255, 241, 235, 245),
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 12,
+                    ),
+                    CircleAvatar(
+                      radius: 10,
+                      backgroundColor: allCheckboxChecked
+                          ? Color.fromARGB(255, 13, 60, 99)
+                          : Colors.transparent,
+                      child: Checkbox(
+                        value: allCheckboxChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            allCheckboxChecked = value ?? false;
+                            // Update the state of all individual checkboxes
+                            selectedCheckboxes = List.filled(
+                                selectedCheckboxes.length, allCheckboxChecked);
+                          });
+                        },
+                        activeColor: Color.fromARGB(255, 13, 60, 99),
+                        checkColor: Colors.white,
+                        shape: CircleBorder(),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "120".tr,
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 13, 60, 99),
+                        fontSize: 19,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Roboto',
+                        letterSpacing: 1.2,
+                        shadows: [
+                          Shadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            offset: Offset(2, 2),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  '\$${calculateTotalPrice().toStringAsFixed(2)}',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 13, 60, 99),
+                    fontSize: 19,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Roboto',
+                    letterSpacing: 1.2,
+                    shadows: [
+                      Shadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        offset: Offset(2, 2),
+                        blurRadius: 2,
+                      ),
+                    ],
+                  ),
+                ),
+                CustomeButton2(
+                  text: "121".tr,
+                  onPressed: () {
+                    //Navigator.push(context,
+                    //  MaterialPageRoute(builder: (context) => Login()));
+                  },
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: productInCart.length,
+              itemBuilder: (context, index) {
+                final theproduct = productInCart[index];
+                final details = allProductDetails[index];
+                final imageData = theproduct['image'];
+                final bytes = List<int>.from(imageData['data']);
+                final productName = theproduct['name'];
+                // final priceOfProd1 = details['price'];
+                final quantity1 = theproduct['quantity'];
+
+                ///
+                String theState = theproduct['product_type'];
+                int productId = theproduct['product_id'];
+                // int thequantity = product['quantity'];
+                String thepriceOfProd = (theState == 'new' ||
+                        theState == 'used' ||
+                        theState == 'New' ||
+                        theState == 'Used' ||
+                        theState == 'مستعمل' ||
+                        theState == 'جديد')
+                    ? details['price']
+                    : 'Free';
+                String qunt = "101".tr;
+                String pr = "110".tr;
+                String stock = "123".tr;
+
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                    child: ListTile(
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 10,
+                            backgroundColor:
+                                index < selectedCheckboxes.length &&
+                                        selectedCheckboxes[index]
+                                    ? Color.fromARGB(255, 13, 60, 99)
+                                    : Colors.transparent,
+                            child: Checkbox(
+                              value: //selectedCheckboxes[index],
+                                  // index < selectedCheckboxes.length && selectedCheckboxes[index],
+                                  index < selectedCheckboxes.length
+                                      ? selectedCheckboxes[index]
+                                      : false,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedCheckboxes[index] = value ?? false;
+                                });
+                              },
+                              activeColor: Color.fromARGB(255, 13, 60, 99),
+                              checkColor: Colors.white,
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                          SizedBox(
+                            // height: 10,
+                            width: 10,
+                          ),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: SizedBox(
+                              width: 90,
+                              height: 100,
+                              child: Image.memory(
+                                Uint8List.fromList(bytes),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      title: Text(
+                        productName,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromARGB(255, 2, 46, 82),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '$pr: $thepriceOfProd',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            '$qunt: $quantity1',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      trailing: CountItem(
+                        // count: productCount[index],
+                        count: (productCount.isNotEmpty &&
+                                index < productCount.length)
+                            ? productCount[index]
+                            : 0,
+
+                        increment: () {
+                          setState(() {
+                            if (productCount[index] < quantity1) {
+                              repos.incrementCounter(context, index);
+                              productCount[index] =
+                                  repos.getCount(context, index);
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.warning,
+                                          color: Colors.orange,
+                                          size: 24,
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          "122".tr,
+                                          style: TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 13, 60, 99),
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Roboto',
+                                            letterSpacing: 1.2,
+                                            shadows: [
+                                              Shadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.5),
+                                                offset: Offset(2, 2),
+                                                blurRadius: 2,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    content: Text(
+                                      '$stock $productName: $quantity1',
+                                      style: GoogleFonts.aBeeZee(
+                                        textStyle: TextStyle(
+                                          color: Color.fromARGB(255, 1, 3, 4),
+                                          fontSize: 14,
+
+                                          // decoration: TextDecoration.underline,
+                                          decorationThickness: 1,
+                                          // fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    actions: [
+                                      CustomeButton2(
+                                        text: "124".tr,
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          });
+                        },
+                        decrement: () {
+                          setState(() {
+                            if (productCount[index] > 1) {
+                              repos.decrementCounter(context, index);
+                              productCount[index] =
+                                  repos.getCount(context, index);
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    // insetPadding: EdgeInsets.all(20),
+
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    elevation: 2.0,
+                                    backgroundColor: Colors.transparent,
+                                    child: Container(
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromARGB(
+                                            255, 241, 235, 245), // Colors.white
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.all(16.0),
+                                            child: Text(
+                                              "125".tr,
+                                              style: GoogleFonts.aBeeZee(
+                                                textStyle: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 2, 92, 123),
+                                                ),
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16.0),
+                                            child: Text(
+                                              "126".tr,
+                                              textAlign: TextAlign.center,
+                                              style: GoogleFonts.aBeeZee(
+                                                textStyle: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 2, 92, 123),
+                                                ),
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 24.0),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: <Widget>[
+                                              OutlinedButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                style: OutlinedButton.styleFrom(
+                                                  foregroundColor:
+                                                      Color.fromARGB(
+                                                          255, 51, 27, 27),
+                                                  side: BorderSide(
+                                                    color: Color.fromARGB(
+                                                        255, 112, 112, 112),
+                                                  ), // Border color
+                                                  textStyle:
+                                                      TextStyle(fontSize: 16.0),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 24.0,
+                                                      vertical: 8.0),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  "127".tr,
+                                                  style: GoogleFonts.aBeeZee(
+                                                    textStyle: TextStyle(
+                                                      color: Colors.black,
+                                                    ),
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  deleteProduct(index);
+                                                  Navigator.of(context).pop();
+                                                  getProductTypeState(
+                                                      productId);
+                                                  fetchCart();
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Color.fromARGB(
+                                                          255, 2, 92, 123),
+                                                  textStyle:
+                                                      TextStyle(fontSize: 16.0),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 24.0,
+                                                      vertical: 8.0),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  "128".tr,
+                                                  style: GoogleFonts.aBeeZee(
+                                                    textStyle: TextStyle(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              255,
+                                                              255,
+                                                              255),
+                                                    ),
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<Map<String, dynamic>?> getProductCart() async {
+    http.Response? response;
+
+    try {
+      response = await http.get(Uri.parse(
+          'http://192.168.0.114:3000/tradetryst/shoppingcart/getCartItem'));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        dynamic responseData = jsonDecode(response.body);
+        print(responseData);
+
+        List<Map<String, dynamic>> theRes = [];
+        List<Map<String, dynamic>> allProductData = [];
+
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('theRes') &&
+            responseData.containsKey('allProductData') &&
+            responseData.containsKey('allProductDetails')) {
+          cartShopContain =
+              List<Map<String, dynamic>>.from(responseData['theRes']);
+          productInCart =
+              List<Map<String, dynamic>>.from(responseData['allProductData']);
+          allProductDetails = List<Map<String, dynamic>>.from(
+              responseData['allProductDetails']);
+          print(productInCart);
+          print(cartShopContain);
+        } else {
+          print('Failed to fetch cart.');
+        }
+      } else {
+        print('Failed to fetch cart. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print(' Response body: ${response?.body}');
+      // throw Exception('Failed to fetch data: $e');
+    }
+    return null;
+  }
+
+////////////////////// delete
+  Future<Map<String, dynamic>?> getProductTypeState(int productid) async {
+    http.Response? response;
+
+    try {
+      response = await http.delete(Uri.parse(
+          'http://192.168.0.114:3000/tradetryst/shoppingcart/deleteCartItem?product_id=$productid'));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('deleted cart item');
+      } else {
+        print('Failed to fetch data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print(' Response body: ${response?.body}');
+      // throw Exception('Failed to fetch data: $e');
+    }
+    return null;
+  }
+}
+
+
+/*
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:project/widgets/button_2.dart';
+import 'package:project/widgets/demo_counter.dart';
 
 class CartItem extends StatefulWidget {
   @override
@@ -113,7 +721,7 @@ class _CartItemState extends State<CartItem> {
                       width: 10,
                     ),
                     Text(
-                      'All',
+                      "120".tr,
                       style: TextStyle(
                         color: Color.fromARGB(255, 13, 60, 99),
                         fontSize: 19,
@@ -149,7 +757,7 @@ class _CartItemState extends State<CartItem> {
                   ),
                 ),
                 CustomeButton2(
-                  text: 'CHECKOUT',
+                  text: "121".tr,
                   onPressed: () {
                     //Navigator.push(context,
                     //  MaterialPageRoute(builder: (context) => Login()));
@@ -180,6 +788,9 @@ class _CartItemState extends State<CartItem> {
                         theState == 'used')
                     ? details['price']
                     : 'Free';
+                String qunt = "101".tr;
+                String pr = "110".tr;
+                String stock = "123".tr;
 
                 return Card(
                   margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -237,11 +848,11 @@ class _CartItemState extends State<CartItem> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Price: $thepriceOfProd',
+                            '$pr: $thepriceOfProd',
                             style: TextStyle(fontSize: 16),
                           ),
                           Text(
-                            'Quantity: $quantity1',
+                            '$qunt: $quantity1',
                             style: TextStyle(fontSize: 16),
                           ),
                         ],
@@ -268,7 +879,7 @@ class _CartItemState extends State<CartItem> {
                                         ),
                                         SizedBox(width: 10),
                                         Text(
-                                          'Quantity Out of Stock',
+                                          "122".tr,
                                           style: TextStyle(
                                             color:
                                                 Color.fromARGB(255, 13, 60, 99),
@@ -289,7 +900,7 @@ class _CartItemState extends State<CartItem> {
                                       ],
                                     ),
                                     content: Text(
-                                      'The quantity of this product is above the range, That Exists of product  ${productName}: ${quantity1}',
+                                      '$stock $productName: $quantity1',
                                       style: GoogleFonts.aBeeZee(
                                         textStyle: TextStyle(
                                           color: Color.fromARGB(255, 1, 3, 4),
@@ -303,7 +914,7 @@ class _CartItemState extends State<CartItem> {
                                     ),
                                     actions: [
                                       CustomeButton2(
-                                        text: 'OK',
+                                        text: "124".tr,
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -347,7 +958,7 @@ class _CartItemState extends State<CartItem> {
                                           Padding(
                                             padding: EdgeInsets.all(16.0),
                                             child: Text(
-                                              'Confirm',
+                                              "125".tr,
                                               style: GoogleFonts.aBeeZee(
                                                 textStyle: TextStyle(
                                                   color: Color.fromARGB(
@@ -362,7 +973,7 @@ class _CartItemState extends State<CartItem> {
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 16.0),
                                             child: Text(
-                                              'Are you sure you want to delete this item?',
+                                              "126".tr,
                                               textAlign: TextAlign.center,
                                               style: GoogleFonts.aBeeZee(
                                                 textStyle: TextStyle(
@@ -402,7 +1013,7 @@ class _CartItemState extends State<CartItem> {
                                                   ),
                                                 ),
                                                 child: Text(
-                                                  'Cancel',
+                                                  "127".tr,
                                                   style: GoogleFonts.aBeeZee(
                                                     textStyle: TextStyle(
                                                       color: Colors.black,
@@ -435,7 +1046,7 @@ class _CartItemState extends State<CartItem> {
                                                   ),
                                                 ),
                                                 child: Text(
-                                                  'Delete',
+                                                  "128".tr,
                                                   style: GoogleFonts.aBeeZee(
                                                     textStyle: TextStyle(
                                                       color:
@@ -529,3 +1140,4 @@ class _CartItemState extends State<CartItem> {
     return null;
   }
 }
+*/

@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/chat_screen.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/notification_page.dart';
+import 'package:project/src/screen/notification_send_msg.dart';
 
 class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
@@ -22,9 +23,8 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     double wid, wid1;
-    wid = MediaQuery.of(context).size.width * 0.25;
-    wid1 = MediaQuery.of(context).size.width * 0.17;
-    /* if (text == 'Smart devices' ||
+
+    if (text == 'Smart devices' ||
         text == 'Shopping Cart' ||
         text == 'Robot cleaner') {
       wid = MediaQuery.of(context).size.width * 0.14;
@@ -59,13 +59,13 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
     } else {
       wid = MediaQuery.of(context).size.width * 0.25;
       wid1 = MediaQuery.of(context).size.width * 0.17;
-    }*/
+    }
     return
         // backgroundColor: Color.fromARGB(255, 201, 111, 111),
         Padding(
       padding: const EdgeInsets.only(right: 5.0, left: 5),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // mainAxisAlignment: MainAxisAlignment.center,
         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
@@ -148,6 +148,7 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
                     size: 26,
                   ),
                   onPressed: () {
+                    // triggerNotification();
                     Navigator.push(
                         context,
                         MaterialPageRoute(

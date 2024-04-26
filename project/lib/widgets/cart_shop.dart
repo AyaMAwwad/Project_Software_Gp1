@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/add_product.dart';
@@ -18,6 +19,7 @@ class CartShop extends StatefulWidget {
 
 class CartShopState extends State<CartShop> {
   int selectedIndex = 2;
+  static String lang = "119".tr;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +51,7 @@ class CartShopState extends State<CartShop> {
         child: Column(
           children: [
             CustemAppBar(
-              text: 'Shopping Cart',
+              text: "119".tr,
             ),
             Expanded(
               child: Container(

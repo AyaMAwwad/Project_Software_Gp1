@@ -75,3 +75,16 @@ exports.Editprofile = (req, res) => {
       res.status(500).json({ error }); // Return error message if update failed
     });
 };
+// new UpdatePass
+exports.UpdatePass = (req, res) => {
+  userRepository
+    .UpdatePass(req, res)
+    .then((message) => {
+      console.log(message);
+      res.status(201).json({ message }); 
+    })
+    .catch((error) => {
+      res.status(400).json({ message: error }); 
+    });
+  }
+  

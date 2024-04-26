@@ -8,12 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/src/screen/product_page.dart';
 import 'package:project/widgets/cart_shop.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+//import 'package:translator/translator.dart';
 
 class RecentProd extends StatelessWidget {
   final String TypeOfCategory;
@@ -27,15 +30,27 @@ class RecentProd extends StatelessWidget {
       required this.prodState,
       required this.prod,
       required this.detail});
+  /*Future<void> translateProductNames(
+      List<Map<String, dynamic>> products) async {
+    await Future.forEach(products, (product) async {
+      print('^^^^^^^^^^^^^^^^^^');
+      product['name'] = MultiLanguage.isArabic
+          ? await LangugeService.transFromEnglishToArabic(product['name'])
+          : await LangugeService.transFromArabicToEnglish(product['name']);
+      print(product['name']);
+    });
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    // GoogleTranslator translate = GoogleTranslator();
     thestate = prodState;
     print(prodState + TypeOfCategory);
     print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
     return FutureBuilder(
       future: Future.delayed(Duration(milliseconds: 300)), // Simulating a delay
       builder: (context, snapshot) {
+        //translateProductNames(prod);
         if (snapshot.connectionState == ConnectionState.waiting) {
           // If still waiting, show CircularProgressIndicator
           return Center(
@@ -60,6 +75,34 @@ class RecentProd extends StatelessWidget {
               ),
             );
           } else {
+            /*  for (int i = 0; i < prod.length; i++)  {
+              print('^^^^^^^^^^^^^^^^^^');
+              prod[i]['name'] = MultiLanguage.isArabic
+                  ?  LangugeService.transFromEnglishToArabic(prod[i]['name'])
+                  :  LangugeService.transFromArabicToEnglish(prod[i]['name']);
+              print(prod[i]['name']);
+            }*/
+            /*
+            int i = 0;
+            prod.forEach((product) async {
+              print('^^^^^^^^^^^^^^^^^^');
+              /*  var translation = MultiLanguage.isArabic
+                  ? await translator.translate(product['name'],
+                      from: 'en', to: 'ar')
+                  : await translator.translate(product['name'],
+                      from: 'ar', to: 'en');*/
+              prod[i]['name'] = MultiLanguage.isArabic
+                  ? LangugeService.transFromEnglishToArabic(product['name'])
+                      .toString()
+                  : LangugeService.transFromArabicToEnglish(product['name'])
+                      .toString();
+              print('WEEEEWEEEEEEEEEWEEEEEEEEEWEEEEEEEEEEE');
+              print(prod[i]['name']);
+              //   prod[i]['name'] = translation;
+              i++;
+
+              // Translate other fields as needed
+            });*/
             // If data available, display the product grid
             return SingleChildScrollView(
               child: GridView.builder(
@@ -552,7 +595,7 @@ class RecentSingleProdState extends State<RecentSingleProd> {
     String textP = '';
     double? width = 0.0;
 
-    if (RecentProd.thestate == 'Free') {
+    if (RecentProd.thestate == 'Free' || RecentProd.thestate == 'مجاني') {
       textP = 'Free';
       width = 100;
     } else {
