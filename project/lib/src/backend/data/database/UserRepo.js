@@ -191,6 +191,42 @@ AllUserName(req, res) {
     });
   }
   
+  //UpdatePass
+  UpdatePass(req, res) {
+    const { email, newPassword } = req.body;
+    console.log(email, newPassword);
+    return new Promise((resolve, reject) => {
+      console.log('aaaaaaaaaa');
+      bcrypt.hash(newPassword, 10, async (hashError, hashedPassword) => {
+        if (hashError) {
+          console.error('Error hashing the password:', hashError);
+          return res.status(500).json({
+            status: 'error',
+            message: 'Error hashing the password',
+          });
+        }
+    
+        let newPass = hashedPassword;
+        console.log(newPass);
+        db.query(
+          'UPDATE User SET password = ? WHERE email = ?',
+          [newPass, email],
+          (error, results) => {
+              if (error) {
+                  reject('Failed to update password');
+              } else {
+                  resolve('Password updated successfully');
+              }
+          }
+      );
+    
+      });
+       
+    });
+}
+
+
+
 
   /// product home page 
 

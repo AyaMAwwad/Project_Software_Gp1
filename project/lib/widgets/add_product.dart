@@ -407,10 +407,10 @@ class AddProductState extends State<AddProduct> {
                             return "23".tr;
                           }
                           final RegExp regex = RegExp(r'^[a-zA-Z\s]+$');
-                          if (!regex.hasMatch(value)) {
+                          /* if (!regex.hasMatch(value)) {
                             return "24".tr;
                           }
-                          return null;
+                          return null;*/
                         },
                       ),
                       custemFieldforProductPage(
@@ -423,10 +423,10 @@ class AddProductState extends State<AddProduct> {
                           }
                           final RegExp regex =
                               RegExp(r'^[a-zA-Z0-9\s]*[a-zA-Z][a-zA-Z0-9\s]*$');
-                          if (!regex.hasMatch(value)) {
+                          /* if (!regex.hasMatch(value)) {
                             return "28".tr;
                           }
-                          return null;
+                          return null;*/
                         },
                       ),
                       Padding(

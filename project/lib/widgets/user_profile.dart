@@ -342,7 +342,7 @@ class UserProfileState extends State<UserProfile> {
       // title: Text('Settings', style:Theme.of(context).textTheme.bodyText1 ,  ),
       title: Text(
         'Informations',
-        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               fontSize: 18, // Set the font size as desired
               //fontWeight: FontWeight.bold, // Set the font weight as desired
               color: Colors.black, // Set the text color as desired
@@ -420,7 +420,7 @@ class UserProfileState extends State<UserProfile> {
         ),
         title: Text(
           title,
-          style: Theme.of(context).textTheme.bodyText2?.copyWith(
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontSize: 18, // Set the font size as desired
                 //fontWeight: FontWeight.bold, // Set the font weight as desired
                 color: Colors.black, // Set the text color as desired

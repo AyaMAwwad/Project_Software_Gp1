@@ -5,6 +5,8 @@ import 'package:project/locale/locale_controller.dart';
 //import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MultiLanguage extends StatelessWidget {
+  static bool isArabic = false;
+  static bool isEnglish = true;
   @override
   Widget build(BuildContext context) {
     mylocalcontroller controller = Get.find();
@@ -19,6 +21,8 @@ class MultiLanguage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 controller.changelang("en");
+                isEnglish = true;
+                isArabic = false;
                 // Code to switch to English language
                 // You can implement your language switching logic here
               },
@@ -28,6 +32,8 @@ class MultiLanguage extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 controller.changelang("ar");
+                isArabic = true;
+                isEnglish = false;
                 // Code to switch to Spanish language
                 // You can implement your language switching logic here
               },

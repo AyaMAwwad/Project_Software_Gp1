@@ -3,8 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:flutter_app_dialog/flutter_app_dialog.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -117,11 +116,20 @@ class AddProductState extends State<AddProductPageTwo> {
     'Fair',
     'Poor',
   ];
-
+  List<String> listProductCondition1 = [
+    'ممتاز',
+    'جيد',
+    'عادل',
+    'فقير',
+  ];
+  List<String> listProductCondition2 = [];
   double high = 0.0;
 
   @override
   Widget build(BuildContext context) {
+    listProductCondition2 = ("11".tr == 'Add Product')
+        ? listProductCondition
+        : listProductCondition1;
     if (state == 'New') {
       text1 = 'Warranty period';
       text2 = 'Enter a warranty period';
@@ -171,7 +179,7 @@ class AddProductState extends State<AddProductPageTwo> {
           child: ListView(
             children: [
               CustemAppBar(
-                text: 'Add Product',
+                text: "11".tr,
               ),
               SizedBox(
                 height: 30,
@@ -190,7 +198,7 @@ class AddProductState extends State<AddProductPageTwo> {
                       Row(
                         children: [
                           Text(
-                            'Quantity',
+                            "101".tr,
                             style: GoogleFonts.aBeeZee(
                               textStyle: TextStyle(
                                 color: Color.fromARGB(255, 2, 92, 123),
@@ -223,7 +231,7 @@ class AddProductState extends State<AddProductPageTwo> {
                       Row(
                         children: [
                           Text(
-                            'Choose image',
+                            "102".tr,
                             style: GoogleFonts.aBeeZee(
                               textStyle: TextStyle(
                                 color: Color.fromARGB(255, 2, 92, 123),
@@ -281,7 +289,7 @@ class AddProductState extends State<AddProductPageTwo> {
                                 child: imagesayyya.isEmpty
                                     ? Center(
                                         child: Text(
-                                          'No Image selected',
+                                          "103".tr,
                                           style: GoogleFonts.aBeeZee(
                                             textStyle: TextStyle(
                                               color: Color.fromARGB(
@@ -366,11 +374,14 @@ class AddProductState extends State<AddProductPageTwo> {
                         height: 10,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 260, top: high),
+                        padding: ("11".tr == 'Add Product')
+                            ? EdgeInsets.only(left: 260, top: high)
+                            : EdgeInsets.only(right: 240, top: high),
+                        // padding: EdgeInsets.only(left: 260, top: high),
                         child: Row(
                           children: [
                             Text(
-                              'Add',
+                              "104".tr,
                               style: GoogleFonts.aBeeZee(
                                 textStyle: TextStyle(
                                   color: Color.fromARGB(255, 2, 92, 123),
@@ -429,9 +440,7 @@ class AddProductState extends State<AddProductPageTwo> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return SuccessDialog(
-                                            message:
-                                                'Thank you for adding the product!');
+                                        return SuccessDialog(message: "105".tr);
                                       },
                                     );
                                     /* showDialog(
@@ -543,272 +552,272 @@ class AddProductState extends State<AddProductPageTwo> {
   }
 
   Widget buildSecondPageContent() {
-    switch (state) {
-      case 'New':
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Warranty Period',
-              style: GoogleFonts.aBeeZee(
-                textStyle: TextStyle(
-                  color: Color.fromARGB(255, 2, 92, 123),
-                  fontSize: 20,
+    if (state == 'New' || state == 'جديد') {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "106".tr,
+            style: GoogleFonts.aBeeZee(
+              textStyle: TextStyle(
+                color: Color.fromARGB(255, 2, 92, 123),
+                fontSize: 20,
 
-                  // decoration: TextDecoration.underline,
-                  decorationThickness: 1,
-                  fontWeight: FontWeight.bold,
-                  //padding: 10,
-                ),
+                // decoration: TextDecoration.underline,
+                decorationThickness: 1,
+                fontWeight: FontWeight.bold,
+                //padding: 10,
               ),
             ),
-            SizedBox(height: 10.0),
-            Text(
-              'Select Warranty Period: ${_selectedValue.toInt()} months',
-              style: GoogleFonts.aBeeZee(
-                textStyle: TextStyle(
-                  color: Color.fromARGB(255, 102, 104, 104),
-                  fontSize: 18,
+          ),
+          SizedBox(height: 10.0),
+          Text(
+            '${"107".tr} ${_selectedValue.toInt()} ${"108".tr}',
+            style: GoogleFonts.aBeeZee(
+              textStyle: TextStyle(
+                color: Color.fromARGB(255, 102, 104, 104),
+                fontSize: 18,
 
-                  // decoration: TextDecoration.underline,
-                  decorationThickness: 1,
-                  //fontWeight: FontWeight.bold,
-                  //padding: 10,
-                ),
+                // decoration: TextDecoration.underline,
+                decorationThickness: 1,
+                //fontWeight: FontWeight.bold,
+                //padding: 10,
               ),
             ),
-            SizedBox(height: 10.0),
-            SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                activeTrackColor: Color.fromARGB(255, 2, 92, 123),
-                inactiveTrackColor: Colors.grey,
-                trackShape: RoundedRectSliderTrackShape(),
-                trackHeight: 4.0, // Height of the slider track
-                thumbColor: Color.fromARGB(255, 2, 92, 123),
-                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.0),
-                overlayColor:
-                    const Color.fromARGB(255, 11, 94, 162).withAlpha(32),
-                overlayShape: RoundSliderOverlayShape(overlayRadius: 20.0),
-              ),
-              child: Slider(
-                value: _selectedValue,
-                min: _minValue,
-                max: _maxValue,
-                divisions: (_maxValue - _minValue).toInt(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedValue = value;
-                    detailsOfState = value.toString();
-                  });
-                },
-              ),
+          ),
+          SizedBox(height: 10.0),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: Color.fromARGB(255, 2, 92, 123),
+              inactiveTrackColor: Colors.grey,
+              trackShape: RoundedRectSliderTrackShape(),
+              trackHeight: 4.0, // Height of the slider track
+              thumbColor: Color.fromARGB(255, 2, 92, 123),
+              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.0),
+              overlayColor:
+                  const Color.fromARGB(255, 11, 94, 162).withAlpha(32),
+              overlayShape: RoundSliderOverlayShape(overlayRadius: 20.0),
             ),
-            custemFieldforProductPage(
-              hintText: 'Enter Price of Product',
-              controller: priceContr,
-              text: 'Price',
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter Price ';
-                } else if (!isNumeric(value)) {
-                  return 'Please enter a valid number for the Price';
-                } else {
-                  return null;
-                }
-              },
-            ),
-          ],
-        );
-
-      case 'Used':
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Product Condition',
-              style: GoogleFonts.aBeeZee(
-                textStyle: TextStyle(
-                  color: Color.fromARGB(255, 2, 92, 123),
-                  fontSize: 20,
-
-                  // decoration: TextDecoration.underline,
-                  decorationThickness: 1,
-                  fontWeight: FontWeight.bold,
-                  //padding: 10,
-                ),
-              ),
-            ),
-            SizedBox(height: 10.0),
-            ListStateAndCat(
-              item: listProductCondition
-                  .map((String item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
-                          style: TextStyle(
-                            fontSize: 16,
-                            // fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 2, 92, 123),
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ))
-                  .toList(),
-              hintText: 'Select Product Condition',
-              value: productCondition,
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please select a Product Condition';
-                }
-                return null;
-              },
-              onChanged: (newVal) {
+            child: Slider(
+              value: _selectedValue,
+              min: _minValue,
+              max: _maxValue,
+              divisions: (_maxValue - _minValue).toInt(),
+              onChanged: (value) {
                 setState(() {
-                  productCondition = newVal;
-                  detailsOfState = newVal;
-                  //selectedType = categoryTypes[valueChoose]![0];
+                  _selectedValue = value;
+                  detailsOfState = value.toString();
                 });
               },
             ),
-            custemFieldforProductPage(
-              hintText: 'Enter Price of Product',
-              controller: priceContr,
-              text: 'Price',
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter Price ';
-                } else if (!isNumeric(value)) {
-                  return 'Please enter a valid number for the Price';
-                } else {
-                  return null;
-                }
-              },
-            ),
-          ],
-        );
-
-      case 'Free':
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Product Condition',
-              style: GoogleFonts.aBeeZee(
-                textStyle: TextStyle(
-                  color: Color.fromARGB(255, 2, 92, 123),
-                  fontSize: 20,
-
-                  // decoration: TextDecoration.underline,
-                  decorationThickness: 1,
-                  fontWeight: FontWeight.bold,
-                  //padding: 10,
-                ),
-              ),
-            ),
-            SizedBox(height: 10.0),
-            ListStateAndCat(
-              item: listProductCondition
-                  .map((String item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
-                          style: TextStyle(
-                            fontSize: 16,
-                            // fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 2, 92, 123),
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ))
-                  .toList(),
-              hintText: 'Select Product Condition',
-              value: productCondition,
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please select a Product Condition';
-                }
+          ),
+          custemFieldforProductPage(
+            hintText: "109".tr,
+            controller: priceContr,
+            text: "110".tr,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "111".tr;
+              } else if (!isNumeric(value)) {
+                return "112".tr;
+              } else {
                 return null;
-              },
-              onChanged: (newVal) {
-                setState(() {
-                  productCondition = newVal;
-                  conditionOfFreeProduct = newVal;
-                  //selectedType = categoryTypes[valueChoose]![0];
-                });
-              },
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              'State of Free',
-              style: GoogleFonts.aBeeZee(
-                textStyle: TextStyle(
-                  color: Color.fromARGB(255, 2, 92, 123),
-                  fontSize: 20,
-
-                  // decoration: TextDecoration.underline,
-                  decorationThickness: 1,
-                  fontWeight: FontWeight.bold,
-                  //padding: 10,
-                ),
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Radio(
-                      value: 'New',
-                      groupValue: valueState,
-                      onChanged: (value) {
-                        setState(() {
-                          valueState = value.toString();
-                          detailsOfState = valueState;
-                        });
-                      },
-                    ),
-                    Text(
-                      'New',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                          color: Colors.black,
-                        ),
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Radio(
-                      value: 'Used',
-                      groupValue: valueState,
-                      onChanged: (value) {
-                        setState(() {
-                          valueState = value.toString();
-                          detailsOfState = valueState;
-                        });
-                      },
-                    ),
-                    Text(
-                      'Used',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                          color: Colors.black,
-                        ),
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        );
-      default:
-        return SizedBox();
+              }
+            },
+          ),
+        ],
+      );
     }
+
+    if (state == 'Used' || state == 'مستعمل') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "113".tr,
+            style: GoogleFonts.aBeeZee(
+              textStyle: TextStyle(
+                color: Color.fromARGB(255, 2, 92, 123),
+                fontSize: 20,
+
+                // decoration: TextDecoration.underline,
+                decorationThickness: 1,
+                fontWeight: FontWeight.bold,
+                //padding: 10,
+              ),
+            ),
+          ),
+          SizedBox(height: 10.0),
+          ListStateAndCat(
+            item: listProductCondition2
+                .map((String item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(
+                        item,
+                        style: TextStyle(
+                          fontSize: 16,
+                          // fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 2, 92, 123),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ))
+                .toList(),
+            hintText: "114".tr,
+            value: productCondition,
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "115".tr;
+              }
+              return null;
+            },
+            onChanged: (newVal) {
+              setState(() {
+                productCondition = newVal;
+                detailsOfState = newVal;
+                //selectedType = categoryTypes[valueChoose]![0];
+              });
+            },
+          ),
+          custemFieldforProductPage(
+            hintText: "109".tr,
+            controller: priceContr,
+            text: "110".tr,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "111".tr;
+              } else if (!isNumeric(value)) {
+                return "112".tr;
+              } else {
+                return null;
+              }
+            },
+          ),
+        ],
+      );
+    }
+
+    if (state == 'Free' || state == 'مجاني') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "113".tr,
+            style: GoogleFonts.aBeeZee(
+              textStyle: TextStyle(
+                color: Color.fromARGB(255, 2, 92, 123),
+                fontSize: 20,
+
+                // decoration: TextDecoration.underline,
+                decorationThickness: 1,
+                fontWeight: FontWeight.bold,
+                //padding: 10,
+              ),
+            ),
+          ),
+          SizedBox(height: 10.0),
+          ListStateAndCat(
+            item: listProductCondition2
+                .map((String item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(
+                        item,
+                        style: TextStyle(
+                          fontSize: 16,
+                          // fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 2, 92, 123),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ))
+                .toList(),
+            hintText: "114".tr,
+            value: productCondition,
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "115".tr;
+              }
+              return null;
+            },
+            onChanged: (newVal) {
+              setState(() {
+                productCondition = newVal;
+                conditionOfFreeProduct = newVal;
+                //selectedType = categoryTypes[valueChoose]![0];
+              });
+            },
+          ),
+          SizedBox(height: 20.0),
+          Text(
+            "116".tr,
+            style: GoogleFonts.aBeeZee(
+              textStyle: TextStyle(
+                color: Color.fromARGB(255, 2, 92, 123),
+                fontSize: 20,
+
+                // decoration: TextDecoration.underline,
+                decorationThickness: 1,
+                fontWeight: FontWeight.bold,
+                //padding: 10,
+              ),
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Radio(
+                    value: 'New',
+                    groupValue: valueState,
+                    onChanged: (value) {
+                      setState(() {
+                        valueState = value.toString();
+                        detailsOfState = valueState;
+                      });
+                    },
+                  ),
+                  Text(
+                    "117".tr,
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Radio(
+                    value: 'Used',
+                    groupValue: valueState,
+                    onChanged: (value) {
+                      setState(() {
+                        valueState = value.toString();
+                        detailsOfState = valueState;
+                      });
+                    },
+                  ),
+                  Text(
+                    "118".tr,
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
+    }
+    return Container();
   }
 
 /*

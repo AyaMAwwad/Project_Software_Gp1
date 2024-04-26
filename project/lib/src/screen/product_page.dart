@@ -5,10 +5,12 @@ import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:project/src/screen/category_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -323,7 +325,23 @@ class ProductPageState extends State<ProductPage> {
               List<Map<String, dynamic>>.from(responseData['allProductData']);
           allProductDetails = List<Map<String, dynamic>>.from(
               responseData['allProductDetails']);
+          //  final translator = GoogleTranslator();
+          /*  int i = 0;
+          allProductData.forEach((product) async {
+            print('^^^^^^^^^^^^^^^^^^');
+            var translation = MultiLanguage.isArabic
+                ? await translator.translate(product['name'],
+                    from: 'en', to: 'ar')
+                : await translator.translate(product['name'],
+                    from: 'ar', to: 'en');
+            /*  allProductData[i]['name'] = MultiLanguage.isArabic
+                ? LangugeService.transFromEnglishToArabic(product['name'])
+                : LangugeService.transFromArabicToEnglish(product['name']);*/
+            allProductData[i]['name'] = translation;
+            i++;
 
+            // Translate other fields as needed
+          });*/
           print(allProductData);
           print(allProductDetails);
           print(allProductData[0]['name']);

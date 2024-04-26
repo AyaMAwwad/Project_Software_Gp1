@@ -17,7 +17,7 @@ class ForgetPassword extends StatefulWidget {
 class ForgetPass extends State<ForgetPassword> with ValidationMixin {
   VerificationService verificationService = VerificationService();
   EmailOTP auth = EmailOTP();
-
+  static String emailUser = '';
   //////
   TextEditingController email = TextEditingController();
   ////////
@@ -158,6 +158,7 @@ class ForgetPass extends State<ForgetPassword> with ValidationMixin {
 
   @override
   Widget build(BuildContext context) {
+    emailUser = email.text;
     //double w = MediaQuery.of(context).size.width;
     // double h = MediaQuery.of(context).size.height;
 
