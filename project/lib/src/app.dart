@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/locale/locale.dart';
 import 'package:project/locale/locale_controller.dart';
+import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/src/screen/notification_page.dart';
 import 'package:project/src/screen/home_page.dart';
 
 import 'package:project/src/screen/login_screen.dart';
 
 import 'package:project/src/screen/screen_state.dart';
+import 'package:project/src/screen/security.dart';
+import 'package:project/src/screen/settings.dart';
 
 import 'package:project/src/screen/signup_screen.dart';
 
@@ -46,7 +49,8 @@ class MyAppState extends State<MyApp> {
     Get.put(mylocalcontroller());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: //CustemAppBar(), // SliderPage(), //NewPass(),
+      home:
+          // CoverStateScreen(), //CustemAppBar(), // SliderPage(), //NewPass(),
           (FirebaseAuth.instance.currentUser == null)
               ? CoverStateScreen()
               : Login(),
@@ -81,6 +85,9 @@ class MyAppState extends State<MyApp> {
         "login": (context) => Login(),
         "homepagee": (context) => HomePage(),
         "notification": (context) => NotificationPage(),
+        "settings": (context) => SettingsPage(),
+        "multiLanguage": (context) => MultiLanguage(),
+        "security": (context) => PrivacySecurityPage(),
         //"category": (context) => ScreenCategory(),
       },
       // Login(), // Signup(), //CoverStateScreen(), // Display SplashScreen initially

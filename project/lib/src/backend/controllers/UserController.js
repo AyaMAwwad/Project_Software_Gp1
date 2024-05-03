@@ -63,7 +63,6 @@ exports.loginUser = (req, res) => {
 };
 
 
-
 exports.Editprofile = (req, res) => {
   const { id, firstName, lastName, email, address, phoneNumber , gender } = req.body;
   userRepository
@@ -75,7 +74,45 @@ exports.Editprofile = (req, res) => {
       res.status(500).json({ error }); // Return error message if update failed
     });
 };
-// new UpdatePass
+
+//exports.del
+
+exports.deleteacountt = (req, res) => {
+  const userId = req.body.userId; // Assuming the user ID is in the request body
+  console.log('deleteacountt controller method invoked with userId:', userId);
+  userRepository.deleteacountt(userId)
+    .then((result) => {
+      console.log(result);
+      res.status(200).send(result);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      res.status(500).send(error);
+    });
+};
+
+exports.oldpassword = (req, res) => {
+  const { email, oldPassword } = req.body;
+
+console.log('oldpassword controller method invoked with email:', email);
+console.log('oldpassword controller method invoked with oldPassword:', oldPassword);
+  userRepository.oldpassword(email, oldPassword)
+  .then((result) => {
+    // If the old password matches the stored password, send success response
+    if (result) {
+      res.status(200).json({ message: 'Old password matches the stored password' });
+    } else {
+     
+      res.status(401).json({ message: 'New password not matches the stored password' });
+    }
+  })
+  .catch((error) => {
+    
+    console.error('Error checking old password:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  });
+};
+
 exports.UpdatePass = (req, res) => {
   userRepository
     .UpdatePass(req, res)
@@ -86,5 +123,4 @@ exports.UpdatePass = (req, res) => {
     .catch((error) => {
       res.status(400).json({ message: error }); 
     });
-  }
-  
+  };

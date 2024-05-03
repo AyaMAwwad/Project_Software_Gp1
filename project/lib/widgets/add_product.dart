@@ -9,6 +9,7 @@ import 'package:project/widgets/add_product_2.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
 import 'package:project/widgets/cart_shop.dart';
+
 import 'package:project/widgets/list_for_add.dart';
 import 'package:project/widgets/textfield_add_prod.dart';
 import 'package:get/get.dart';
@@ -37,18 +38,18 @@ class AddProductState extends State<AddProduct> {
     'Smart devices',
     'Books',
     'Games',
-    'Houseware',
-    'Vehicles',
     'Furniture'
+        'Vehicles',
+    'Houseware',
   ];
   List<String> listItem1 = [
     'الموضة',
     'الأجهزة الذكية',
     'كتب',
     'ألعاب',
-    'أدوات منزلية',
-    'مركبات',
     'أثاث'
+        'مركبات',
+    'أدوات منزلية',
   ];
 
   final Map<String, List<String>> categoryTypes = {
@@ -162,7 +163,13 @@ class AddProductState extends State<AddProduct> {
       'مرطب الجو ',
       'ألة القهوة'
     ],
-    'مركبات': ['Car', 'Electric', 'Motorcycles', 'Bicycles', 'Commercial'],
+    'مركبات': [
+      'سيارات',
+      'سيارات كهربائية',
+      'دراجات نارية',
+      'دراجات',
+      'سيارة تجارية'
+    ],
     'أثاث': [
       'الأرائك',
       'سجاد',
@@ -499,6 +506,8 @@ class AddProductState extends State<AddProduct> {
             selectedIndex = index;
             switch (index) {
               case 0:
+                HomePageState.isPressTosearch = false;
+                HomePageState.isPressTosearchButton = false;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),

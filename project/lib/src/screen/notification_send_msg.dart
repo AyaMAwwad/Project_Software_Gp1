@@ -26,7 +26,7 @@ Future<void> sendNotification(
     },
     'to': fcmToken,
   };
-  print(data);
+  // print(data);
 
   try {
     User? user = FirebaseAuth.instance.currentUser;
@@ -60,8 +60,8 @@ Future<void> sendNotification(
     print('Notification sent successfully to FCM token: $fcmToken');
   } else {
     print('Failed to send notification to FCM token: $fcmToken');
-    print('HTTP response code: ${response.statusCode}');
-    print('HTTP response body: ${response.body}');
+    // print('HTTP response code: ${response.statusCode}');
+    // print('HTTP response body: ${response.body}');
   }
 }
 

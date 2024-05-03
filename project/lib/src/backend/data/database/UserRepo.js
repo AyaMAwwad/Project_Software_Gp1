@@ -190,8 +190,200 @@ AllUserName(req, res) {
       );
     });
   }
+
+  // delete acount user 
+/*
+
+  deleteacountt(userId) {
+    console.log('deleteacountt function called with userId:', userId);
+    return new Promise((resolve, reject) => {
+      // SQL query to delete the user account from the database
+      db.query(
+        'DELETE FROM user WHERE user_id = ?',
+        [userId],
+        (error, results) => {
+          if (error) {
+            console.error('Error deleting account:', error);
+            return reject('Failed to delete account');
+          }
+          if (results.affectedRows === 0) {
+            // No rows affected, meaning no user with the specified ID found
+            return reject('User not found');
+          }
+          console.log('Account deleted successfully');
+          return resolve('Account deleted successfully');
+        }
+      );
+
+    });
+  }
   
-  //UpdatePass
+*/
+
+/*
+deleteacountt(userId) {
+  console.log('deleteacountt function called with userId:', userId);
+  return new Promise((resolve, reject) => {
+    // SQL query to delete records from the new_product table where product_id is associated with the user
+    db.query(
+      'DELETE FROM new_product WHERE product_id IN (SELECT product_id FROM product WHERE user_id = ?)',
+      [userId],
+      (error, results) => {
+        if (error) {
+          console.error('Error deleting new_product records:', error);
+          return reject('Failed to delete account');
+        }
+        
+        // SQL query to delete records from the used_product table where product_id is associated with the user
+        db.query(
+          'DELETE FROM used_product WHERE product_id IN (SELECT product_id FROM product WHERE user_id = ?)',
+          [userId],
+          (error, results) => {
+            if (error) {
+              console.error('Error deleting used_product records:', error);
+              return reject('Failed to delete account');
+            }
+            
+            // SQL query to delete the products associated with the user
+            db.query(
+              'DELETE FROM shopping_cart WHERE user_id = ?',
+              [userId],
+              (error, results) => {
+                if (error) {
+                  console.error('Error deleting products:', error);
+                  return reject('Failed to delete account');
+                }
+                
+                // SQL query to delete records from the shoppingcart table
+                db.query( //DELETE FROM product WHERE user_id = ?
+                  'DELETE FROM product WHERE user_id = ?',
+                  [userId],
+                  (error, results) => {
+                    if (error) {
+                      console.error('Error deleting shoppingcart:', error);
+                      return reject('Failed to delete account');
+                    }
+                    
+                    // SQL query to delete the user account
+                    db.query(
+                      'DELETE FROM user WHERE user_id = ?',
+                      [userId],
+                      (error, results) => {
+                        if (error) {
+                          console.error('Error deleting account:', error);
+                          return reject('Failed to delete account');
+                        }
+                        
+                        if (results.affectedRows === 0) {
+                          // No rows affected, meaning no user with the specified ID found
+                          return reject('User not found');
+                        }
+                        
+                        console.log('Account deleted successfully');
+                        return resolve('Account deleted successfully');
+                      }
+                    );
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
+    );
+  });
+}
+
+*/
+
+deleteacountt(userId) {
+  console.log('deleteacountt function called with userId:', userId);
+  return new Promise((resolve, reject) => {
+    // SQL query to delete records from the new_product table where product_id is associated with the user
+    db.query(
+      'DELETE FROM new_product WHERE product_id IN (SELECT product_id FROM product WHERE user_id = ?)',
+      [userId],
+      (error, results) => {
+        if (error) {
+          console.error('Error deleting new_product records:', error);
+          return reject('Failed to delete account');
+        }
+        
+        // SQL query to delete records from the used_product table where product_id is associated with the user
+        db.query(
+          'DELETE FROM used_product WHERE product_id IN (SELECT product_id FROM product WHERE user_id = ?)',
+          [userId],
+          (error, results) => {
+            if (error) {
+              console.error('Error deleting used_product records:', error);
+              return reject('Failed to delete account');
+            }
+            
+            // SQL query to delete records from the productimage table where product_id is associated with the user
+            db.query(
+              'DELETE FROM productimage WHERE product_id IN (SELECT product_id FROM product WHERE user_id = ?)',
+              [userId],
+              (error, results) => {
+                if (error) {
+                  console.error('Error deleting productimage records:', error);
+                  return reject('Failed to delete account');
+                }
+                
+                // SQL query to delete the products associated with the user
+                db.query(
+                  'DELETE FROM shopping_cart WHERE user_id = ?',
+                  [userId],
+                  (error, results) => {
+                    if (error) {
+                      console.error('Error deleting products:', error);
+                      return reject('Failed to delete account');
+                    }
+                    
+                    // SQL query to delete records from the shoppingcart table
+                    db.query(
+                      'DELETE FROM product WHERE user_id = ?',
+                      [userId],
+                      (error, results) => {
+                        if (error) {
+                          console.error('Error deleting shoppingcart:', error);
+                          return reject('Failed to delete account');
+                        }
+                        
+                        // SQL query to delete the user account
+                        db.query(
+                          'DELETE FROM user WHERE user_id = ?',
+                          [userId],
+                          (error, results) => {
+                            if (error) {
+                              console.error('Error deleting account:', error);
+                              return reject('Failed to delete account');
+                            }
+                            
+                            if (results.affectedRows === 0) {
+                              // No rows affected, meaning no user with the specified ID found
+                              return reject('User not found');
+                            }
+                            
+                            console.log('Account deleted successfully');
+                            return resolve('Account deleted successfully');
+                          }
+                        );
+                      }
+                    );
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
+    );
+  });
+}
+
+  /// product home page 
+
+
   UpdatePass(req, res) {
     const { email, newPassword } = req.body;
     console.log(email, newPassword);
@@ -205,7 +397,7 @@ AllUserName(req, res) {
             message: 'Error hashing the password',
           });
         }
-    
+
         let newPass = hashedPassword;
         console.log(newPass);
         db.query(
@@ -219,16 +411,72 @@ AllUserName(req, res) {
               }
           }
       );
-    
+
       });
-       
+
     });
 }
 
 
 
 
-  /// product home page 
+
+
+
+
+
+//
+//oldpasswordcheck
+oldpassword(email, oldPassword) {
+  return new Promise((resolve, reject) => {
+    console.log(email);
+    console.log(oldPassword);
+    // Query to fetch the user's stored password from the database based on their email
+    db.query(
+      'SELECT password FROM user WHERE email = ?',
+      [email],
+      (error, results) => {
+        if (error) {
+          console.error('Error checking old password:', error);
+          return reject('Internal server error.');
+        }
+
+        // Check if the user exists
+        if (results.length === 0) {
+          console.log(results.length);
+          console.log('\n \n ');
+          return reject('User not found.');
+        }
+
+        const storedPassword = results[0].password;
+
+        // Compare the provided old password with the stored password
+        bcrypt.compare(
+          oldPassword,
+          storedPassword,
+          (compareError, passwordMatch) => {
+            if (compareError) {
+              console.error('Error comparing passwords:', compareError);
+              return reject('Internal server error.');
+            }
+
+            if (passwordMatch) {
+              // Old password matches the stored password
+              console.log('Old password matches the stored password');
+              resolve(true);
+            } else {
+              console.log('New password not matches the stored password');
+              // Old password does not match the stored password
+              resolve(false);
+            }
+          }
+        );
+      }
+    );
+  });
+}
+
+
 
 
 

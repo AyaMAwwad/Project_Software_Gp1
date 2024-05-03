@@ -6,15 +6,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/src/screen/product_page.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
 import 'package:project/widgets/cart_shop.dart';
+
 import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
@@ -100,9 +103,75 @@ class _ScreenCategoryState extends State<ScreenCategory> {
       'Shoe Racks'
     ],
   };
+  final Map<String, List<String>> categoryTypes1 = {
+    'الموضة': ['رجال', 'نساء', 'أحذية', 'أطفال', 'حقائب', 'ساعات', 'نظارات'],
+    'الأجهزة الذكية': [
+      'هاتف',
+      'حاسوب محمول',
+      'ايباد',
+      'سماعات',
+      'حاسوب',
+      'ساعات ذكية',
+      'تلفاز',
+      'مكبر صوت'
+    ],
+    'كتب': [
+      'ألغاز',
+      'دينية',
+      'إثارة وتشويق',
+      'تاريخ',
+      'مساعدة ذاتية',
+      'فلسفة',
+      'شعر',
+      'دراما',
+      'طبخ',
+      'صحة',
+    ],
+    'ألعاب': [
+      'بلايستيشن',
+      'إكس بوكس',
+      'سكوتر',
+      'أحذية تزلج',
+      'نظارات الواقع الإفتراضي',
+      'سماعات الراس',
+    ],
+    'أدوات منزلية': [
+      'روبوت التنظيف',
+      'مكنسة كهربائية',
+      'مقلاة هوائية',
+      'ثلاجة',
+      'غسالة',
+      'جلاية',
+      'فرن',
+      'أدوات كهربائية',
+      'مرطب الجو ',
+      'ألة القهوة'
+    ],
+    'مركبات': [
+      'سيارات',
+      'سيارات كهربائية',
+      'دراجات نارية',
+      'دراجات',
+      'سيارة تجارية'
+    ],
+    'أثاث': [
+      'الأرائك',
+      'سجاد',
+      'كراسي',
+      'طاولة',
+      'سرير',
+      'خزانة',
+      'خزائن المطبح',
+      'مكاتب',
+      'مرايا',
+      'مصابيح',
+      'جداريات',
+      'رفوف الأحذية'
+    ],
+  };
 
   Map<String, List<String>> categoryimage = {
-    'Fashion': [
+    "129".tr: [
       'images/icon/men_back.png',
       'images/icon/wom_back.png',
       'images/icon/shoes_back.png',
@@ -111,7 +180,7 @@ class _ScreenCategoryState extends State<ScreenCategory> {
       'images/icon/watch_back.png',
       'images/icon/glass1_back.png',
     ],
-    'Smart devices': [
+    "130".tr: [
       'images/icon/iphone_ic.png',
       'images/icon/laptop_ic.png',
       'images/icon/ipad_ic.png',
@@ -121,7 +190,7 @@ class _ScreenCategoryState extends State<ScreenCategory> {
       'images/icon/tv_ic.png',
       'images/icon/speakers_ic.png',
     ],
-    'Books': [
+    "131".tr: [
       'images/icon/books1.png',
       'images/icon/books6.png',
       'images/icon/books2.png',
@@ -133,7 +202,7 @@ class _ScreenCategoryState extends State<ScreenCategory> {
       'images/icon/books8.png',
       'images/icon/books9.png',
     ],
-    'Games': [
+    "132".tr: [
       'images/icon/games4.png',
       'images/icon/games2.png',
       'images/icon/games3.png',
@@ -141,7 +210,7 @@ class _ScreenCategoryState extends State<ScreenCategory> {
       'images/icon/games6.png',
       'images/icon/games5.png',
     ],
-    'Houseware': [
+    "133".tr: [
       'images/icon/house1.png',
       'images/icon/house2.png',
       'images/icon/house4.png',
@@ -153,14 +222,14 @@ class _ScreenCategoryState extends State<ScreenCategory> {
       'images/icon/house3.png',
       'images/icon/house9.png',
     ],
-    'Vehicles': [
+    "134".tr: [
       'images/icon/vec2.png',
       'images/icon/vec3.png',
       'images/icon/vec4.png',
       'images/icon/vec5.png',
       'images/icon/vec1.png',
     ],
-    'Furniture': [
+    "135".tr: [
       'images/icon/sofa_ic.png',
       'images/icon/carp_ic.png',
       'images/icon/chair_ic.png',
@@ -186,6 +255,9 @@ class _ScreenCategoryState extends State<ScreenCategory> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, List<String>> categoryTypes2 =
+        (MultiLanguage.isEnglish) ? categoryTypes : categoryTypes1;
+
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
 
@@ -233,7 +305,7 @@ class _ScreenCategoryState extends State<ScreenCategory> {
             Container(
               padding: EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color.fromARGB(255, 254, 247, 255),
               ),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -243,11 +315,20 @@ class _ScreenCategoryState extends State<ScreenCategory> {
                 ),
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: categoryTypes[selectedCategory]!.length,
+                itemCount: categoryTypes2[selectedCategory]?.length ??
+                    0, //categoryTypes2[selectedCategory]!.length,
                 itemBuilder: (context, index) {
-                  String type = categoryTypes[selectedCategory]![
+                  String type = categoryTypes2[selectedCategory]![
                       index]; //type selected need it
                   String image = categoryimage[selectedCategory]![index];
+                  /* String type = '';
+                  String image = '';
+                  if (selectedCategory != null &&
+                      categoryTypes2[selectedCategory] != null) {
+                    type = categoryTypes2[selectedCategory]![index];
+                    image = categoryimage[selectedCategory]![index];
+                    // Your remaining code for itemBuilder goes here
+                  }*/
 
                   return InkWell(
                     onTap: () {
@@ -481,6 +562,9 @@ class _ScreenCategoryState extends State<ScreenCategory> {
             selectedIndex = index;
             switch (index) {
               case 0:
+                HomePageState.isPressTosearch = false;
+                HomePageState.isPressTosearchButton = false;
+
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),

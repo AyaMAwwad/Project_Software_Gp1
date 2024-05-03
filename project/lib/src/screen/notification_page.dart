@@ -138,7 +138,7 @@ class NotificationPageState extends State<NotificationPage> {
 */
   @override
   Widget build(BuildContext context) {
-    print(notifications);
+    // print(notifications);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 2, 92, 123),
       body: SafeArea(
@@ -186,7 +186,9 @@ class NotificationPageState extends State<NotificationPage> {
                   return Padding(
                     padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                     child: Card(
-                      elevation: 3,
+                      elevation: 4,
+                      color:
+                          Color.fromARGB(255, 241, 235, 245).withOpacity(0.9),
                       child: /*ListTile(
                         title: Text(
                           notifications[index]['title'],
@@ -240,7 +242,7 @@ class NotificationPageState extends State<NotificationPage> {
                             ),
                             onSelected: (value) {
                               if (value == 1) {
-                                print(index);
+                                // print(index);
                                 deleteNotification(
                                     index,
                                     notifications[index]['title'],

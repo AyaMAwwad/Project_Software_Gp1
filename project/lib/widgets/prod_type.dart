@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/widgets/enam.dart';
 import 'dart:ui';
 
@@ -80,13 +81,37 @@ class ProductType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 5, bottom: 5, left: 25, right: 10),
+      padding: MultiLanguage.isEnglish
+          ? EdgeInsets.only(left: 50, right: 10)
+          : EdgeInsets.only(left: 10, right: 50),
       child: GestureDetector(
         onTap: () {
           press();
           updateSelectedType(selectedType);
         },
-        child: ClipRRect(
+        child: Column(
+          children: [
+            Text(
+              name,
+              style: GoogleFonts.abyssinicaSil(
+                textStyle: TextStyle(
+                  fontSize: 20,
+                  color: selectedType == currentSelectedType
+                      ? Color.fromARGB(255, 2, 92, 123)
+                      : Colors.grey,
+                ),
+              ),
+            ),
+            if (selectedType ==
+                currentSelectedType) // Add line under the text if selected
+              Container(
+                height: 2,
+                width: 40, // Adjust width of the line according to text length
+                color: Color.fromARGB(255, 2, 92, 123),
+              ),
+          ],
+        ),
+        /*ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
             width: 80,
@@ -94,7 +119,7 @@ class ProductType extends StatelessWidget {
                 ? activeBoxDecoration
                 : inactiveBoxDecoration,
             child: Container(
-              color: Colors.transparent,
+              // color: const Color.fromARGB(0, 103, 66, 66),
               child: Center(
                 child: Text(
                   name,
@@ -108,7 +133,7 @@ class ProductType extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        ),*/
       ),
     );
   }

@@ -138,9 +138,12 @@ class LoginScreen extends State<Login> with ValidationMixin {
               String ii = emailController.text;
               Login.Email = emailController.text;
               String jj = passwordController.text;
-              print("hi $ii\n");
-              print("hi $jj\n");
+              // print("hi $ii\n");
+              // print("hi $jj\n");
               await getTheName(Login.Email);
+              print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ');
+              print(Login.FirstName);
+              print(Login.LastName);
               await loginnn(ii, jj);
 
               //ayaaaaa
@@ -367,6 +370,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
 
 //// new
   Future<void> loginnn(String email, String password) async {
+    //172.19.240.81  --- 192.168.0.114  ---172.19.240.81
     final url = Uri.parse('http://192.168.0.114:3000/tradetryst/user/login');
     try {
       final response = await http.post(
@@ -392,9 +396,9 @@ class LoginScreen extends State<Login> with ValidationMixin {
             Login.phonenumberr = user['phone_number'];
             Login.idd = user['user_id'];
             Login.birthdaylogin = user['birthday'];
-            print('First Name: ${Login.first_name}');
-            print('id user: ${Login.idd}');
-            print('id user: ${Login.birthdaylogin}');
+            //  print('First Name: ${Login.first_name}');
+            //  print('id user: ${Login.idd}');
+            //  print('id user: ${Login.birthdaylogin}');
           }
         }
         setState(() {});
@@ -412,8 +416,8 @@ class LoginScreen extends State<Login> with ValidationMixin {
               .set({
             'uid': credential.user!.uid,
             'email': emailController.text,
-            'first_name': Login.FirstName,
-            'last_name': Login.LastName,
+            'first_name': Login.first_name,
+            'last_name': Login.last_name,
           }, SetOptions(merge: true));
         }
 
@@ -446,6 +450,9 @@ class LoginScreen extends State<Login> with ValidationMixin {
         print('Failed to authenticate. Status code: ${response.statusCode}');
       }
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Invalid email or password"),
+      ));
       print('Error: $e');
     }
   }
@@ -455,21 +462,16 @@ class LoginScreen extends State<Login> with ValidationMixin {
 
     // print(email);
     try {
-      response = await http.get(Uri.parse(
+      response = await http.get(Uri.parse(//192.168.0.114
           'http://192.168.0.114:3000/tradetryst/user/userName?email=$email'));
       if (response.statusCode == 200) {
         dynamic responseData = jsonDecode(response.body);
         if (responseData is List && responseData.isNotEmpty) {
-          // Extract price from the first item in the list
-
           dynamic user = responseData[0];
           // print(responseData[0]);
 
           Login.FirstName = user['first_name'];
           Login.LastName = user['last_name'];
-
-          print(Login.FirstName);
-          print(Login.LastName);
 
           //  dynamic userId = responseData[2];
 
@@ -481,10 +483,10 @@ class LoginScreen extends State<Login> with ValidationMixin {
         throw Exception('Failed . Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e, Response body: ${response?.body}');
+      //  print('Error: $e, Response body:'); // ${response?.body}
       throw Exception('Failed  : $e');
     }
-    var snapshot = await FirebaseFirestore.instance
+    /*  var snapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('email', isEqualTo: email)
         .get();
@@ -492,7 +494,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
       return snapshot.docs.first.data();
     } else {
       return null;
-    }
+    }*/
   }
 /*
 loginnn(email , password) async {

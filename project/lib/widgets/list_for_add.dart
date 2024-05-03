@@ -57,11 +57,12 @@ class ListStateAndCat extends StatelessWidget {
           width: 350,
           padding: const EdgeInsets.only(left: 14, right: 14),
           decoration: BoxDecoration(
+            //  fillColor: Color.fromARGB(82, 209, 224, 223),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: Color.fromARGB(255, 95, 150, 168),
             ),
-            color: Color.fromARGB(255, 255, 255, 255),
+            color: const Color.fromARGB(255, 239, 240, 245),
           ),
           elevation: 2,
         ),
@@ -78,13 +79,13 @@ class ListStateAndCat extends StatelessWidget {
           width: 340,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: const Color.fromARGB(255, 239, 240, 245),
           ),
           offset: const Offset(5, 0),
           scrollbarTheme: ScrollbarThemeData(
             radius: const Radius.circular(40),
-            thickness: MaterialStateProperty.all<double>(6),
-            thumbVisibility: MaterialStateProperty.all<bool>(true),
+            thickness: WidgetStateProperty.all<double>(6),
+            thumbVisibility: WidgetStateProperty.all<bool>(true),
           ),
         ),
         menuItemStyleData: const MenuItemStyleData(

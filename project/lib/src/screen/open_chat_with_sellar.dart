@@ -34,7 +34,7 @@ class OpenChatWithSellar {
           //
 
           //
-          print(NameRec1 + NameRec2);
+          //  print(NameRec1 + NameRec2);
 
           //  dynamic userId = responseData[2];
 
@@ -47,7 +47,7 @@ class OpenChatWithSellar {
             'Failed to fetch price for product . Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e, Response body: ${response?.body}');
+      print('Error: $e, Response body:'); // ${response?.body}
       throw Exception('Failed to fetch price for product : $e');
     }
   }
@@ -70,13 +70,7 @@ class OpenChatWithSellar {
         var data = snapshot.docs.first.data();
         var userEmail = data['email'];
         var userID = data['uid'];
-        print(OpenChatWithSellar.NameRec1 +
-            OpenChatWithSellar.NameRec2 +
-            data['email'] +
-            data['uid'] +
-            ChatScreenState.FirstNameSender +
-            ChatScreenState.LastNameSender);
-        print('CHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAAAAAAAAAAAAATTTTTT');
+
         Navigator.push(
           context,
           MaterialPageRoute(

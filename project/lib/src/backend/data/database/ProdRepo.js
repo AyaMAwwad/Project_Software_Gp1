@@ -57,12 +57,33 @@ class ProductRepository {
           console.error(error);
           reject('Failed to fetch product images');
         } else {
-          console.log({results});
+        //  console.log({results});
+          resolve(results);
+        }
+      });
+    });
+  }m
+  // ibtisam used
+
+  getusedprice(id) {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT price FROM used_product WHERE product_id = ?', [id], (error, results) => {
+        if (error) {
+          console.error(error);
+          reject('Failed to fetch product images');
+        } else {
+        //  console.log({results});
           resolve(results);
         }
       });
     });
   }
+
+
+
+
+
+  // ibtisam  used
 
 
 addProduct(req, res) {
@@ -255,13 +276,13 @@ gettypeofproduct(category,type,state) {
              
              if (allProductData.length <= theRes.length) {
              let Query='';
-              if(state== 'New'||state== 'جديد'){
+              if(state== 'New' || state== 'جديد'){
                 Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
               }
-              else if(state=='Used'||state== 'مستعمل'){
+              else if(state=='Used'|| state== 'مستعمل'){
                 Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
               }
-              else if(state=='Free'||state== 'مجاني'){
+              else if(state=='Free'|| state== 'مجاني'){
                 Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
               }
              
@@ -314,12 +335,12 @@ gettypeofproduct(category,type,state) {
 addToShopCart(req, res) {
   
   //numberofimage
-    const { id,Number_Item,date,name,state } = req.body;
+    const { id,Number_Item,date,name,state ,description } = req.body;
   
     //console.log(id,Number_Item,date,name,state );
     return new Promise((resolve, reject) => {
 
-      db.query('SELECT product_id FROM product WHERE name = ? AND product_type = ?', [name,state], (error1, res1) => {
+      db.query('SELECT product_id FROM product WHERE name = ? AND product_type = ? AND user_id=? AND description=?', [name,state,id,description], (error1, res1) => {
         if (error1) {
          // console.error(error1);
           reject('Failed to store to cart ');
@@ -331,11 +352,16 @@ addToShopCart(req, res) {
           db.query(
             'SELECT * FROM shopping_cart WHERE product_id = ?',
             [productid],
+         
             (error3, results3) => {
                 if (error3) {
+                  
+                  console.log('**************');
                     return reject('Failed to store to cart ');
                 }
                 else if (results3.length > 0) {
+                  console.log(results3);
+                  console.log('^^^^^^^^^^^^^^^');
                     return reject('This item is already in the cart');
                 }
                 else {
@@ -413,7 +439,7 @@ getToShopCart(req, res) {
                  else if(state=='Used'|| state== 'used'|| state== 'مستعمل'){
                    Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
                  }
-                 else if(state=='Free'|| state== 'free'|| state== 'مجاني'){
+                 else if(state=='Free'|| state== 'free' ||state== 'مجاني'){
                    Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
                  }
                  db.query(Query, [productId], (error2, res2) => {
@@ -484,9 +510,9 @@ retriveWordOfsearch(name) {
     SELECT p.name AS product_name, p.description AS product_description, c.name AS category_name, c.type AS category_type
     FROM Product p
     JOIN Category c ON p.category_id = c.category_id
-    WHERE p.name LIKE CONCAT('%', ?, '%') OR c.name LIKE CONCAT('%', ?, '%')
+    WHERE p.name LIKE CONCAT('%', ?, '%') OR c.name LIKE CONCAT('%', ?, '%')  OR c.type LIKE CONCAT('%', ?, '%')
   `;
-    db.query(query, [name, name],  (error, results) => {
+    db.query(query, [name, name,name],  (error, results) => {
       if (error || results.length==0) {
         console.error(error);
         reject('Failed to Search ');
@@ -496,6 +522,94 @@ retriveWordOfsearch(name) {
       }
     });
   });}
+
+   //retriveProductOfsearch 1_MAY
+   retriveProductOfsearch(name) {
+    return new Promise((resolve, reject) => {
+      const allProductDetails = [];
+ 
+      const query = `
+      SELECT Product.*
+      FROM Product
+      JOIN Category ON Product.category_id = Category.category_id
+      WHERE LOWER(Product.name) = LOWER(?)
+      OR LOWER(Category.type) = LOWER(?);
+
+    `;
+    console.log(name);
+      db.query(query, [name, name],  (error, results) => {
+        if (error || results.length==0) {
+          console.error(error);
+          reject('Failed to Search ');
+        } else {
+       
+          console.log( results);
+          results.forEach(product => {
+           
+                   const productId =product.product_id;
+                   const state= product.product_type;
+                   console.log(state);
+                   let Query='';
+                   if(state== 'New' || state== 'new'|| state== 'جديد'){
+                     Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
+                   }
+                   else if(state=='Used'|| state== 'used'|| state== 'مستعمل'){
+                     Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
+                   }
+                   else if(state=='Free'|| state== 'free' ||state== 'مجاني'){
+                     Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
+                   }
+                   db.query(Query, [productId], (error2, res2) => {
+                    if (error2) {
+                        console.error(error2);
+                        reject('Failed to retrieve data from new_product table');
+                    } else {
+                       
+                        res2.forEach(entry => {
+                          const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
+                          if (!found) {
+                              allProductDetails.push(entry);
+                          }
+                      });
+                  
+                      if (allProductDetails.length == results.length) {
+                          resolve({results, allProductDetails });
+                        }
+                        else if(allProductDetails.length==0) {
+                          reject('Not have data to retrieve ');
+                        }
+                      
+                    }
+                });
+               });
+        }
+      });
+    });}
+
+    ///updateItemOnShopCart
+    updateItemOnShopCart(req, res) {
+      const { item,productId } = req.body;
+      console.log(item);
+      console.log(productId);
+      return new Promise((resolve, reject) => {
+      
+          db.query(
+            'UPDATE shopping_cart SET item = ? WHERE product_id = ?',
+            [item,productId],
+            (error, results) => {
+                if (error) {
+                    reject('Failed to update item in shop cart ');
+                } else {
+                    resolve('item in shop cart updated successfully');
+                }
+            }
+        );
+  
+  
+  
+      });
+  }
+  
 
 }
    

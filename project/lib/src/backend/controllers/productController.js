@@ -43,7 +43,27 @@ exports.getnewprice = (req, res) => {
             res.status(500).json({ message: 'Internal server error' });
         });
 };
+// ibtisam 
 
+exports.getusedprice = (req, res) => {
+  const { id } = req.query;
+  console.log({id});
+
+  prod.getusedprice(id)
+      .then((price) => {
+          console.log({price});
+          console.log('Price:', price);
+          res.status(200).json(price);
+      })
+      .catch((error) => {
+          console.error({error});
+          res.status(500).json({ message: 'Internal server error' });
+      });
+};
+
+
+
+// ibtisam
 
 
   exports.addProduct = (req, res) => {
@@ -134,3 +154,35 @@ exports.getnewprice = (req, res) => {
             res.status(500).json({ message: 'Not have thing to retrieve' });
         });
 };
+
+//retriveProductOfsearch 1-MAY
+exports.retriveProductOfsearch = (req, res) => {
+  const { name } = req.query;//req.query;
+  
+
+  prod.retriveProductOfsearch(name)
+      .then((res1) => {
+          console.log({res1});
+        
+          res.status(200).json(res1);
+      })
+      .catch((error) => {
+          console.error({error});
+          res.status(500).json({ message: 'Not have thing to retrieve' });
+      });
+};
+
+//updateItemOnShopCart 2_MAY
+
+exports.updateItemOnShopCart = (req, res) => {
+  prod
+    .updateItemOnShopCart(req, res)
+    .then((message) => {
+      console.log(message);
+      res.status(201).json({ message }); 
+    })
+    .catch((error) => {
+      res.status(400).json({ message: error }); 
+    });
+  };
+  

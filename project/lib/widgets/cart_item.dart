@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, sized_box_for_whitespace, unnecessary_cast, use_key_in_widget_constructors, unnecessary_null_comparison, prefer_if_null_operators
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -200,7 +201,8 @@ void fetchCart() async {
                     letterSpacing: 1.2,
                     shadows: [
                       Shadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Color.fromARGB(255, 241, 235, 245)
+                            .withOpacity(0.9), //Colors.grey.withOpacity(0.5),
                         offset: Offset(2, 2),
                         blurRadius: 2,
                       ),
@@ -248,6 +250,7 @@ void fetchCart() async {
                 return Card(
                   margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   elevation: 4,
+                  color: Color.fromARGB(255, 241, 235, 245).withOpacity(0.9),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 8),
                     child: ListTile(
@@ -329,11 +332,16 @@ void fetchCart() async {
                               repos.incrementCounter(context, index);
                               productCount[index] =
                                   repos.getCount(context, index);
+                              updateItemOnShopCart(
+                                  repos.getCount(context, index), productId);
+                              /////
                             } else {
                               showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
+                                    backgroundColor:
+                                        Color.fromARGB(255, 241, 235, 245),
                                     title: Row(
                                       children: [
                                         Icon(
@@ -396,6 +404,9 @@ void fetchCart() async {
                               repos.decrementCounter(context, index);
                               productCount[index] =
                                   repos.getCount(context, index);
+                              ////
+                              updateItemOnShopCart(
+                                  repos.getCount(context, index), productId);
                             } else {
                               showDialog(
                                 context: context,
@@ -555,10 +566,6 @@ void fetchCart() async {
           'http://192.168.0.114:3000/tradetryst/shoppingcart/getCartItem'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         dynamic responseData = jsonDecode(response.body);
-        print(responseData);
-
-        List<Map<String, dynamic>> theRes = [];
-        List<Map<String, dynamic>> allProductData = [];
 
         if (responseData is Map<String, dynamic> &&
             responseData.containsKey('theRes') &&
@@ -570,8 +577,6 @@ void fetchCart() async {
               List<Map<String, dynamic>>.from(responseData['allProductData']);
           allProductDetails = List<Map<String, dynamic>>.from(
               responseData['allProductDetails']);
-          print(productInCart);
-          print(cartShopContain);
         } else {
           print('Failed to fetch cart.');
         }
@@ -579,7 +584,7 @@ void fetchCart() async {
         print('Failed to fetch cart. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print(' Response body: ${response?.body}');
+      print(' Response body: '); //${response?.body}
       // throw Exception('Failed to fetch data: $e');
     }
     return null;
@@ -598,10 +603,32 @@ void fetchCart() async {
         print('Failed to fetch data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print(' Response body: ${response?.body}');
+      print(' Response body:');
       // throw Exception('Failed to fetch data: $e');
     }
     return null;
+  }
+
+  Future<void> updateItemOnShopCart(int item, int productId) async {
+    print(item);
+    print(productId);
+    final response = await http.put(
+      Uri.parse(
+          'http://192.168.0.114:3000/tradetryst/shoppingcart/updateItemOnShopCart'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, int>{
+        'item': item,
+        'productId': productId,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('item number updated successfully');
+    } else {
+      print('Failed to update item number ');
+    }
   }
 }
 

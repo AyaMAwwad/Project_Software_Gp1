@@ -40,10 +40,18 @@ router.get('/products' , productController.getproduct);
 router.get('/productImages', productController.getProductImages);
 
 router.get('/pricenew', productController.getnewprice);
+
+router.get('/usedprice', productController.getusedprice);
+
 router.get('/typeofproduct', productController.gettypeofproduct);
 router.post('/add', productController.addToShopCart);
 router.get('/getCartItem', productController.getToShopCart);
 router.delete('/deleteCartItem', productController.deleteFromShopCart);
+// new 2_MAY
+router.put('/updateItemOnShopCart', productController.updateItemOnShopCart);
 
 router.get('/retriveWordOfsearch', productController.retriveWordOfsearch);
+//newwwww 1-MAY
+router.get('/retriveProductOfsearch', productController.retriveProductOfsearch);
+
 module.exports = router;

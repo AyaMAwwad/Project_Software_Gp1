@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project/src/screen/notification.dart';
 import '../src/app.dart';
@@ -15,7 +15,38 @@ Future firebaseBacjgroundNotification(RemoteMessage msg) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Platform.isAndroid
+  // Platform.isAndroid
+  if (kIsWeb) {
+    print('some web app is running');
+    // Initialize Firebase for web
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: "AIzaSyDrL04dT9BA50QPXEvvE0ikOVhzTTmzQtY",
+        // authDomain: "flutterproject-1a0ba.firebaseapp.com",
+        projectId: "flutterproject-1a0ba",
+        // storageBucket: "flutterproject-1a0ba.appspot.com",
+        messagingSenderId: "1089510135683",
+        appId: "1:1089510135683:web:85f7cbe649dcdf2ba608b6",
+        //  measurementId: "G-7SK0NEKCXZ"
+      ),
+    );
+    runApp(MyApp());
+  }
+  //
+  //
+  else {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: 'AIzaSyDrgXyoZlKMUDQIet_5ywTkLwdPC4BEwYo',
+          appId: '1:1089510135683:android:69d0bd6ecd28c8d1a608b6',
+          messagingSenderId: '1089510135683',
+          projectId: 'flutterproject-1a0ba'),
+    );
+    // await Firebase.initializeApp();
+    runApp(MyApp());
+  }
+
+  /*
       ? await Firebase.initializeApp(
           options: const FirebaseOptions(
               apiKey: 'AIzaSyDrgXyoZlKMUDQIet_5ywTkLwdPC4BEwYo',
@@ -23,7 +54,7 @@ void main() async {
               messagingSenderId: '1089510135683',
               projectId: 'flutterproject-1a0ba'))
       : await Firebase.initializeApp();
-
+*/
   /////// new
   await FirebaseNotification.initNotifications();
   await FirebaseNotification.localNotification();
@@ -52,6 +83,6 @@ void main() async {
           .pushNamed('notification'); //, arguments: message
     });
   }
+
   //  options: DefaultFirebaseOptions.currentPlatform,
-  runApp(MyApp());
 }

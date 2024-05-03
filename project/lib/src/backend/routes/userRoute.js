@@ -12,10 +12,13 @@ router.post('/login', userController.loginUser);
 router.post('/signup', authController.signup);
 router.post('/editprofile', userController.Editprofile);
 
-//  
+//new  
 router.get('/userName', userController.userName);
 router.get('/AllUserName', userController.AllUserName);
 router.get('/sellarChat', userController.sellarChat);
-// new UpdatePass
+
+router.post('/delete', userController.deleteacountt);
+
 router.put('/UpdatePass', userController.UpdatePass);
+router.post('/oldpassword', userController.oldpassword); 
 module.exports = router;

@@ -45,6 +45,10 @@ class custemFieldforProductPage extends StatelessWidget {
         TextFormField(
           controller: controller,
           decoration: InputDecoration(
+            filled: true, // Set to true to enable filling
+            fillColor: const Color.fromARGB(255, 239, 240, 245),
+
+            //  fillColor: Color.fromARGB(82, 209, 224, 223),
             // nice
             // fillColor: Color.fromARGB(255, 2, 92, 123),
 
@@ -53,7 +57,7 @@ class custemFieldforProductPage extends StatelessWidget {
             hintText: hintText,
             hintStyle: GoogleFonts.aBeeZee(
               textStyle: TextStyle(
-                //color: Color.fromARGB(255, 78, 78, 78),
+                color: Color.fromARGB(255, 78, 78, 78),
                 fontSize: 15,
               ),
             ),

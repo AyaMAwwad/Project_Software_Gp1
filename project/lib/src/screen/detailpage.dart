@@ -71,7 +71,7 @@ class _DetailPageState extends State<DetailPage> {
         setState(() {
           _imagePaths = imageList;
         });
-        print({imageList});
+        //  print({imageList});
         return imageList;
       } else {
         throw Exception('Failed to load product images');
