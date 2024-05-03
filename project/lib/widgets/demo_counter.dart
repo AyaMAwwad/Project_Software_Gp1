@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/widgets/cart_shop.dart';
 
 class CountItem extends StatefulWidget {
@@ -80,7 +81,8 @@ class CountItemState extends State<CountItem> {
   InkWell _buildCounterButton(bool left, IconData icon, VoidCallback onTap,
       [bool active = true]) {
     double d1, d2;
-    if (CartShopState.lang == "Shopping Cart") {
+    if (MultiLanguage.isEnglish) {
+      //CartShopState.lang == "Shopping Cart"
       if (icon == Icons.add_outlined) {
         d1 = 7.5;
         d2 = 1;

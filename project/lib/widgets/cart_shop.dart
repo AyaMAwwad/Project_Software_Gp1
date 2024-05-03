@@ -73,6 +73,8 @@ class CartShopState extends State<CartShop> {
             selectedIndex = index;
             switch (index) {
               case 0:
+                HomePageState.isPressTosearch = false;
+                HomePageState.isPressTosearchButton = false;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),

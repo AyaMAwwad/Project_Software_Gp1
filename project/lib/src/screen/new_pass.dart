@@ -125,8 +125,8 @@ class NewPassword extends State<NewPass> {
   }
 
   Future<void> updatePassword(String email, String newPassword) async {
-    print(email);
-    print(newPassword);
+    //  print(email);
+    // print(newPassword);
     final response = await http.put(
       Uri.parse('http://192.168.0.114:3000/tradetryst/user/UpdatePass'),
       headers: <String, String>{
@@ -139,12 +139,10 @@ class NewPassword extends State<NewPass> {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print('******************************************');
-      print(email);
-      print(newPassword);
+      // print('******************************************');
+      //  print(email);
+      //  print(newPassword);
       changePassword(email, 'aya123', newPassword);
-      // Re-authenticate the user
-      // updateFirebasePassword(email, 'aya123');
 
       print('Password updated successfully');
     } else {

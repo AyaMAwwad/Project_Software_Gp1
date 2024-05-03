@@ -509,6 +509,8 @@ class AddProductState extends State<AddProductPageTwo> {
                 );
                 break;
               case 1:
+                HomePageState.isPressTosearch = false;
+                HomePageState.isPressTosearchButton = false;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => AddProduct()),
@@ -930,10 +932,10 @@ class AddProductState extends State<AddProductPageTwo> {
       'POST',
       Uri.parse('http://192.168.0.114:3000/tradetryst/Product/AddProduct'),
     );
-    print('Number of files: ${imageA.length}');
+    /* print('Number of files: ${imageA.length}');
     for (int i = 0; i < imageA.length; i++) {
       print('File $i path: ${imageA[i].path}');
-    }
+    }*/
 
     request.fields['email'] = Login.Email;
     request.fields['name'] = name;

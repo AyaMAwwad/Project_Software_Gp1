@@ -139,7 +139,8 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 255, 251, 254),
+                backgroundColor: Color.fromARGB(
+                    255, 254, 247, 255), // Color.fromARGB(255, 255, 251, 254),
                 child: IconButton(
                   icon: Icon(
                     // FontAwesomeIcons.bell,
@@ -158,7 +159,8 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 255, 251, 254),
+                backgroundColor: Color.fromARGB(
+                    255, 254, 247, 255), //Color.fromARGB(255, 255, 251, 254),
                 child: IconButton(
                   icon: Icon(
                     FontAwesomeIcons.facebookMessenger,

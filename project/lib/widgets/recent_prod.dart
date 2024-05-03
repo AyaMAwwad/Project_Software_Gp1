@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unnecessary_brace_in_string_interps, prefer_interpolation_to_compose_strings, unnecessary_string_interpolations
 
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:project/src/screen/detailpage.dart';
 
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/multiLanguage.dart';
@@ -22,6 +22,7 @@ class RecentProd extends StatelessWidget {
   final String TypeOfCategory;
   final String prodState;
   static String? thestate;
+  static int? theProdId;
   final List<Map<String, dynamic>> prod;
   final List<Map<String, dynamic>> detail;
 
@@ -45,8 +46,7 @@ class RecentProd extends StatelessWidget {
   Widget build(BuildContext context) {
     // GoogleTranslator translate = GoogleTranslator();
     thestate = prodState;
-    print(prodState + TypeOfCategory);
-    print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+
     return FutureBuilder(
       future: Future.delayed(Duration(milliseconds: 300)), // Simulating a delay
       builder: (context, snapshot) {
@@ -108,10 +108,14 @@ class RecentProd extends StatelessWidget {
               child: GridView.builder(
                 itemCount: prod.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: 0.70),
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.70,
+                  mainAxisSpacing: 5.0,
+                ),
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
+                  theProdId = prod[index]['product_id'];
                   return SingleChildScrollView(
                     child: RecentSingleProd(
                       recet_prod_description: prod[index]['description'],
@@ -602,124 +606,147 @@ class RecentSingleProdState extends State<RecentSingleProd> {
       textP = 'Price:\$${widget.recet_prod_price}';
       width = 40;
     }
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: 10, right: 10, left: 10, bottom: 10),
-            width: 180,
-            //height: 400,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Color.fromARGB(255, 239, 237, 245),
-            ),
-
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 180,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    // color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  // child: Text(recet_prod_name), //
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: // Image.asset(
-                        // imagePath[0],
-                        Image.memory(
-                      // Use Image.memory for Uint8List
-                      Uint8List.fromList(bytes),
-                      // 200
-                      fit: BoxFit.cover,
-                    ),
-                    /*child: Image.asset(
-                      //Image.memory(
-                      'images/icon/kids_free1.jpeg',
-                      // Use Image.memory for Uint8List
-                      // Uint8List.fromList('images/icon/kids_free1.jpeg' ),//(widget.recet_prod_image),
-                      width: 150,
-                      height: 200, // 200
-                      fit: BoxFit.cover,
-                    ),*/
-
-                    /*child: Image.asset(
-                      'images/icon/kids_free1.jpeg',
-                      fit: BoxFit.cover,
-                    ),*/
-                  ),
+    return GestureDetector(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding:
+                    EdgeInsets.only(top: 10, right: 10, left: 10, bottom: 10),
+                width: 180,
+                //height: 400,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color.fromARGB(255, 239, 237, 245),
                 ),
-                SizedBox(
-                  height: 5,
-                ),
-                Column(
+
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.recet_prod_name,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      '${textP}',
-                      style: TextStyle(fontSize: 16, color: Colors.green),
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 110,
+                    Container(
+                      width: 180,
+                      height: 180,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        // color: Color.fromARGB(255, 255, 255, 255),
+                      ),
+                      // child: Text(recet_prod_name), //
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: // Image.asset(
+                            // imagePath[0],
+                            Image.memory(
+                          // Use Image.memory for Uint8List
+                          Uint8List.fromList(bytes),
+                          // 200
+                          fit: BoxFit.cover,
                         ),
-                        GestureDetector(
-                          child: Icon(
-                            FontAwesomeIcons.facebookMessenger,
-                            size: 18,
-                            color: Color.fromARGB(255, 2, 92, 123),
-                          ),
-                          onTap: () async {
-                            OpenChatWithSellar.functionForChar(
-                                widget.recet_prod_name, context);
-                          },
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          child: Icon(
-                            Icons.shopping_cart_checkout,
-                            //FontAwesomeIcons.cartShopping,
-                            size: 20,
-                            color: Color.fromARGB(255, 2, 92, 123),
-                          ),
-                          onTap: () async {
-                            DateTime now = DateTime.now();
-                            String formattedDate =
-                                DateFormat('yyyy-MM-dd – kk:mm').format(
-                                    now); // Format the date as per your requirement
+                        /*child: Image.asset(
+                        //Image.memory(
+                        'images/icon/kids_free1.jpeg',
+                        // Use Image.memory for Uint8List
+                        // Uint8List.fromList('images/icon/kids_free1.jpeg' ),//(widget.recet_prod_image),
+                        width: 150,
+                        height: 200, // 200
+                        fit: BoxFit.cover,
+                      ),*/
 
-                            await shoppingCartStore('1', formattedDate,
-                                widget.recet_prod_name, RecentProd.thestate!);
-                          },
+                        /*child: Image.asset(
+                        'images/icon/kids_free1.jpeg',
+                        fit: BoxFit.cover,
+                      ),*/
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.recet_prod_name,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 2, 46, 82),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          '${textP}',
+                          style: TextStyle(fontSize: 14, color: Colors.green),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              child: Icon(
+                                FontAwesomeIcons.facebookMessenger,
+                                size: 16,
+                                color: Color.fromARGB(255, 2, 92, 123),
+                              ),
+                              onTap: () async {
+                                OpenChatWithSellar.functionForChar(
+                                    widget.recet_prod_name, context);
+                              },
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            GestureDetector(
+                              child: Icon(
+                                Icons.shopping_cart_checkout,
+                                //FontAwesomeIcons.cartShopping,
+                                size: 17,
+                                color: Color.fromARGB(255, 2, 92, 123),
+                              ),
+                              onTap: () async {
+                                DateTime now = DateTime.now();
+                                String formattedDate =
+                                    DateFormat('yyyy-MM-dd – kk:mm').format(
+                                        now); // Format the date as per your requirement
+
+                                await shoppingCartStore(
+                                    '1',
+                                    formattedDate,
+                                    widget.recet_prod_name,
+                                    RecentProd.thestate!,
+                                    widget.recet_prod_description);
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailPage(
+                categoryName: widget.recet_prod_name,
+                imagePaths: imageData,
+                price: textP,
+                productid: RecentProd.theProdId!,
+                Typeproduct: RecentProd.thestate!,
+              ),
+            ),
+          );
+        });
   }
 
+/*  */
   static Future<void> shoppingCartStore(
     String numberItem,
     String date,
     String name,
     String state,
+    String description,
   ) async {
     final url =
         Uri.parse('http://192.168.0.114:3000/tradetryst/shoppingcart/add');
@@ -735,6 +762,7 @@ class RecentSingleProdState extends State<RecentSingleProd> {
           'date': date,
           'name': name,
           'state': state,
+          'description': description,
         }),
       );
 

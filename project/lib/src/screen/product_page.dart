@@ -31,7 +31,7 @@ class ProductPage extends StatefulWidget {
 
 class ProductPageState extends State<ProductPage> {
   late String selectedCategory;
-  String selectedProdState = 'New';
+  String selectedProdState = MultiLanguage.isEnglish ? 'New' : 'جديد';
   static String TypeGlobal = '';
   static String StateGlobal = '';
   static String CategoryGlobal = '';
@@ -57,6 +57,7 @@ class ProductPageState extends State<ProductPage> {
     setState(() async {
       selectedProdState = prodState;
       StateGlobal = prodState;
+      print(prodState);
       await getProductTypeState(widget.category.name, widget.type, prodState);
       setState(() {});
     });
@@ -141,7 +142,7 @@ class ProductPageState extends State<ProductPage> {
                     .width, // Set the desired size of the circle
                 height: 50, // Set the desired size of the circle
                 // color: Color.fromARGB(255, 95, 150, 168),
-                decoration: BoxDecoration(
+                /* decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color:
                       Colors.transparent, //Color.fromARGB(255, 147, 176,186),
@@ -154,13 +155,13 @@ class ProductPageState extends State<ProductPage> {
                       blurRadius: 5,
                     ),
                   ],
-                ),
+                ),*/
                 child: Container(
                   height: 60,
                   margin: EdgeInsets.all(5),
                   child: Stack(
                     children: [
-                      Container(
+                      /*  Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           border:
@@ -181,24 +182,26 @@ class ProductPageState extends State<ProductPage> {
                                 // .withOpacity(0.15),
                               ]),
                         ),
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            ProductType(
-                              press: () {
-                                updateType('New');
-                                //handleProductTypeSelection('New');
+                        child:*/
+                      ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          ProductType(
+                            press: () {
+                              updateType(
+                                  MultiLanguage.isEnglish ? 'New' : 'جديد');
+                              //handleProductTypeSelection('New');
 
-                                updateSelectedType(TypeProductState.newprod);
-                              },
-                              //  image: 'images/icon/new.png',
-                              name: 'New',
-                              selectedType: TypeProductState.newprod,
-                              currentSelectedType: currentSelectedType,
-                              updateSelectedType: updateSelectedType,
-                              //selectedtype: TypeState.newprod,
-                            ),
-                            /**ProductType(
+                              updateSelectedType(TypeProductState.newprod);
+                            },
+                            //  image: 'images/icon/new.png',
+                            name: MultiLanguage.isEnglish ? 'New' : 'جديد',
+                            selectedType: TypeProductState.newprod,
+                            currentSelectedType: currentSelectedType,
+                            updateSelectedType: updateSelectedType,
+                            //selectedtype: TypeState.newprod,
+                          ),
+                          /**ProductType(
   press: () {
     updateType('Used'); // Update to 'Used' product type
     updateSelectedType(TypeProductState.usedprod); // Update the selected type state
@@ -208,38 +211,40 @@ class ProductPageState extends State<ProductPage> {
   currentSelectedType: currentSelectedType,
   updateSelectedType: updateSelectedType,
 ), */
-                            ProductType(
-                              press: () {
-                                updateType('Used');
-                                //handleProductTypeSelection('Used');
+                          ProductType(
+                            press: () {
+                              updateType(
+                                  MultiLanguage.isEnglish ? 'Used' : 'مستعمل');
+                              //handleProductTypeSelection('Used');
 
-                                updateSelectedType(TypeProductState.usedprod);
-                              },
-                              //  image: 'images/icon/used.png',
-                              name: 'Used',
-                              selectedType: TypeProductState.usedprod,
-                              currentSelectedType: currentSelectedType,
-                              updateSelectedType: updateSelectedType,
-                              //selectedtype: TypeState.usedprod,
-                            ),
-                            ProductType(
-                              press: () {
-                                updateType('Free');
-                                // handleProductTypeSelection('Free');
+                              updateSelectedType(TypeProductState.usedprod);
+                            },
+                            //  image: 'images/icon/used.png',
+                            name: MultiLanguage.isEnglish ? 'Used' : 'مستعمل',
+                            selectedType: TypeProductState.usedprod,
+                            currentSelectedType: currentSelectedType,
+                            updateSelectedType: updateSelectedType,
+                            //selectedtype: TypeState.usedprod,
+                          ),
+                          ProductType(
+                            press: () {
+                              updateType(
+                                  MultiLanguage.isEnglish ? 'Free' : 'مجاني');
+                              // handleProductTypeSelection('Free');
 
-                                updateSelectedType(TypeProductState.freeprod);
-                              },
-                              // image: 'images/icon/donate.png',
-                              name: 'Free',
-                              selectedType: TypeProductState.freeprod,
+                              updateSelectedType(TypeProductState.freeprod);
+                            },
+                            // image: 'images/icon/donate.png',
+                            name: MultiLanguage.isEnglish ? 'Free' : 'مجاني',
+                            selectedType: TypeProductState.freeprod,
 
-                              currentSelectedType: currentSelectedType,
-                              updateSelectedType: updateSelectedType,
-                              // selectedtype: TypeState.freeprod,
-                            ),
-                          ],
-                        ),
+                            currentSelectedType: currentSelectedType,
+                            updateSelectedType: updateSelectedType,
+                            // selectedtype: TypeState.freeprod,
+                          ),
+                        ],
                       ),
+                      //    ),
 
                       ///////////
                     ],
@@ -247,11 +252,12 @@ class ProductPageState extends State<ProductPage> {
                 ),
               ),
               SizedBox(
-                height: 40,
+                height: 10,
                 //  child:Carousel(),
               ),
               Container(
                 height: 500,
+                padding: EdgeInsets.only(left: 3, right: 3),
                 child: RecentProd(
                   TypeOfCategory: selectedCategory,
                   prodState: selectedProdState,
@@ -270,6 +276,7 @@ class ProductPageState extends State<ProductPage> {
             selectedIndex = index;
             switch (index) {
               case 0:
+                HomePageState.isPressTosearch = false;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
@@ -305,17 +312,12 @@ class ProductPageState extends State<ProductPage> {
 
   Future<Map<String, dynamic>?> getProductTypeState(
       String category, String type, String state) async {
-    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-    print(category);
-    print(type);
-    print(state);
     http.Response? response;
 
     try {
       response = await http.get(Uri.parse(
           'http://192.168.0.114:3000/tradetryst/Product/typeofproduct?category=$category&type=$type&state=$state'));
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
         dynamic responseData = jsonDecode(response.body);
         if (responseData is Map<String, dynamic> &&
             responseData.containsKey('allProductData') &&
@@ -342,10 +344,6 @@ class ProductPageState extends State<ProductPage> {
 
             // Translate other fields as needed
           });*/
-          print(allProductData);
-          print(allProductDetails);
-          print(allProductData[0]['name']);
-          print("LALALALALALLALALLALLALLLALALLAAL");
         } else {
           print('Failed to fetch data. ');
         }
@@ -353,7 +351,7 @@ class ProductPageState extends State<ProductPage> {
         print('Failed to fetch data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print(' Response body: ${response?.body}');
+      print(' Response body: '); //${response?.body}
       // throw Exception('Failed to fetch data: $e');
     }
     return null;

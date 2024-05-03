@@ -24,16 +24,16 @@ class FirebaseNotification {
 
   static Future getDiveceToken() async {
     final fcmToken = await firebaseMsg.getToken();
-    print('Token: ${fcmToken}');
+    // print('Token: ${fcmToken}');
     bool isUserLog = LoginScreen.isUserLog;
     if (isUserLog) {
       await CRUDService.saveUserToken(fcmToken!);
-      print('save token');
+      // print('save token');
     }
     firebaseMsg.onTokenRefresh.listen((event) async {
       if (isUserLog) {
         await CRUDService.saveUserToken(fcmToken!);
-        print('save token');
+        // print('save token');
       }
     });
   }

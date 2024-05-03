@@ -49,6 +49,10 @@ class ChatScreenState extends State<ChatScreen> {
     'images/icon/aega.jpeg',
     'images/icon/userprofile1.png',
     'images/icon/Profile1.png',
+    'images/icon/Profile1.png',
+    'images/icon/Profile1.png',
+    'images/icon/Profile1.png',
+    'images/icon/Profile1.png',
   ];
 
   @override
@@ -118,83 +122,90 @@ class ChatScreenState extends State<ChatScreen> {
               scrollDirection: Axis.horizontal,
               child: Padding(
                 padding: EdgeInsets.only(left: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                    ListProfile.length,
-                    (index) => Padding(
-                      padding: EdgeInsets.only(
-                          right: index < ListProfile.length - 1
-                              ? 10.0
-                              : 0), // Adjust the value according to your needs
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.asset(
-                          ListProfile[index],
-                          width: 70,
-                          height: 70,
-                          fit: BoxFit.cover,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: List.generate(
+                        ListProfile.length,
+                        (index) => Padding(
+                          padding: EdgeInsets.only(
+                              right: index < ListProfile.length - 1
+                                  ? 12.0
+                                  : 0), // Adjust the value according to your needs
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.asset(
+                              ListProfile[index],
+                              width: 70,
+                              height: 70,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 35.0, right: 20),
-              child: Text(
-                style: GoogleFonts.aBeeZee(
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    decorationThickness: 1,
-                  ),
-                ),
-                allUserName.map((userInfo) {
-                  String firstName = userInfo['first_name'];
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 60),
+                      child: Text(
+                        style: GoogleFonts.aBeeZee(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            decorationThickness: 1,
+                          ),
+                        ),
+                        allUserName.map((userInfo) {
+                          String firstName = userInfo['first_name'];
 
-                  //  String lastName = userInfo['last_name'];
-                  return '$firstName ';
-                }).join(
-                    '           '), // Joining all the names with a comma and space
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white, // Color.fromARGB(
-                // 255, 134, 174, 187), //Color.fromARGB(255, 95, 150, 168),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
+                          //  String lastName = userInfo['last_name'];
+                          return '$firstName ';
+                        }).join(
+                            '             '), // Joining all the names with a comma and space
+                      ),
+                    ),
+                  ],
                 ),
-                /*gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.grey,
-                      Color.fromARGB(255, 147, 198, 215),
-                      // .withOpacity(0.15),
-                      Color.fromARGB(255, 95, 150, 168),
-                      // .withOpacity(0.1),
-
-                      //  .withOpacity(0.05),
-                      Color.fromARGB(255, 95, 150, 168),
-                      // .withOpacity(0.1),
-                      Color.fromARGB(255, 147, 198, 215),
-                      Colors.grey,
-                      // .withOpacity(0.15),
-                    ]),*/
               ),
-              width: double.infinity,
-              height: 515,
-              child: buildUserList(),
+            ),
+
+            SizedBox(
+              height: 15,
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white, // Color.fromARGB(
+                  // 255, 134, 174, 187), //Color.fromARGB(255, 95, 150, 168),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+                  /*gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.grey,
+                        Color.fromARGB(255, 147, 198, 215),
+                        // .withOpacity(0.15),
+                        Color.fromARGB(255, 95, 150, 168),
+                        // .withOpacity(0.1),
+              
+                        //  .withOpacity(0.05),
+                        Color.fromARGB(255, 95, 150, 168),
+                        // .withOpacity(0.1),
+                        Color.fromARGB(255, 147, 198, 215),
+                        Colors.grey,
+                        // .withOpacity(0.15),
+                      ]),*/
+                ),
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height, //515
+                child: buildUserList(),
+              ),
             ),
             //   buildUserList(),
           ],
@@ -228,6 +239,7 @@ class ChatScreenState extends State<ChatScreen> {
             ),
           ));
         }
+        print(snapshot.data!.docs);
         return ListView(
           children: snapshot.data!.docs
               .map<Widget>((doc) => buildUserListItem(doc))
@@ -252,6 +264,7 @@ class ChatScreenState extends State<ChatScreen> {
     if (auth.currentUser!.email != data['email']) {
       LastNameReceiver = data['last_name'];
       FirstNameReceiver = data['first_name'];
+      print(FirstNameReceiver);
       bool nameExists = allUserName
           .any((userInfo) => userInfo['first_name'] == FirstNameReceiver);
 
@@ -266,6 +279,7 @@ class ChatScreenState extends State<ChatScreen> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             allUserName.add(userInfo);
+            print(allUserName);
           });
         });
       }
@@ -306,39 +320,40 @@ class ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // for (int i = j; i < j + 1; i++)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 7.0),
-                        child: Text(
-                          '${data['first_name']} ${data['last_name']}',
-                          style: GoogleFonts.aBeeZee(
-                            textStyle: TextStyle(
-                              color:
-                                  Color.fromARGB(255, 0, 0, 0), // Colors.white,
-                              //Color.fromARGB(255, 0, 0, 0), // Colors.white,
-                              fontSize: 16,
-                              decorationThickness: 1,
-                              //   fontWeight: FontWeight.bold,
-                            ),
-                          ), /*TextStyle(
+                //  Expanded(
+                //    child:
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // for (int i = j; i < j + 1; i++)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 7.0),
+                      child: Text(
+                        '${data['first_name']} ${data['last_name']}',
+                        style: GoogleFonts.aBeeZee(
+                          textStyle: TextStyle(
+                            color:
+                                Color.fromARGB(255, 0, 0, 0), // Colors.white,
+                            //Color.fromARGB(255, 0, 0, 0), // Colors.white,
+                            fontSize: 16,
+                            decorationThickness: 1,
+                            //   fontWeight: FontWeight.bold,
+                          ),
+                        ), /*TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),*/
-                        ),
                       ),
-                      //CustomChatBubble
-                      SizedBox(
-                        height: 3,
-                      ),
-                      buildMessageList(data['uid']),
-                    ],
-                  ),
+                    ),
+                    //CustomChatBubble
+                    SizedBox(
+                      height: 3,
+                    ),
+                    buildMessageList(data['uid']),
+                  ],
                 ),
+                //    ),
               ],
             ),
           ),
@@ -407,6 +422,9 @@ class ChatScreenState extends State<ChatScreen> {
             ),
           ),
         ),
+        SizedBox(
+          width: 180,
+        ),
         Text(
           theDate,
           style: GoogleFonts.aBeeZee(
@@ -466,7 +484,7 @@ class ChatScreenState extends State<ChatScreen> {
       throw Exception('Failed  : $e');
     }
     var snapshot = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('Theusers')
         .where('email', isEqualTo: email)
         .get();
     if (snapshot.docs.isNotEmpty) {

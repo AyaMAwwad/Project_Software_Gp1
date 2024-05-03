@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -21,8 +22,11 @@ import 'package:project/src/screen/chat_page.dart';
 import 'package:project/src/screen/chat_screen.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/notification.dart';
+import 'package:project/src/screen/notification_page.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
+import 'package:project/src/screen/security.dart';
+import 'package:project/src/screen/settings.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -30,6 +34,7 @@ import 'package:project/widgets/cart_shop.dart';
 import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
+import 'package:project/widgets/search_page.dart';
 import 'package:project/widgets/slider.dart';
 import 'package:project/src/screen/detailpage.dart';
 import 'package:project/widgets/user_profile.dart';
@@ -43,9 +48,15 @@ class HomePage extends StatefulWidget {
 String Priceeneww = '';
 
 class HomePageState extends State<HomePage> {
+  static bool isPressTosearch = false;
+  static bool isPressTosearchButton = false;
   String firsttname = Login.first_name;
   String lastttname = Login.last_name;
   String emailbefore = Login.Email;
+
+  String imagepath = 'images/icon/userprofile.png';
+
+  //
   List<Product> products = [];
   static String CategorySelected = '';
   @override
@@ -53,6 +64,14 @@ class HomePageState extends State<HomePage> {
     super.initState();
     FirebaseNotification.getDiveceToken();
     fetchProducts();
+
+    //
+    if (PrivacySecurity.Delete == 'delete') {
+      setState(() {
+        // Update the image path if the condition is met
+        imagepath = 'images/icon/nohuman.png'; // New image path
+      });
+    }
   }
 
   Future<void> fetchProducts() async {
@@ -106,6 +125,7 @@ class HomePageState extends State<HomePage> {
             'Price: \$${newPrice}',
             product.productId,
             product.product_type,
+            product.description,
           );
         }
       },
@@ -135,10 +155,13 @@ class HomePageState extends State<HomePage> {
   Future<String> newproductt(Product product) async {
     String productType = product.product_type;
     // If product is new, fetch price from New_Product table
-    if (productType == 'new') {
+    if (productType == 'new' || productType == 'New' || productType == 'جديد') {
       return await fetchPriceFromNewProduct(product.productId);
+    } else if (productType == 'used' || productType == 'مستعمل') {
+      return await fetchPriceFromusedProduct(product.productId);
+      //return product.price; // Return original price fetchPriceFromusedProduct
     } else {
-      return product.price; // Return original price
+      return product.price;
     }
   }
 
@@ -153,8 +176,8 @@ class HomePageState extends State<HomePage> {
         // For example, show a dialog or navigate to another page
       },
       child: Card(
-        elevation: 5,
-        color: Colors.white,
+        elevation: 4,
+        color: Color.fromARGB(255, 244, 242, 245).withOpacity(0.9),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
@@ -240,18 +263,22 @@ class HomePageState extends State<HomePage> {
   String pricetablet = 'Price: \$100.00';
 
   final List<Category> categories = [
-    Category(name: 'Fashion', imagePath: 'images/icon/fashion.jpg'),
-    Category(name: 'Books', imagePath: 'images/icon/books.jpg'),
-    Category(name: 'Games', imagePath: 'images/icon/game.jpg'),
-    Category(name: 'Vehicles', imagePath: 'images/icon/vehicles.jpg'),
-    Category(name: 'Furniture', imagePath: 'images/icon/furniture.jpg'),
-    Category(name: 'Smart devices', imagePath: 'images/icon/mobile.jpg'),
-    Category(name: 'Houseware', imagePath: 'images/icon/Houseware.jpg'),
+    Category(name: '50'.tr, imagePath: 'images/icon/fashion.jpg'),
+    Category(name: '51'.tr, imagePath: 'images/icon/books.jpg'),
+    Category(name: '52'.tr, imagePath: 'images/icon/game.jpg'),
+    Category(name: '53'.tr, imagePath: 'images/icon/vehicles.jpg'),
+    Category(name: '54'.tr, imagePath: 'images/icon/furniture.jpg'),
+    Category(name: '55'.tr, imagePath: 'images/icon/mobile.jpg'),
+    Category(name: '56'.tr, imagePath: 'images/icon/Houseware.jpg'),
   ];
 
   //
   @override
   Widget build(BuildContext context) {
+    print('*************** in Home ');
+    print(isPressTosearch);
+    print('*************** isPressTosearchButton');
+    print(isPressTosearchButton);
     /*
      return Scaffold(
     appBar: buildAppBar(
@@ -278,7 +305,7 @@ class HomePageState extends State<HomePage> {
      */
     // bool isSearching = false;
     return Scaffold(
-      //backgroundColor: Colors.transparent,
+      backgroundColor: const Color.fromARGB(255, 253, 246, 254),
       drawer: Drawer(
         //child: CustemAppBar(),
         child: ListView(
@@ -290,7 +317,7 @@ class HomePageState extends State<HomePage> {
               currentAccountPicture: CircleAvatar(
                 radius: 300,
                 child: ClipOval(
-                  child: Image.asset('images/icon/userprofile.png'),
+                  child: Image.asset(imagepath),
                 ),
               ),
               decoration: BoxDecoration(
@@ -352,7 +379,7 @@ UserAccountsDrawerHeader(
               leading: Icon(Icons.account_circle,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
               title: Text(
-                'Profile',
+                '8'.tr,
                 style: GoogleFonts.aBeeZee(
                   textStyle: TextStyle(
                     fontSize: 18,
@@ -366,13 +393,36 @@ UserAccountsDrawerHeader(
                   MaterialPageRoute(builder: (context) => UserProfile()),
                 );
               },
+            ), // SettingsPage
+            Visibility(
+              visible: isPressTosearch,
+              child: ListTile(
+                  leading: Icon(Icons.arrow_back_ios_new,
+                      size: 24, color: Color.fromARGB(255, 2, 92, 123)),
+                  title: Text(
+                    "137".tr,
+                    style: GoogleFonts.aBeeZee(
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        //  color: Color.fromARGB(255, 2, 92, 123),
+                      ),
+                    ),
+                  ),
+                  onTap: () => {
+                        isPressTosearch = false,
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        ),
+                        // Navigator.pop(context),
+                      } //print('Notifications'),
+                  ),
             ),
-
             ListTile(
               leading: Icon(Icons.settings,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
               title: Text(
-                'Settings',
+                '62'.tr,
                 style: GoogleFonts.aBeeZee(
                   textStyle: TextStyle(
                     fontSize: 18,
@@ -380,13 +430,20 @@ UserAccountsDrawerHeader(
                   ),
                 ),
               ),
-              onTap: () => print('setting'),
+              onTap: () //async
+                  {
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => SettingsPage()),
+                // );
+                Get.to(() => SettingsPage());
+              },
             ),
             ListTile(
               leading: Icon(Icons.notifications,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
               title: Text(
-                'Notifications',
+                '61'.tr,
                 style: GoogleFonts.aBeeZee(
                   textStyle: TextStyle(
                     fontSize: 18,
@@ -394,13 +451,15 @@ UserAccountsDrawerHeader(
                   ),
                 ),
               ),
-              onTap: () => print('Notifications'),
+              onTap: () {
+                Get.to(() => NotificationPage());
+              },
             ),
             ListTile(
               leading: Icon(Icons.logout,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
               title: Text(
-                'Sign Out',
+                '60'.tr,
                 style: GoogleFonts.aBeeZee(
                   textStyle: TextStyle(
                     fontSize: 18,
@@ -409,6 +468,7 @@ UserAccountsDrawerHeader(
                 ),
               ),
               onTap: () async {
+                await FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => Login()),
@@ -440,53 +500,118 @@ UserAccountsDrawerHeader(
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustemAppBar(
-              text: 'Home',
+              text:
+                  isPressTosearch || isPressTosearchButton ? '136'.tr : '59'.tr,
             ),
             SizedBox(
               height: 10,
               //  child:Carousel(),
             ),
             SearchAppBar(),
+            //    SearchAppBar(onSearchPressed: handleSearchPressed),
             SizedBox(
               height: 10,
               //  child:Carousel(),
             ),
-            SliderPage(),
-            SizedBox(
-              height: 10,
-              //  child:Carousel(),
-            ),
-            //Expanded(child:
-            SizedBox(
-              height: 180, // Set the height of the category list section
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  // SizedBox(height: 16);
+            Visibility(
+              visible: isPressTosearch,
+              child: Container(
+                color: const Color.fromARGB(255, 254, 247, 255),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0, left: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '139'.tr, //
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 2, 92, 123),
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Roboto',
+                              letterSpacing: 1.2,
+                              shadows: [
+                                Shadow(
+                                  color: Color.fromARGB(255, 2, 92, 123)
+                                      .withOpacity(0.05),
+                                  offset: Offset(1, 1),
+                                  blurRadius: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
-                  return buildCategoryCard(categories[index], context);
-                },
+                    //SearchPage(),
+                  ],
+                ),
+              ), //SearchPage(),
+            ),
+            Visibility(
+              visible: isPressTosearchButton, //&& !isPressTosearch,
+              child: Container(
+                // padding: EdgeInsets.only(bottom: 10),
+                color: const Color.fromARGB(255, 254, 247, 255),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: SearchPage(
+                  allProductDataForSearch: SearchAppBar.allProductDataForSearch,
+                  allProductDetailsForSearch:
+                      SearchAppBar.allProductDetailsForSearch,
+                ),
               ),
             ),
-            // ),
-            // SizedBox(height: 16),
-            textfunction2(),
-            SizedBox(height: 16),
-            // productItem(products);
-            // ibtisamproduct(),
-            // SizedBox(height: 50),
-            buildBottom(context), //openSans
-            SizedBox(height: 16),
+            Visibility(
+              visible: !isPressTosearch && !isPressTosearchButton,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SliderPage(),
+                  SizedBox(
+                    height: 10,
+                    //  child:Carousel(),
+                  ),
+                  //Expanded(child:
+                  SizedBox(
+                    height: 180, // Set the height of the category list section
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) {
+                        // SizedBox(height: 16);
 
-            textfunction(),
-            SizedBox(height: 16),
-            buildNext(namefashion, imagefashion, pricefashion, namegame,
-                imagegame, pricegame),
-            buildNext(nameJumpsuit, imageJumpsuit, priceJumpsuit, nameiphone,
-                imageiphone, pricephone),
-            buildNext(namebluse, imagebluse, pricebluse, nametablet,
-                imagetablet, pricetablet),
+                        return buildCategoryCard(categories[index], context);
+                      },
+                    ),
+                  ),
+                  // ),
+                  // SizedBox(height: 16),
+                  textfunction2(),
+                  SizedBox(height: 16),
+                  // productItem(products);
+                  // ibtisamproduct(),
+                  // SizedBox(height: 50),
+                  buildBottom(context), //openSans
+                  SizedBox(height: 16),
+
+                  textfunction(),
+                  SizedBox(height: 16),
+                  buildNext(namefashion, imagefashion, pricefashion, namegame,
+                      imagegame, pricegame),
+                  buildNext(nameJumpsuit, imageJumpsuit, priceJumpsuit,
+                      nameiphone, imageiphone, pricephone),
+                  buildNext(namebluse, imagebluse, pricebluse, nametablet,
+                      imagetablet, pricetablet),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -497,6 +622,8 @@ UserAccountsDrawerHeader(
             selectedIndex = index;
             switch (index) {
               case 0:
+                isPressTosearchButton = false;
+                isPressTosearch = false;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
@@ -622,8 +749,8 @@ UserAccountsDrawerHeader(
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Card(
-        elevation: 5,
-        color: Colors.white,
+        elevation: 4,
+        color: Color.fromARGB(255, 244, 242, 245).withOpacity(0.9),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
@@ -754,7 +881,8 @@ UserAccountsDrawerHeader(
       Map<String, dynamic> imagePath,
       String price,
       int productId,
-      String type) {
+      String type,
+      String description) {
     List<int> bytes = List<int>.from(imagePath['data']);
 
     return GestureDetector(
@@ -778,8 +906,8 @@ UserAccountsDrawerHeader(
         );
       },
       child: Card(
-        elevation: 5,
-        color: Colors.white,
+        elevation: 4,
+        color: Color.fromARGB(255, 244, 242, 245).withOpacity(0.9),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
@@ -839,7 +967,7 @@ UserAccountsDrawerHeader(
                         ),
                         onTap: () async {
                           RecentSingleProdState.shoppingCartStore(
-                              '1', '', itemName, type);
+                              '1', '', itemName, type, description);
                         },
                       ),
                     ],
@@ -875,10 +1003,14 @@ UserAccountsDrawerHeader(
   }
 
   // build fixed from tow pictiure in the same row
-  Widget fixedbuttom(String itemName, String imagePath, String price) {
+  Widget fixedbuttom(
+    String itemName,
+    String imagePath,
+    String price, //String type,String description
+  ) {
     return Card(
-      elevation: 5,
-      color: Colors.white,
+      elevation: 4,
+      color: Color.fromARGB(255, 244, 242, 245).withOpacity(0.9),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
       ),
@@ -935,7 +1067,7 @@ UserAccountsDrawerHeader(
                       ),
                       onTap: () async {
                         RecentSingleProdState.shoppingCartStore('1', '',
-                            itemName, 'New'); /////////////// need to update
+                            itemName, 'New', ''); /////////////// need to update
                       },
                     ),
                   ],
@@ -954,7 +1086,7 @@ UserAccountsDrawerHeader(
       padding: const EdgeInsets.only(
           left: 16.0), // Adjust the left padding as needed
       child: Text(
-        'Popular goods', //displayed goods
+        '57'.tr, //displayed goods
         style: GoogleFonts.aBeeZee(
           fontSize: 24,
           fontWeight: FontWeight.bold,
@@ -976,7 +1108,7 @@ UserAccountsDrawerHeader(
       padding: const EdgeInsets.only(
           left: 16.0), // Adjust the left padding as needed
       child: Text(
-        'Displayed goods', //displayed goods
+        '58'.tr, //displayed goods
         style: GoogleFonts.aBeeZee(
           fontSize: 24,
           fontWeight: FontWeight.bold,
@@ -1078,7 +1210,38 @@ Future<String> fetchPriceFromNewProduct(int productId) async {
     throw Exception('Failed to fetch price for product $productId: $e');
   }
 }
+// used product
 
+Future<String> fetchPriceFromusedProduct(int productId) async {
+  http.Response? response;
+  try {
+    response = await http.get(Uri.parse(
+        'http://192.168.0.114:3000/tradetryst/productused/usedprice?id=$productId'));
+    if (response.statusCode == 200) {
+      dynamic responseData = jsonDecode(response.body);
+      if (responseData is List && responseData.isNotEmpty) {
+        // Extract price from the first item in the list
+        dynamic firstItem = responseData.first;
+        if (firstItem is Map<String, dynamic> &&
+            firstItem.containsKey('price')) {
+          return firstItem['price'].toString();
+        } else {
+          throw Exception('Invalid response data format for price');
+        }
+      } else {
+        throw Exception('Empty or invalid response data format for price');
+      }
+    } else {
+      throw Exception(
+          'Failed to fetch price for product $productId. Status code: ${response?.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e, Response body: ${response?.body}');
+    throw Exception('Failed to fetch price for product $productId: $e');
+  }
+}
+
+// end used
 class Product {
   final int productId;
   final String name;

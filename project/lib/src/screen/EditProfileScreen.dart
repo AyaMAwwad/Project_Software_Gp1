@@ -63,7 +63,7 @@ class EditProfileScreen extends State<editprofile> {
     if (birthday.isNotEmpty) {
       final DateTime parsedDate = DateTime.parse(birthday);
       formattedBirthday = DateFormat('yyyy-MM-dd').format(parsedDate);
-      print('\n \n $formattedBirthday\n $birthday\n \n ');
+      // print('\n \n $formattedBirthday\n $birthday\n \n ');
     }
   }
 
@@ -319,7 +319,7 @@ class EditProfileScreen extends State<editprofile> {
                     );
                     Login.first_name = firstName.text;
                     //widget.onUpdateFirstName(firstName.text);
-                    print('it is ok ${Login.first_name}\n');
+                    // print('it is ok ${Login.first_name}\n');
                     setState(() {
                       Login.first_name = firstName.text;
                       UserProfileState.firstname = firstName.text;
@@ -331,7 +331,7 @@ class EditProfileScreen extends State<editprofile> {
                     });
                     Login.last_name = lastName.text;
                     print('it is ok \n');
-                    print('id user :::: $iduser \n');
+                    // print('id user :::: $iduser \n');
 
                     // All fields are valid, perform update operation
                     // Call a function to update the profile in the database

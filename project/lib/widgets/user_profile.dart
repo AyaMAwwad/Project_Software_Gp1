@@ -13,6 +13,7 @@ import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/information.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/multiLanguage.dart';
+import 'package:project/src/screen/security.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -184,24 +185,29 @@ class UserProfileState extends State<UserProfile> {
             //width: 200,
             // width: double.infinity, // Make button take full width
             Center(
-              child: CustomeButton(
-                //  width:50,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => editprofile()),
-                  ).then((updatedFirstName) {
-                    if (updatedFirstName != null) {
-                      setState(() {
-                        firstname = updatedFirstName;
-                      });
-                    }
-                  });
-                },
-                text: '7'.tr,
-                borderRadius: BorderRadius.circular(30),
-                // width : 50,
-                //child: Text('Edit Profile'),
+              child: ElevatedButton(
+                onPressed: PrivacySecurity.Delete == 'delete'
+                    ? null
+                    : () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => editprofile()),
+                        ).then((updatedFirstName) {
+                          if (updatedFirstName != null) {
+                            setState(() {
+                              firstname = updatedFirstName;
+                            });
+                          }
+                        });
+                      },
+                child: Text('7'.tr),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
               ),
             ),
             //  ),
@@ -287,6 +293,8 @@ class UserProfileState extends State<UserProfile> {
             selectedIndex = index;
             switch (index) {
               case 0:
+                HomePageState.isPressTosearch = false;
+                HomePageState.isPressTosearchButton = false;
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
