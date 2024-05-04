@@ -46,13 +46,15 @@ class ChatScreenState extends State<ChatScreen> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   List<String> ListProfile = [
+    'images/icon/ibtisam.jpg',
     'images/icon/aega.jpeg',
-    'images/icon/userprofile1.png',
+
+    //'images/icon/userprofile1.png',
     'images/icon/Profile1.png',
-    'images/icon/Profile1.png',
-    'images/icon/Profile1.png',
-    'images/icon/Profile1.png',
-    'images/icon/Profile1.png',
+    //'images/icon/Profile1.png',
+    //'images/icon/Profile1.png',
+    // 'images/icon/Profile1.png',
+    // 'images/icon/Profile1.png',
   ];
 
   @override
@@ -121,8 +123,9 @@ class ChatScreenState extends State<ChatScreen> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Padding(
-                padding: EdgeInsets.only(left: 10.0),
+                padding: const EdgeInsets.only(left: 8.0),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,41 +133,35 @@ class ChatScreenState extends State<ChatScreen> {
                         ListProfile.length,
                         (index) => Padding(
                           padding: EdgeInsets.only(
-                              right: index < ListProfile.length - 1
-                                  ? 12.0
-                                  : 0), // Adjust the value according to your needs
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.asset(
-                              ListProfile[index],
-                              width: 70,
-                              height: 70,
-                              fit: BoxFit.cover,
-                            ),
+                            right: index < ListProfile.length - 1 ? 12.0 : 0,
+                          ),
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.asset(
+                                  ListProfile[index],
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              SizedBox(
+                                  height:
+                                      10), // Adjust this value for spacing between image and name
+                              Text(
+                                allUserName[index]['first_name'],
+                                style: GoogleFonts.aBeeZee(
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    decorationThickness: 1,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 60),
-                      child: Text(
-                        style: GoogleFonts.aBeeZee(
-                          textStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            decorationThickness: 1,
-                          ),
-                        ),
-                        allUserName.map((userInfo) {
-                          String firstName = userInfo['first_name'];
-
-                          //  String lastName = userInfo['last_name'];
-                          return '$firstName ';
-                        }).join(
-                            '             '), // Joining all the names with a comma and space
                       ),
                     ),
                   ],
@@ -172,6 +169,85 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             ),
 
+            /*  SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List.generate(
+                      ListProfile.length,
+                      (index) => Padding(
+                        padding: EdgeInsets.only(
+                            right: index < ListProfile.length - 1
+                                ? 12.0
+                                : 0), // Adjust the value according to your needs
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(
+                            ListProfile[index],
+                            width: 70,
+                            height: 70,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: allUserName.map((userInfo) {
+                        String firstName = userInfo['first_name'];
+
+                        //  String lastName = userInfo['last_name'];
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              right:
+                                  50), // Adjust this value for the desired distance
+                          child: Text(
+                            firstName,
+                            style: GoogleFonts.aBeeZee(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                decorationThickness: 1,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+
+                  /*  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      style: GoogleFonts.aBeeZee(
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          decorationThickness: 1,
+                        ),
+                      ),
+                      allUserName.map((userInfo) {
+                        String firstName = userInfo['first_name'];
+              
+                        //  String lastName = userInfo['last_name'];
+                        return '$firstName ';
+                      }).join(
+                          ''), // Joining all the names with a comma and space
+                    ),
+                  ),*/
+                ],
+              ),
+            ),
+*/
             SizedBox(
               height: 15,
             ),
@@ -204,6 +280,7 @@ class ChatScreenState extends State<ChatScreen> {
                 ),
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height, //515
+
                 child: buildUserList(),
               ),
             ),
@@ -312,11 +389,14 @@ class ChatScreenState extends State<ChatScreen> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(50),
-                  child: Image.asset(
-                    ListProfile[j],
-                    width: 50,
-                    height: 50, // 200
-                    //  fit: BoxFit.cover,
+                  child: Container(
+                    color: const Color.fromARGB(255, 80, 79, 79),
+                    child: Image.asset(
+                      ListProfile[j],
+                      width: 50,
+                      height: 50, // 200
+                      //  fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 SizedBox(width: 16),
@@ -408,35 +488,39 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Widget designMsg(String msg, String theDate) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          msg,
-          style: GoogleFonts.aBeeZee(
-            textStyle: TextStyle(
-              color: Color.fromARGB(
-                  255, 87, 87, 87), // Color.fromARGB(255, 191, 189, 189),
-              fontSize: 12,
-              decorationThickness: 1,
+    // double length = msg.length.toDouble();
+    return Container(
+      width: 250,
+      //  color: Colors.yellow,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //  crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            msg,
+            style: GoogleFonts.aBeeZee(
+              textStyle: TextStyle(
+                color: Color.fromARGB(
+                    255, 87, 87, 87), // Color.fromARGB(255, 191, 189, 189),
+                fontSize: 12,
+                decorationThickness: 1,
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          width: 180,
-        ),
-        Text(
-          theDate,
-          style: GoogleFonts.aBeeZee(
-            textStyle: TextStyle(
-              color: Color.fromARGB(
-                  255, 87, 87, 87), //Color.fromARGB(255, 191, 189, 189),
-              fontSize: 12,
-              decorationThickness: 1,
+          // SizedBox(width: 180 - length),
+          Text(
+            theDate,
+            style: GoogleFonts.aBeeZee(
+              textStyle: TextStyle(
+                color: Color.fromARGB(
+                    255, 87, 87, 87), //Color.fromARGB(255, 191, 189, 189),
+                fontSize: 12,
+                decorationThickness: 1,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

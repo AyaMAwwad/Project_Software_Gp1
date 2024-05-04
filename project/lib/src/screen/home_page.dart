@@ -497,7 +497,7 @@ UserAccountsDrawerHeader(
         //SingleChildScrollView(
         child: ListView(
           //padding: EdgeInsets.all(8),
-          // crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
             CustemAppBar(
               text:
@@ -520,7 +520,7 @@ UserAccountsDrawerHeader(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 12.0, left: 20),
@@ -593,15 +593,22 @@ UserAccountsDrawerHeader(
                   ),
                   // ),
                   // SizedBox(height: 16),
-                  textfunction2(),
+                  Padding(
+                    padding: EdgeInsets.only(right: 170),
+                    child: textfunction2(),
+                  ),
+
                   SizedBox(height: 16),
                   // productItem(products);
                   // ibtisamproduct(),
                   // SizedBox(height: 50),
                   buildBottom(context), //openSans
                   SizedBox(height: 16),
+                  Padding(
+                    padding: EdgeInsets.only(right: 190),
+                    child: textfunction(),
+                  ),
 
-                  textfunction(),
                   SizedBox(height: 16),
                   buildNext(namefashion, imagefashion, pricefashion, namegame,
                       imagegame, pricegame),

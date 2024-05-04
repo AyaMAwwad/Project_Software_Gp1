@@ -61,6 +61,7 @@ class SearchAppBar extends StatelessWidget {
                       },
                       onSelected: (value) {
                         val = value;
+                        selected = value;
                         ListRecentSearch.add(value);
                         print('^^^^^^ ListRecentSearch : $ListRecentSearch');
                         print('Selected: $value');
@@ -126,7 +127,7 @@ class SearchAppBar extends StatelessWidget {
                                           (BuildContext context, int index) {
                                         final option = options.elementAt(index);
 
-                                        selected = option;
+                                        //    selected = option;
                                         // String s = onSelected(option);
                                         return ListTile(
                                           title: Text(
