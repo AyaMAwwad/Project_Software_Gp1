@@ -33,7 +33,7 @@ class SearchPage extends StatelessWidget {
             crossAxisCount: 2,
             crossAxisSpacing: 5.0,
             mainAxisSpacing: 10.0,
-            childAspectRatio: 0.7,
+            childAspectRatio: 0.5,
           ),
           itemCount: allProductDataForSearch.length,
           shrinkWrap: true,

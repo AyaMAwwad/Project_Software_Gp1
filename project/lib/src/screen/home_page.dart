@@ -316,8 +316,14 @@ class HomePageState extends State<HomePage> {
               accountEmail: Text('$emailbefore'),
               currentAccountPicture: CircleAvatar(
                 radius: 300,
-                child: ClipOval(
-                  child: Image.asset(imagepath),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image.asset(
+                    imagepath,
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               decoration: BoxDecoration(
@@ -395,7 +401,7 @@ UserAccountsDrawerHeader(
               },
             ), // SettingsPage
             Visibility(
-              visible: isPressTosearch,
+              visible: isPressTosearch || isPressTosearchButton,
               child: ListTile(
                   leading: Icon(Icons.arrow_back_ios_new,
                       size: 24, color: Color.fromARGB(255, 2, 92, 123)),
@@ -516,43 +522,115 @@ UserAccountsDrawerHeader(
             Visibility(
               visible: isPressTosearch,
               child: Container(
-                color: const Color.fromARGB(255, 254, 247, 255),
+                //color: const Color.fromARGB(255, 224, 223, 225),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 12.0, left: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            '139'.tr, //
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 2, 92, 123),
-                              fontSize: 19,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto',
-                              letterSpacing: 1.2,
-                              shadows: [
-                                Shadow(
-                                  color: Color.fromARGB(255, 2, 92, 123)
-                                      .withOpacity(0.05),
-                                  offset: Offset(1, 1),
-                                  blurRadius: 1,
-                                ),
-                              ],
+                      padding: const EdgeInsets.only(top: 10.0, left: 20),
+                      child: Text(
+                        '139'.tr,
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 2, 92, 123),
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Roboto',
+                          letterSpacing: 1.2,
+                          shadows: [
+                            Shadow(
+                              color: Color.fromARGB(255, 2, 92, 123)
+                                  .withOpacity(0.05),
+                              offset: Offset(1, 1),
+                              blurRadius: 1,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children:
+                            SearchAppBar.ListRecentSearch.map((searchTerm) {
+                          return GestureDetector(
+                            onTap: () async {
+                              await SearchAppBar.searchbyName(
+                                  context, searchTerm);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 232, 231, 231),
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                  color: const Color.fromARGB(255, 2, 92,
+                                      123), // Choose your border color
+                                  width: 1, // Choose your border width
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    searchTerm,
+                                    style: GoogleFonts.aBeeZee(
+                                      textStyle: TextStyle(
+                                        color: Color.fromARGB(255, 2, 92, 123),
+                                        fontSize: 13,
 
-                    //SearchPage(),
+                                        // decoration: TextDecoration.underline,
+                                        decorationThickness: 1,
+                                        fontWeight: FontWeight.bold,
+                                        //padding: 10,
+                                      ),
+                                    ), /*TextStyle(
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Roboto',
+                                    ),*/
+                                  ),
+                                  SizedBox(width: 12),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Delete the image at the current index
+                                      setState(() {
+                                        SearchAppBar.ListRecentSearch.remove(
+                                            searchTerm);
+                                      });
+                                    },
+                                    child: Container(
+                                      width: 20,
+                                      height: 20,
+                                      padding: EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color:
+                                            Color.fromARGB(255, 232, 231, 231),
+                                      ),
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Color.fromARGB(255, 2, 92, 123),
+                                        size: 15,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   ],
                 ),
-              ), //SearchPage(),
+              ),
             ),
             Visibility(
               visible: isPressTosearchButton, //&& !isPressTosearch,

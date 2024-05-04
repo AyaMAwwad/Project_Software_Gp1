@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/button_2.dart';
 import 'package:project/widgets/demo_counter.dart';
 import 'package:get/get.dart';
@@ -82,7 +83,7 @@ class _CartItemState extends State<CartItem> {
   }
 
   void fetchCart() async {
-    await getProductCart();
+    await getProductCart(Login.idd);
 
     setState(() {
       if (selectedCheckboxes.isEmpty ||
@@ -558,12 +559,13 @@ void fetchCart() async {
     );
   }
 
-  Future<Map<String, dynamic>?> getProductCart() async {
+  Future<Map<String, dynamic>?> getProductCart(int userId) async {
     http.Response? response;
+    print('********* IN SHOP GET PROD CART $userId');
 
     try {
       response = await http.get(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/shoppingcart/getCartItem'));
+          'http://192.168.0.114:3000/tradetryst/shoppingcart/getCartItem?userId=$userId'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         dynamic responseData = jsonDecode(response.body);
 

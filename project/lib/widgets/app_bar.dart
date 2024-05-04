@@ -23,7 +23,11 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     double wid, wid1;
-
+    double containerWidth = MediaQuery.of(context).size.width;
+    double adjustedWidth = containerWidth - 50;
+    if (containerWidth > 1000) {
+      adjustedWidth = containerWidth - 300;
+    }
     if (text == 'Smart devices' ||
         text == 'Shopping Cart' ||
         text == 'Robot cleaner') {
@@ -62,68 +66,76 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
     return
         // backgroundColor: Color.fromARGB(255, 201, 111, 111),
-        Padding(
-      padding: const EdgeInsets.only(right: 5.0, left: 5),
-      child: Row(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            flex: 1,
-            child: Container(
-              child: Builder(
-                builder: (context) => IconButton(
-                  icon: Icon(
-                    Icons.dashboard,
-                    color: Color.fromARGB(
-                        255, 2, 92, 123), //Color.fromARGB(255, 3, 94, 124),
-                  ),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
+        // 1 Padding(
+        //1 padding: const EdgeInsets.only(right: 5.0, left: 5),
+        //1  child:
+        // Flexible(
+        //   flex: 1,
+        //   child:
+        Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, // center spaceBetween
+      children: [
+        Container(
+          //   margin: EdgeInsets.symmetric(horizontal: 10),
+          // child: SizedBox(
+          //  width: adjustedWidth,
+          child: Builder(
+            builder: (context) => IconButton(
+              icon: Icon(
+                Icons.dashboard,
+                color: Color.fromARGB(
+                    255, 2, 92, 123), //Color.fromARGB(255, 3, 94, 124),
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+          ),
+          // ),
+        ),
+        // ),
+
+        // Container(
+        //   padding: EdgeInsets.only(
+        //     right: wid,
+        //   ),
+        // ),
+
+        Column(
+          //
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              text,
+              style: GoogleFonts.aBeeZee(
+                textStyle: TextStyle(
+                  color: Color.fromARGB(255, 2, 92, 123),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-          ),
-          Container(
-            padding: EdgeInsets.only(
-              right: wid,
-            ),
-          ),
-          Flexible(
-            flex: 4,
-            child: Column(
-              //  crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  text,
-                  style: GoogleFonts.aBeeZee(
-                    textStyle: TextStyle(
-                      color: Color.fromARGB(255, 2, 92, 123),
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            Text(
+              "9".tr,
+              style: GoogleFonts.aBeeZee(
+                textStyle: TextStyle(
+                  color: Color.fromARGB(255, 78, 78, 78),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  "9".tr,
-                  style: GoogleFonts.aBeeZee(
-                    textStyle: TextStyle(
-                      color: Color.fromARGB(255, 78, 78, 78),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          Container(
-            padding: EdgeInsets.only(
-              right: wid1,
-            ),
-          ),
-          /* CircleAvatar(
+          ],
+        ),
+        // ),
+
+        // Container(
+        //   padding: EdgeInsets.only(
+        //     right: wid1,
+        //   ),
+        // ),
+
+        /* CircleAvatar(
             backgroundColor: Color.fromARGB(255, 255, 255, 255),
             child: IconButton(
               icon: Icon(
@@ -135,54 +147,59 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () {},
             ),
           ),*/
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                backgroundColor: Color.fromARGB(
-                    255, 254, 247, 255), // Color.fromARGB(255, 255, 251, 254),
-                child: IconButton(
-                  icon: Icon(
-                    // FontAwesomeIcons.bell,
-                    Icons.notifications,
-                    color: Color.fromARGB(255, 2, 92, 123),
-                    size: 26,
-                  ),
-                  onPressed: () {
-                    // triggerNotification();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NotificationPage()));
-                    // navigatorKey.currentState!.pushNamed('notification', arguments: msg);
-                  },
+
+        //        Align(
+        // alignment: Alignment.centerRight,
+        // child:
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            CircleAvatar(
+              backgroundColor: Color.fromARGB(255, 255, 251, 254),
+              child: IconButton(
+                icon: Icon(
+                  // FontAwesomeIcons.bell,
+                  Icons.notifications,
+                  color: Color.fromARGB(255, 2, 92, 123),
+                  size: 26,
                 ),
-              ),
-              CircleAvatar(
-                backgroundColor: Color.fromARGB(
-                    255, 254, 247, 255), //Color.fromARGB(255, 255, 251, 254),
-                child: IconButton(
-                  icon: Icon(
-                    FontAwesomeIcons.facebookMessenger,
-                    color: Color.fromARGB(255, 2, 92, 123),
-                    // size: 30,
-                    //  color: kTextColor,
-                  ),
-                  onPressed: () {
-                    //triggerNotification();
-                    Navigator.push(
+                onPressed: () {
+                  // triggerNotification();
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatScreen(),
-                      ),
-                    );
-                  },
-                ),
+                          builder: (context) => NotificationPage()));
+                  // navigatorKey.currentState!.pushNamed('notification', arguments: msg);
+                },
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+            CircleAvatar(
+              backgroundColor: Color.fromARGB(255, 255, 251, 254),
+              child: IconButton(
+                icon: Icon(
+                  FontAwesomeIcons.facebookMessenger,
+                  color: Color.fromARGB(255, 2, 92, 123),
+                  // size: 30,
+                  //  color: kTextColor,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatScreen(),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ], // children
     );
+    // ],
+    // ),
+
+    //  );
   }
 }

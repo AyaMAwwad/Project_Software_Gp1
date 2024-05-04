@@ -393,13 +393,14 @@ addToShopCart(req, res) {
     
 }
 //getToShopCart
-getToShopCart(req, res) {
+getToShopCart(userId) {
 
   return new Promise((resolve, reject) => {
+    console.log(userId);
 
     
-    db.query('SELECT * FROM shopping_cart ', (error, results) => {
-      if (error) {
+    db.query('SELECT * FROM shopping_cart WHERE user_id = ?',[userId], (error, results) => {
+      if (error || results.length==0) {
         console.error(error);
         reject('Failed to retrive from cart ');
       } else {
