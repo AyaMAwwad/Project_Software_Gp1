@@ -270,7 +270,7 @@ class changepasspage extends State<changepass> {
     print(" hi $oldPassword \n \n");
     // Make an HTTP request to your backend API to verify the old password
     final response = await http.post(
-      Uri.parse('http://192.168.1.126:3000/tradetryst/old/oldpassword'),
+      Uri.parse('http://192.168.0.114:3000/tradetryst/old/oldpassword'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

@@ -169,6 +169,7 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
                     //  color: kTextColor,
                   ),
                   onPressed: () {
+                    //triggerNotification();
                     Navigator.push(
                       context,
                       MaterialPageRoute(

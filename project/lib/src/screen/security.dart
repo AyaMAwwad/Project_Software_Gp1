@@ -211,7 +211,7 @@ class PrivacySecurity extends State<PrivacySecurityPage> {
   // delete account
   Future<void> deleteaccount(String userId) async {
     final url =
-        Uri.parse('http://192.168.1.126:3000/tradetryst/deleteaccount/delete');
+        Uri.parse('http://192.168.0.114:3000/tradetryst/deleteaccount/delete');
 
     try {
       final response = await http.post(
