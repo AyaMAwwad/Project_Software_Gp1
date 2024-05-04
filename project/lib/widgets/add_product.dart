@@ -38,8 +38,8 @@ class AddProductState extends State<AddProduct> {
     'Smart devices',
     'Books',
     'Games',
-    'Furniture'
-        'Vehicles',
+    'Furniture',
+    'Vehicles',
     'Houseware',
   ];
   List<String> listItem1 = [
@@ -47,8 +47,8 @@ class AddProductState extends State<AddProduct> {
     'الأجهزة الذكية',
     'كتب',
     'ألعاب',
-    'أثاث'
-        'مركبات',
+    'أثاث',
+    'مركبات',
     'أدوات منزلية',
   ];
 
@@ -182,7 +182,7 @@ class AddProductState extends State<AddProduct> {
       'مرايا',
       'مصابيح',
       'جداريات',
-      'رفوف الأحذية'
+      'رفوف الأحذية',
     ],
   };
   @override

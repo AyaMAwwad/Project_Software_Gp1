@@ -62,7 +62,11 @@ class SearchAppBar extends StatelessWidget {
                       onSelected: (value) {
                         val = value;
                         selected = value;
-                        ListRecentSearch.add(value);
+                        //  ListRecentSearch.add(value);
+                        if (!ListRecentSearch.contains(value)) {
+                          ListRecentSearch.add(value);
+                          print('^^^^^^ ListRecentSearch : $ListRecentSearch');
+                        }
                         print('^^^^^^ ListRecentSearch : $ListRecentSearch');
                         print('Selected: $value');
                       },
@@ -177,117 +181,7 @@ class SearchAppBar extends StatelessWidget {
                     color: Color.fromARGB(255, 2, 92, 123),
                   ),
                   onPressed: () async {
-                    HomePageState.isPressTosearch = false;
-
-                    print('*************in button click ');
-                    final List<Category> categories = [
-                      Category(
-                          name: '50'.tr, imagePath: 'images/icon/fashion.jpg'),
-                      Category(
-                          name: '51'.tr, imagePath: 'images/icon/books.jpg'),
-                      Category(
-                          name: '52'.tr, imagePath: 'images/icon/game.jpg'),
-                      Category(
-                          name: '53'.tr, imagePath: 'images/icon/vehicles.jpg'),
-                      Category(
-                          name: '54'.tr,
-                          imagePath: 'images/icon/furniture.jpg'),
-                      Category(
-                          name: '55'.tr, imagePath: 'images/icon/mobile.jpg'),
-                      Category(
-                          name: '56'.tr,
-                          imagePath: 'images/icon/Houseware.jpg'),
-                    ];
-                    /* print(controller.text);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ScreenCategory(categories[0])),
-                    );*/
-                    print('********selected:' + selected);
-                    if (selected == 'fashion' || selected == '50'.tr) {
-                      //print('fasfas');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ScreenCategory(categories[0])),
-                      );
-                    } else if (selected == 'books' ||
-                        selected == '51'.tr ||
-                        selected == 'book') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ScreenCategory(categories[1])),
-                      );
-                    } else if (selected == 'game' ||
-                        selected == '52'.tr ||
-                        selected == 'games') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ScreenCategory(categories[2])),
-                      );
-                    } else if (selected == 'vehichle' ||
-                        selected == '53'.tr ||
-                        selected == 'vehichles') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ScreenCategory(categories[3])),
-                      );
-                    } else if (selected == 'furniture' || selected == '54'.tr) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ScreenCategory(categories[4])),
-                      );
-                    } else if (selected == 'smart device' ||
-                        selected == '55'.tr ||
-                        selected == 'smart devices') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ScreenCategory(categories[5])),
-                      );
-                    } else if (selected == 'houseware' || selected == '56'.tr) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ScreenCategory(categories[6])),
-                      );
-                    } else {
-                      print('************* in else');
-                      print('**** the selected:${valofCont}');
-                      HomePageState.isPressTosearchButton = true;
-                      print(val);
-
-                      allProductDataForSearch.clear;
-                      allProductDetailsForSearch.clear;
-                      /* selected.length == 0
-                          ? serachGetTheProduct(valofCont)
-                          : */
-                      serachGetTheProduct(val);
-                      Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Color.fromARGB(255, 2, 92, 123)),
-                        ),
-                      );
-
-                      await Future.delayed(Duration(seconds: 2));
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
-                    }
+                    await searchbyName(context, selected);
                   },
                 ),
               ),
@@ -298,7 +192,94 @@ class SearchAppBar extends StatelessWidget {
     );
   }
 
-  Future<Map<String, dynamic>?> serachGetTheProduct(String name) async {
+  static Future<void> searchbyName(BuildContext context, String value) async {
+    HomePageState.isPressTosearch = false;
+
+    print('*************in button click ');
+    final List<Category> categories = [
+      Category(name: '50'.tr, imagePath: 'images/icon/fashion.jpg'),
+      Category(name: '51'.tr, imagePath: 'images/icon/books.jpg'),
+      Category(name: '52'.tr, imagePath: 'images/icon/game.jpg'),
+      Category(name: '53'.tr, imagePath: 'images/icon/vehicles.jpg'),
+      Category(name: '54'.tr, imagePath: 'images/icon/furniture.jpg'),
+      Category(name: '55'.tr, imagePath: 'images/icon/mobile.jpg'),
+      Category(name: '56'.tr, imagePath: 'images/icon/Houseware.jpg'),
+    ];
+    /* print(controller.text);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ScreenCategory(categories[0])),
+    );*/
+    print('********selected:' + value);
+    if (value == 'fashion' || value == '50'.tr) {
+      //print('fasfas');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScreenCategory(categories[0])),
+      );
+    } else if (value == 'books' || value == '51'.tr || value == 'book') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScreenCategory(categories[1])),
+      );
+    } else if (value == 'game' || value == '52'.tr || value == 'games') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScreenCategory(categories[2])),
+      );
+    } else if (value == 'vehichle' ||
+        value == '53'.tr ||
+        value == 'vehichles') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScreenCategory(categories[3])),
+      );
+    } else if (value == 'furniture' || value == '54'.tr) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScreenCategory(categories[4])),
+      );
+    } else if (value == 'smart device' ||
+        value == '55'.tr ||
+        value == 'smart devices') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScreenCategory(categories[5])),
+      );
+    } else if (value == 'houseware' || value == '56'.tr) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ScreenCategory(categories[6])),
+      );
+    } else {
+      print('************* in else');
+      //  print('**** the selected:${valofCont}');
+      HomePageState.isPressTosearchButton = true;
+      print(value);
+
+      allProductDataForSearch.clear;
+      allProductDetailsForSearch.clear;
+      /* selected.length == 0
+          ? serachGetTheProduct(valofCont)
+          : */
+      serachGetTheProduct(value);
+      Center(
+        child: CircularProgressIndicator(
+          valueColor:
+              AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 2, 92, 123)),
+        ),
+      );
+
+      await Future.delayed(Duration(seconds: 2));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }
+  }
+
+  static Future<Map<String, dynamic>?> serachGetTheProduct(String name) async {
     http.Response? response;
 
     try {

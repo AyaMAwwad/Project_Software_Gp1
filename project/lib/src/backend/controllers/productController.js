@@ -107,7 +107,9 @@ exports.getusedprice = (req, res) => {
 
     //getToShopCart
     exports.getToShopCart = (req, res) => {
-      prod.getToShopCart()
+      
+    const userId=req.query.userId;
+      prod.getToShopCart(userId)
       .then((res1) => {
         console.log({res1});
        // console.log('Price:', price);

@@ -46,11 +46,11 @@ class ChatScreenState extends State<ChatScreen> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   List<String> ListProfile = [
-    'images/icon/ibtisam.jpg',
     'images/icon/aega.jpeg',
-
-    //'images/icon/userprofile1.png',
     'images/icon/Profile1.png',
+    'images/icon/ibtisam.jpg',
+    //'images/icon/userprofile1.png',
+
     //'images/icon/Profile1.png',
     //'images/icon/Profile1.png',
     // 'images/icon/Profile1.png',
@@ -150,7 +150,9 @@ class ChatScreenState extends State<ChatScreen> {
                                   height:
                                       10), // Adjust this value for spacing between image and name
                               Text(
-                                allUserName[index]['first_name'],
+                                index < allUserName.length
+                                    ? allUserName[index]['first_name']
+                                    : '',
                                 style: GoogleFonts.aBeeZee(
                                   textStyle: TextStyle(
                                     color: Colors.white,
