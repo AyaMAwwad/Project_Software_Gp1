@@ -60,7 +60,8 @@ dependencies:
   provider: 
   flutter_local_notifications: ^17.1.0
   get: ^4.6.6
-  dropdown_button2: ^2.3.9  
+  dropdown_button2: ^2.3.9 
+  flutter_stripe: ^10.1.1 
 
   
   #carousel_pro: ^1.0.0
