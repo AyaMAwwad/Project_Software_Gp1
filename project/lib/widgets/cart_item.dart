@@ -4,31 +4,30 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+//import 'package:flutter/material.dart' as material;
+import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/payment.dart';
 import 'package:project/widgets/button_2.dart';
 import 'package:project/widgets/demo_counter.dart';
 import 'package:get/get.dart';
 
 class CartItem extends StatefulWidget {
   @override
-  State<CartItem> createState() => _CartItemState();
+  State<CartItem> createState() => CartItemState();
 }
 
-class _CartItemState extends State<CartItem> {
+class CartItemState extends State<CartItem> {
   List<Map<String, dynamic>> cartShopContain = [];
   List<Map<String, dynamic>> productInCart = [];
   List<Map<String, dynamic>> allProductDetails = [];
-  List<int?> selectedRadioValues = [];
   static List<int> productCount = [];
-  String? valueState;
-  String? theValueState;
-  int? theValueState1;
-  bool colorEnabled = false;
-  Color? activeColor;
   static List<bool> selectedCheckboxes = [];
   static bool allCheckboxChecked = false;
+  static List<int> selectedListOfUserToPay = [];
+
   double calculateTotalPrice() {
     double totalPrice = 0.0;
     if (productInCart != null &&
@@ -42,13 +41,32 @@ class _CartItemState extends State<CartItem> {
             Map<String, dynamic> details = allProductDetails[i];
             double price = double.tryParse(details['price'] ?? '0.0') ?? 0.0;
 
-            int count = productCount[i] ?? 0; // Ensure count is not null
+            int count = productCount[i] ?? 0;
             totalPrice += price * count;
           }
         }
       }
     }
     return totalPrice;
+  }
+
+  void functionPayed() {
+    print('****************** in functionPayed');
+    //CartItemState instance = new CartItemState();
+    allCheckboxChecked = false;
+    for (int i = 0; i < selectedListOfUserToPay.length; i++) {
+      if (selectedListOfUserToPay[i] != 0) {
+        // instance.
+        deleteProduct(i);
+        selectedCheckboxes.removeAt(i);
+        productCount.removeAt(i);
+        selectedListOfUserToPay[i] = 0;
+      }
+    }
+    print(selectedCheckboxes);
+    print(productCount);
+    print(selectedListOfUserToPay);
+    print(cartShopContain);
   }
 
 /*
@@ -72,6 +90,7 @@ class _CartItemState extends State<CartItem> {
       productInCart.removeAt(index);
       allProductDetails.removeAt(index);
       cartShopContain.removeAt(index);
+      selectedListOfUserToPay.removeAt(index);
     });
   }
 
@@ -82,9 +101,70 @@ class _CartItemState extends State<CartItem> {
     fetchCart();
   }
 
+  void refreshCart() {
+    // functionPayed();
+    // Fetch cart items again to update the UI
+    fetchCart();
+  }
+
+  static double amount = 0;
   void fetchCart() async {
     await getProductCart(Login.idd);
+    /* if (Payment.isPay) {
+      functionPayed();
+    }*/
 
+    setState(() {
+      amount = calculateTotalPrice();
+      if (selectedCheckboxes.isEmpty) {
+        allCheckboxChecked = false;
+      }
+      if (selectedCheckboxes.isEmpty ||
+          selectedCheckboxes.length != productInCart.length) {
+        selectedCheckboxes =
+            List.generate(productInCart.length, (index) => false);
+      }
+
+      if (productCount == null ||
+          productCount.isEmpty ||
+          productCount.length != productInCart.length) {
+        productCount = List.filled(productInCart.length, 1);
+      }
+
+      selectedCheckboxes = List.from(selectedCheckboxes, growable: true);
+
+      while (selectedCheckboxes.length < productInCart.length) {
+        selectedCheckboxes.add(false);
+      }
+
+      for (int i = 0; i < selectedCheckboxes.length; i++) {
+        if (i >= productCount.length || selectedCheckboxes[i] == null) {
+          selectedCheckboxes[i] = false;
+        }
+      }
+      //// new 8_MAY
+      selectedListOfUserToPay =
+          List.from(selectedListOfUserToPay, growable: true);
+
+      while (selectedListOfUserToPay.length < productInCart.length) {
+        selectedListOfUserToPay.add(0);
+      }
+
+      for (int i = 0; i < selectedCheckboxes.length; i++) {
+        if (i >= selectedListOfUserToPay.length ||
+            selectedListOfUserToPay[i] == null) {
+          selectedListOfUserToPay[i] = 0;
+        }
+      }
+
+      // }
+    });
+  }
+
+/*
+  void fetchCart() async {
+    await getProductCart(Login.idd);
+//selectedListOfUserToPay
     setState(() {
       if (selectedCheckboxes.isEmpty ||
           selectedCheckboxes.length != productInCart.length) {
@@ -107,8 +187,21 @@ class _CartItemState extends State<CartItem> {
           selectedCheckboxes[i] = false; // Set new items to false by default
         }
       }
+
+      //// new 8_MAY
+      /* if (selectedListOfUserToPay.isEmpty) {
+        selectedListOfUserToPay.length = selectedCheckboxes.length;
+        for (int i = 0; i < selectedCheckboxes.length; i++) {
+          if (i >= selectedListOfUserToPay.length ||
+              selectedCheckboxes[i] == null) {
+            selectedListOfUserToPay[i] = 0;
+          }
+        }
+      }*/
+      ////
     });
-  }
+  }*/
+
 /*
 void fetchCart() async {
   await getProductCart();
@@ -131,7 +224,45 @@ void fetchCart() async {
   });
 }
 */
+/////////////////////////////////////////////////////////////////
+  ///
+  /*
+  Future<void> initPaymentSheet() async {
+    try {
+// 1. create payment intent on the server
+      final data = await createPaymentIntent(
+          name: 'aya', currency: 'USD', amount: '1000');
+// 2. initialize the payment sheet
+      await stripe.Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: stripe.SetupPaymentSheetParameters(
+// Set to true for custom flow
+          customFlow: false,
+// Main params
+          merchantDisplayName: 'Test payment',
+          paymentIntentClientSecret: data['paymentIntent'],
+// Customer keys
+          customerEphemeralKeySecret: data[' ephemeralKey'],
+          customerId: data['id'],
+          /*   applePay: const PaymentSheetApplePay (
+merchantCountryCode: 'US',
 
+),
+googlePay: const PaymentSheetGoogLePay (
+merchantCountryCode: 'US', testEnv: true,
+
+),*/
+          style: ThemeMode.dark,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+      rethrow;
+    }
+  }
+*/
+/////////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,6 +294,16 @@ void fetchCart() async {
                             // Update the state of all individual checkboxes
                             selectedCheckboxes = List.filled(
                                 selectedCheckboxes.length, allCheckboxChecked);
+                            for (int i = 0;
+                                i < selectedListOfUserToPay.length;
+                                i++) {
+                              selectedListOfUserToPay[i] = allCheckboxChecked
+                                  ? productInCart[i]['product_id']
+                                  : 0;
+                            }
+                            // selectedListOfUserToPay = List.filled(
+                            //  selectedListOfUserToPay.length,
+                            //  allCheckboxChecked ? productInCart[i][] : 0);
                           });
                         },
                         activeColor: Color.fromARGB(255, 13, 60, 99),
@@ -212,7 +353,41 @@ void fetchCart() async {
                 ),
                 CustomeButton2(
                   text: "121".tr,
-                  onPressed: () {
+                  onPressed: () async {
+                    try {
+                      Payment.onPaymentSuccess = () {
+                        refreshCart();
+                      };
+                      //  Payment.onPaymentSuccess = refreshCart;
+                      Payment.makePayment(context, calculateTotalPrice());
+
+                      print('Payment sheet initialized successfully.');
+                    } catch (e) {
+                      print('Error initializing payment sheet: $e');
+                    }
+                    /*
+                    await PaymentClass.initPaymentSheet();
+                    try {
+                      await stripe.Stripe.instance.presentPaymentSheet();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          "payment Done",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.green,
+                      ));
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          "payment Failed",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.redAccent,
+                      ));
+                      print(e);
+                    }*/
+                    //  Payment pay = Payment();
+                    //pay.makePayment();
                     //Navigator.push(context,
                     //  MaterialPageRoute(builder: (context) => Login()));
                   },
@@ -235,6 +410,9 @@ void fetchCart() async {
                 ///
                 String theState = theproduct['product_type'];
                 int productId = theproduct['product_id'];
+                /* if (selectedCheckboxes[index]) {
+                  selectedListOfUserToPay[index] = productId;
+                } */
                 // int thequantity = product['quantity'];
                 String thepriceOfProd = (theState == 'new' ||
                         theState == 'used' ||
@@ -275,6 +453,11 @@ void fetchCart() async {
                               onChanged: (value) {
                                 setState(() {
                                   selectedCheckboxes[index] = value ?? false;
+                                  if (selectedCheckboxes[index] == false) {
+                                    selectedListOfUserToPay[index] = 0;
+                                  } else {
+                                    selectedListOfUserToPay[index] = productId;
+                                  }
                                 });
                               },
                               activeColor: Color.fromARGB(255, 13, 60, 99),
@@ -562,6 +745,8 @@ void fetchCart() async {
   Future<Map<String, dynamic>?> getProductCart(int userId) async {
     http.Response? response;
     print('********* IN SHOP GET PROD CART $userId');
+    print(
+        "********************selectedListOfUserToPay : $selectedListOfUserToPay");
 
     try {
       response = await http.get(Uri.parse(
@@ -633,7 +818,6 @@ void fetchCart() async {
     }
   }
 }
-
 
 /*
 import 'dart:convert';

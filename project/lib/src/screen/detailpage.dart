@@ -14,6 +14,7 @@ import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/button.dart';
+import 'package:project/widgets/recent_prod.dart';
 
 class DetailPage extends StatefulWidget {
   final String categoryName;
@@ -21,13 +22,19 @@ class DetailPage extends StatefulWidget {
   final String price;
   final int productid;
   final String Typeproduct;
+  final int quantity;
+  final String name;
+  final String description;
 
   DetailPage(
       {required this.categoryName,
       required this.imagePaths,
       required this.price,
       required this.productid,
-      required this.Typeproduct});
+      required this.Typeproduct,
+      required this.quantity,
+      required this.name,
+      required this.description});
   //Category.name = categoryName;
   String get catoryname => categoryName;
   String get pricename => price;
@@ -322,7 +329,7 @@ class _DetailPageState extends State<DetailPage> {
           buildDetailsRow(
               " Item ID", "$idproduct", FontAwesomeIcons.circleInfo),
           SizedBox(height: 20),
-          buybutton(),
+          buybutton(Typeproduct),
           /*
         // Center the button
 
@@ -374,17 +381,33 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   /// buy button
-  buybutton() {
+  buybutton(String state) {
     return Center(
       child: CustomeButton(
-        onPressed: () {
-          //backgroundColor  foregroundColor Handle the button press (buy the item, for example)
+        onPressed: () async {
+          if (widget.quantity != 0) {
+            await RecentSingleProdState.shoppingCartStore(
+                '1',
+                '',
+                widget.name,
+                state, // theState,
+                widget.description);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                "Product SOLD OUT\nCan not add Item to Shoppimg Card",
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.redAccent,
+            ));
+          }
         },
 
         // Text('Buy Now'
         //style: Color.white,
         //),
-        text: 'ADD TO CART', borderRadius: BorderRadius.circular(30.0),
+        text: widget.quantity == 0 ? 'SOLD OUT' : 'ADD TO CART',
+        borderRadius: BorderRadius.circular(30.0),
       ),
     );
   }

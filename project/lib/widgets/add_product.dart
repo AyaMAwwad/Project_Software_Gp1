@@ -305,6 +305,8 @@ class AddProductState extends State<AddProduct> {
                             selectedType = categoryTypes2[valueChoose]!.first;
                           });
                         },
+                        width1: 350,
+                        width2: 340,
                       ),
                       SizedBox(
                         height: 20,
@@ -327,6 +329,8 @@ class AddProductState extends State<AddProduct> {
                         height: 10,
                       ),
                       ListStateAndCat(
+                        width1: 350,
+                        width2: 340,
                         item: selectedType != null
                             ? categoryTypes2[valueChoose!]!
                                 .map((String item) => DropdownMenuItem<String>(
@@ -378,6 +382,8 @@ class AddProductState extends State<AddProduct> {
                         height: 10,
                       ),
                       ListStateAndCat(
+                        width1: 350,
+                        width2: 340,
                         item: ListState2.map(
                             (String item) => DropdownMenuItem<String>(
                                   value: item,
@@ -419,8 +425,10 @@ class AddProductState extends State<AddProduct> {
                           }
                           return null;*/
                         },
+                        width: 342,
                       ),
                       custemFieldforProductPage(
+                        width: 342,
                         hintText: "25".tr,
                         controller: descContr,
                         text: "26".tr,

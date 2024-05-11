@@ -89,9 +89,9 @@ class ProductRepository {
 addProduct(req, res) {
   
 //numberofimage
-  const { email,name, category, state, description, price, quantity,image, numberofimage,detailsOfState,typeOfCategory,productFreeCond,imagedata } = req.body;
+  const { email,name, category, state, description, price, quantity,image, numberofimage,detailsOfState,typeOfCategory,productFreeCond,imagedata,currency } = req.body;
 
-  console.log(email,name, category, state, description, price, quantity,image,numberofimage,detailsOfState,typeOfCategory,productFreeCond,imagedata);
+  console.log(email,name, category, state, description, price, quantity,image,numberofimage,detailsOfState,typeOfCategory,productFreeCond,imagedata,currency);
   
  let prodID=0;
   return new Promise((resolve, reject) => {
@@ -126,8 +126,8 @@ addProduct(req, res) {
              
                 if(i==0) {
              db.query(
-              'INSERT INTO product (name, description, quantity, category_id, user_id,image,product_type) VALUES ( ?, ?, ?, ?, ?,?,?)',
-              [name, description, quantity, categoryid, userid, data,state
+              'INSERT INTO product (name, description, quantity, category_id, user_id,image,product_type,currency) VALUES ( ?, ?, ?, ?, ?,?,?,?)',
+              [name, description, quantity, categoryid, userid, data,state,currency
         
 
               ],
@@ -337,14 +337,15 @@ addToShopCart(req, res) {
   //numberofimage
     const { id,Number_Item,date,name,state ,description } = req.body;
   
-    //console.log(id,Number_Item,date,name,state );
+    console.log(name,state,description );
     return new Promise((resolve, reject) => {
 
-      db.query('SELECT product_id FROM product WHERE name = ? AND product_type = ? AND user_id=? AND description=?', [name,state,id,description], (error1, res1) => {
+      db.query('SELECT product_id FROM product WHERE name = ? AND product_type = ? AND description=?', [name,state,description], (error1, res1) => {
         if (error1) {
          // console.error(error1);
           reject('Failed to store to cart ');
         } else {
+          console.log(res1[0]);
           const productid=res1[0].product_id;
           const theDate = new Date();
 

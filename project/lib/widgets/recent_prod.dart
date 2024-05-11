@@ -122,6 +122,7 @@ class RecentProd extends StatelessWidget {
                       recet_prod_name: prod[index]['name'],
                       recet_prod_image: prod[index]['image'], //bytes,
                       recet_prod_price: detail[index]['price'],
+                      recent_prod_quantity: prod[index]['quantity'],
                     ),
                   );
                 },
@@ -579,13 +580,15 @@ class RecentSingleProd extends StatefulWidget {
   final recet_prod_image;
   final recet_prod_price;
   final recet_prod_description;
+  final recent_prod_quantity;
 
   const RecentSingleProd(
       {super.key,
       this.recet_prod_name,
       this.recet_prod_image,
       this.recet_prod_price,
-      this.recet_prod_description});
+      this.recet_prod_description,
+      this.recent_prod_quantity});
 
   @override
   State<RecentSingleProd> createState() => RecentSingleProdState();
@@ -594,6 +597,7 @@ class RecentSingleProd extends StatefulWidget {
 class RecentSingleProdState extends State<RecentSingleProd> {
   @override
   Widget build(BuildContext context) {
+    print('the  widget.recent_prod_quantity : ${widget.recent_prod_quantity}');
     final Map<String, dynamic> imageData = widget.recet_prod_image;
     List<int> bytes = List<int>.from(imageData['data']);
     String textP = '';
@@ -695,7 +699,10 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                             ),
                             GestureDetector(
                               child: Icon(
-                                Icons.shopping_cart_checkout,
+                                widget.recent_prod_quantity == 0
+                                    ? Icons.remove_shopping_cart
+                                    : Icons.shopping_cart_checkout,
+                                //  Icons.shopping_cart_checkout,
                                 //FontAwesomeIcons.cartShopping,
                                 size: 17,
                                 color: Color.fromARGB(255, 2, 92, 123),
@@ -705,13 +712,23 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                                 String formattedDate =
                                     DateFormat('yyyy-MM-dd – kk:mm').format(
                                         now); // Format the date as per your requirement
-
-                                await shoppingCartStore(
-                                    '1',
-                                    formattedDate,
-                                    widget.recet_prod_name,
-                                    RecentProd.thestate!,
-                                    widget.recet_prod_description);
+                                if (widget.recent_prod_quantity != 0) {
+                                  await shoppingCartStore(
+                                      '1',
+                                      formattedDate,
+                                      widget.recet_prod_name,
+                                      RecentProd.thestate!,
+                                      widget.recet_prod_description);
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                      "Product SOLD OUT\nCan not add Item to Shoppimg Card",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    backgroundColor: Colors.redAccent,
+                                  ));
+                                }
                               },
                             ),
                           ],
@@ -734,6 +751,9 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                 price: textP,
                 productid: RecentProd.theProdId!,
                 Typeproduct: RecentProd.thestate!,
+                quantity: widget.recent_prod_quantity,
+                name: widget.recet_prod_name,
+                description: widget.recet_prod_description,
               ),
             ),
           );

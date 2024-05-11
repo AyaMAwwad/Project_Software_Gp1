@@ -11,6 +11,8 @@ class ListStateAndCat extends StatelessWidget {
   final String? value;
   final String? Function(String?)? validator;
   final void Function(String?)? onChanged;
+  final double width1;
+  final double width2;
 
   const ListStateAndCat({
     Key? key,
@@ -19,6 +21,8 @@ class ListStateAndCat extends StatelessWidget {
     required this.value,
     required this.validator,
     required this.onChanged,
+    required this.width1,
+    required this.width2,
   }) : super(key: key);
 
   @override
@@ -54,7 +58,7 @@ class ListStateAndCat extends StatelessWidget {
         },*/
         buttonStyleData: ButtonStyleData(
           height: 45,
-          width: 350,
+          width: width1, //350,
           padding: const EdgeInsets.only(left: 14, right: 14),
           decoration: BoxDecoration(
             //  fillColor: Color.fromARGB(82, 209, 224, 223),
@@ -76,7 +80,7 @@ class ListStateAndCat extends StatelessWidget {
         ),
         dropdownStyleData: DropdownStyleData(
           maxHeight: 160,
-          width: 340,
+          width: width2, //340,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             color: const Color.fromARGB(255, 239, 240, 245),

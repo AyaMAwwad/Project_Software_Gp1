@@ -29,7 +29,7 @@ class CounterItemState extends State<CounterItem> {
         right: 10,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Color.fromARGB(255, 2, 46, 82)),
       ),
       child: Row(
@@ -99,8 +99,8 @@ class CounterItemState extends State<CounterItem> {
               ? Color.fromARGB(255, 95, 150, 168)
               : const Color.fromARGB(255, 211, 211, 211),
           borderRadius: BorderRadius.horizontal(
-            left: Radius.circular(4),
-            right: Radius.circular(4),
+            left: Radius.circular(15),
+            right: Radius.circular(15),
           ),
         ),
         child: Icon(

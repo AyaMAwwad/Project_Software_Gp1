@@ -20,11 +20,13 @@ import 'package:project/src/screen/category_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/chat_page.dart';
 import 'package:project/src/screen/chat_screen.dart';
+import 'package:project/src/screen/currency.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/notification.dart';
 import 'package:project/src/screen/notification_page.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
+import 'package:project/src/screen/providercurrency.dart';
 import 'package:project/src/screen/security.dart';
 import 'package:project/src/screen/settings.dart';
 import 'package:project/widgets/add_product.dart';
@@ -48,6 +50,7 @@ class HomePage extends StatefulWidget {
 String Priceeneww = '';
 
 class HomePageState extends State<HomePage> {
+  String selectedCurr = Providercurrency.selectedCurrency;
   static bool isPressTosearch = false;
   static bool isPressTosearchButton = false;
   String firsttname = Login.first_name;
@@ -115,6 +118,8 @@ class HomePageState extends State<HomePage> {
         } else {
           // Use the fetched price
           String newPrice = snapshot.data!;
+          // ibtisam
+          String sympolprice = getsymbol(newPrice); // ibtisam
           Priceeneww = newPrice;
           print('Priceenew:::: $Priceeneww\n');
 
@@ -122,14 +127,37 @@ class HomePageState extends State<HomePage> {
             context,
             product.name,
             product.imageData,
-            'Price: \$${newPrice}',
+            // 'Price: \$${newPrice}',  // ibtisam
+            sympolprice,
             product.productId,
             product.product_type,
             product.description,
+            product.quantity,
           );
         }
       },
     );
+  }
+
+  String getsymbol(String price) {
+    String sympol = '';
+    switch (selectedCurr) {
+      case 'USD':
+        sympol = '\$';
+        break;
+      case 'DIN':
+        sympol = 'JOD';
+        break;
+      case 'ILS':
+        sympol = '₪';
+        break;
+
+      default:
+        sympol = '';
+
+      //return
+    }
+    return 'Price: $sympol$price';
   }
 
   ///
@@ -152,6 +180,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+/*
   Future<String> newproductt(Product product) async {
     String productType = product.product_type;
     // If product is new, fetch price from New_Product table
@@ -163,6 +192,168 @@ class HomePageState extends State<HomePage> {
     } else {
       return product.price;
     }
+  }*/
+  Future<String> newproductt(Product product) async {
+    String productType = product.product_type;
+    double conversionRate = 0.3;
+    //  double price = double.tryParse(priceInILS) ?? 0.0;
+
+    // If product is new, fetch price from New_Product table
+    if (productType == 'new' || productType == 'New' || productType == 'جديد') {
+      // ibtisam
+      print('\n \n currency ibtisam $selectedCurr \n \n ');
+      String priceInILS = await fetchPriceFromNewProduct(product.productId);
+      double price = double.tryParse(priceInILS) ?? 0.0;
+      print('\n \n currency price $priceInILS \n \n ');
+      if (selectedCurr == 'USD') {
+        if (product.currency == 'ILS') {
+          double convertedPrice = price * conversionRate;
+          convertedPrice = price * conversionRate;
+          return convertedPrice.toStringAsFixed(2);
+        } else if (product.currency == 'DIN') {
+          double conversionRateDINToUSD = 0.25;
+          double convertedPrice = price * conversionRateDINToUSD;
+          return convertedPrice.toStringAsFixed(2);
+        } else {
+          return price.toStringAsFixed(2);
+        }
+      } else if (selectedCurr == 'DIN') {
+        if (product.currency == 'ILS') {
+          return convertdin(priceInILS);
+        } else if (product.currency == 'USD') {
+          ///
+          double conversionRateusdtodin = 0.709;
+          double convertedPrice = price * conversionRateusdtodin;
+          //  return convertedPrice.toStringAsFixed(2);
+          print('\n \n  from usd to din hiiii \n \n ');
+          return convertedPrice.toStringAsFixed(2);
+
+          // convertUSDToDIN(priceInILS);
+
+          // price.toStringAsFixed(2);
+        } else {
+          return price.toStringAsFixed(2);
+        }
+      } else if (selectedCurr == 'ILS') {
+        if (product.currency == 'USD') {
+          double conversionRateUSDToILS = 3.25;
+          double convertedPrice = price * conversionRateUSDToILS;
+          return convertedPrice.toStringAsFixed(2);
+        } else if (product.currency == 'DIN') {
+          double conversionRateDINToILS = 4.9;
+          double convertedPrice = price * conversionRateDINToILS;
+          return convertedPrice.toStringAsFixed(2);
+        } else {
+          return price.toStringAsFixed(2);
+        }
+      }
+      // ibtisam
+      //  return await fetchPriceFromNewProduct(product.productId);
+/*
+    else if (selectedCurr == 'DIN' && product.currency == 'ILS'){
+       double conversionRatedin = 0.25;
+      double convertedPricedin = price * conversionRatedin;
+      return convertedPricedin.toStringAsFixed(2);
+    }*/
+      else {
+        return priceInILS;
+      }
+    } else if (productType == 'used' ||
+        productType == 'مستعمل' ||
+        productType == 'Used') {
+      //  return await fetchPriceFromusedProduct(product.productId);
+      //return product.price; // Return original price fetchPriceFromusedProduct
+      String priceInILS = await fetchPriceFromusedProduct(product.productId);
+
+// ibtisam
+      double price = double.tryParse(priceInILS) ?? 0.0;
+      print('\n \n currency price $priceInILS \n \n ');
+      if (selectedCurr == 'USD') {
+        if (product.currency == 'ILS') {
+          //  double convertedPrice = price * conversionRate;
+          //  convertedPrice = price * conversionRate;
+          // return convertedPrice.toStringAsFixed(2);
+          return convertusd(priceInILS);
+        } else if (product.currency == 'DIN') {
+          double conversionRateDINToUSD = 0.25;
+          double convertedPrice = price * conversionRateDINToUSD;
+          return convertedPrice.toStringAsFixed(2);
+        } else {
+          return price.toStringAsFixed(2);
+        }
+      } else if (selectedCurr == 'DIN') {
+        if (product.currency == 'ILS') {
+          return convertdin(priceInILS);
+        } else if (product.currency == 'USD') {
+          ///
+          double conversionRateDINToUSD = 0.709;
+          double convertedPrice = price * conversionRateDINToUSD;
+          //  return convertedPrice.toStringAsFixed(2);
+          print('\n \n  from usd to din hiiii \n \n ');
+          return convertedPrice.toStringAsFixed(2);
+
+          // convertUSDToDIN(priceInILS);
+
+          // price.toStringAsFixed(2);
+        } else {
+          return price.toStringAsFixed(2);
+        }
+      } else if (selectedCurr == 'ILS') {
+        if (product.currency == 'USD') {
+          double conversionRateUSDToILS = 3.25;
+          double convertedPrice = price * conversionRateUSDToILS;
+          return convertedPrice.toStringAsFixed(2);
+        } else if (product.currency == 'DIN') {
+          double conversionRateDINToILS = 4.9;
+          double convertedPrice = price * conversionRateDINToILS;
+          return convertedPrice.toStringAsFixed(2);
+        } else {
+          return price.toStringAsFixed(2);
+        }
+      }
+      /*
+    //  if(product.currency == 'ILS'){  //}
+           if(selectedCurr == 'USD' && product.currency == 'ILS' ){
+        // double convertedPrice = price * conversionRate;
+      //  convertedPrice = price * conversionRate;
+     //   return convertedPrice.toStringAsFixed(2);
+           return convertusd(priceInILS);
+      }
+     // ibtisam 
+    //  return await fetchPriceFromNewProduct(product.productId);
+
+    else if (selectedCurr == 'DIN' && product.currency == 'ILS'){
+     //  double conversionRatedin = 0.25;
+     // double convertedPricedin = price * conversionRatedin;
+     // return convertedPricedin.toStringAsFixed(2);
+     return convertdin(priceInILS);
+    }*/
+      else {
+        return priceInILS;
+      }
+
+      // ibtisam
+    } else {
+      return product.price;
+    }
+  }
+
+// ibtisam
+
+  String convertusd(String priceInILS) {
+    double price = double.tryParse(priceInILS) ?? 0.0;
+
+    double conversionRate = 0.3;
+
+    double convertedPrice = price * conversionRate;
+    return convertedPrice.toStringAsFixed(2);
+  }
+
+  String convertdin(String priceInILS) {
+    double price = double.tryParse(priceInILS) ?? 0.0;
+    double conversionRatedin = 0.25;
+    double convertedPricedin = price * conversionRatedin;
+    return convertedPricedin.toStringAsFixed(2);
   }
 
 //
@@ -459,6 +650,28 @@ UserAccountsDrawerHeader(
               ),
               onTap: () {
                 Get.to(() => NotificationPage());
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.monetization_on,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                'Select Currency',
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    // color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () //async
+                  {
+                // Navigator.pushReplacement(
+                //  context,
+                //  MaterialPageRoute(builder: (context) => currency()),
+                // );
+
+                Get.to(() => currency());
               },
             ),
             ListTile(
@@ -967,7 +1180,8 @@ UserAccountsDrawerHeader(
       String price,
       int productId,
       String type,
-      String description) {
+      String description,
+      int quantity) {
     List<int> bytes = List<int>.from(imagePath['data']);
 
     return GestureDetector(
@@ -981,7 +1195,8 @@ UserAccountsDrawerHeader(
               imagePaths: imagePath,
               price: price,
               productid: productId,
-              Typeproduct: type,
+              Typeproduct: type, quantity: quantity, name: itemName,
+              description: description,
               //'lib/icon/tablet.jpg',
               //'lib/icon/fashion.jpg',
               //  ] ,// dots: [DotInfo(left: 50, top: 100
@@ -1251,7 +1466,8 @@ class ProductService {
                   quantity: data['quantity'],
                   categoryId: data['category_id'],
                   userId: data['user_id'],
-                  imageData: data['image'], // Assuming 'image' is a Uint8List
+                  imageData: data['image'],
+                  currency: data['currency'],
                   //imageData1: data['image1'],
                 ))
             .toList();
@@ -1337,6 +1553,7 @@ class Product {
   final int userId;
   final String product_type;
   final Map<String, dynamic> imageData;
+  final String currency;
   //final Map<String, dynamic> imageData1;
 
   Product({
@@ -1349,6 +1566,7 @@ class Product {
     required this.userId,
     required this.imageData,
     required this.product_type,
+    required this.currency,
   });
 }
 
