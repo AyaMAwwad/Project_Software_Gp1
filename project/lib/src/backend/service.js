@@ -3,6 +3,7 @@
 const express = require('express');
 const user = require('./routes/userRoute.js');
 const product = require('./routes/productRoute.js');
+const payment = require('./routes/paymentRoute.js');
 const app = express();
 const bodyParser = require('body-parser');
 const port = 3000;
@@ -35,6 +36,9 @@ app.use('/tradetryst/search',product);
 app.use('/tradetryst/deleteaccount',user);
 app.use('/tradetryst/user',user);
 app.use('/tradetryst/old',user);
+// 8_MAY 
+app.use('/tradetryst/payment',payment);
+app.use('/tradetryst/payment',payment);
 
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server is listening on port ${port}`);

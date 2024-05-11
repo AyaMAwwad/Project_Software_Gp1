@@ -78,6 +78,9 @@ class SearchPage extends StatelessWidget {
                           price: price,
                           productid: productData['product_id'],
                           Typeproduct: theState,
+                          quantity: productData['quantity'],
+                          name: productData['name'],
+                          description: productData['description'],
                         ),
                       ),
                     );
@@ -178,17 +181,33 @@ class SearchPage extends StatelessWidget {
                                   SizedBox(width: 10),
                                   GestureDetector(
                                     child: Icon(
-                                      Icons.shopping_cart_checkout,
+                                      productData['quantity'] == 0
+                                          ? Icons.remove_shopping_cart
+                                          : Icons.shopping_cart_checkout,
+                                      // Icons.shopping_cart_checkout,
                                       size: 14,
                                       color: Color.fromARGB(255, 2, 92, 123),
                                     ),
                                     onTap: () async {
-                                      RecentSingleProdState.shoppingCartStore(
-                                          '1',
-                                          '',
-                                          productData['name'],
-                                          theState,
-                                          productData['description']);
+                                      if (productData['quantity'] != 0) {
+                                        await RecentSingleProdState
+                                            .shoppingCartStore(
+                                                '1',
+                                                '',
+                                                productData['name'],
+                                                theState,
+                                                productData['description']);
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text(
+                                            "Product SOLD OUT\nCan not add Item to Shoppimg Card",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          backgroundColor: Colors.redAccent,
+                                        ));
+                                      }
                                     },
                                   ),
                                 ],

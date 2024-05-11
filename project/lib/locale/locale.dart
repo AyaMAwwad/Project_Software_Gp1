@@ -89,6 +89,10 @@ class mylocale implements Translations {
           "137": "للخلف",
           "138": "هذا المنتج غير متوفر",
           "139": "أخر ما تم البحث عنه",
+          "140": "العملة",
+          "141": "شيكل",
+          "142": "دينار",
+          "143": "دولار",
         },
         "en": {
           "1": "Multi Language",
@@ -175,6 +179,10 @@ class mylocale implements Translations {
           "137": "Back",
           "138": "Product is not available",
           "139": "Recently searched",
+          "140": "Currency",
+          "141": "ILS",
+          "142": "DIN",
+          "143": "USD",
         },
         "fr": {
           "1": "Langue multiple",

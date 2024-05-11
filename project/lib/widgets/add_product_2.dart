@@ -135,7 +135,7 @@ class AddProductState extends State<AddProductPageTwo> {
       text2 = 'Enter a warranty period';
       text3 = 'Please Enter a warranty period';
       conditionOfFreeProduct = '1';
-      high = 20;
+      high = 10;
     } else if (state == 'Free') {
       text1 = 'State of Free';
       text2 = 'Enter a State [New, Used]';
@@ -614,19 +614,24 @@ class AddProductState extends State<AddProductPageTwo> {
               },
             ),
           ),
-          custemFieldforProductPage(
-            hintText: "109".tr,
-            controller: priceContr,
-            text: "110".tr,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "111".tr;
-              } else if (!isNumeric(value)) {
-                return "112".tr;
-              } else {
-                return null;
-              }
-            },
+          Row(
+            children: [
+              custemFieldforProductPage(
+                width: 220,
+                hintText: "109".tr,
+                controller: priceContr,
+                text: "110".tr,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "111".tr;
+                  } else if (!isNumeric(value)) {
+                    return "112".tr;
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+            ],
           ),
         ],
       );
@@ -652,6 +657,8 @@ class AddProductState extends State<AddProductPageTwo> {
           ),
           SizedBox(height: 10.0),
           ListStateAndCat(
+            width1: 350,
+            width2: 340,
             item: listProductCondition2
                 .map((String item) => DropdownMenuItem<String>(
                       value: item,
@@ -682,19 +689,24 @@ class AddProductState extends State<AddProductPageTwo> {
               });
             },
           ),
-          custemFieldforProductPage(
-            hintText: "109".tr,
-            controller: priceContr,
-            text: "110".tr,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "111".tr;
-              } else if (!isNumeric(value)) {
-                return "112".tr;
-              } else {
-                return null;
-              }
-            },
+          Row(
+            children: [
+              custemFieldforProductPage(
+                hintText: "109".tr,
+                controller: priceContr,
+                text: "110".tr,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "111".tr;
+                  } else if (!isNumeric(value)) {
+                    return "112".tr;
+                  } else {
+                    return null;
+                  }
+                },
+                width: 220,
+              ),
+            ],
           ),
         ],
       );
@@ -720,6 +732,8 @@ class AddProductState extends State<AddProductPageTwo> {
           ),
           SizedBox(height: 10.0),
           ListStateAndCat(
+            width1: 350,
+            width2: 340,
             item: listProductCondition2
                 .map((String item) => DropdownMenuItem<String>(
                       value: item,
@@ -948,6 +962,7 @@ class AddProductState extends State<AddProductPageTwo> {
     request.fields['detailsOfState'] = details ?? '';
     request.fields['typeOfCategory'] = typeOfCategory;
     request.fields['productFreeCond'] = productFreeCond ?? '';
+    request.fields['currency'] = custemFieldforProductPageState.Currecncy!;
 
     for (int i = 0; i < imageA.length; i++) {
       var stream = http.ByteStream(

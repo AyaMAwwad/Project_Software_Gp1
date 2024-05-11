@@ -3,8 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:project/src/screen/notification.dart';
 import '../src/app.dart';
+import 'package:project/src/screen/providercurrency.dart';
+import 'package:provider/provider.dart';
 
 //final navigateerKey = GlobalKey<NavigatorState>();
 Future firebaseBacjgroundNotification(RemoteMessage msg) async {
@@ -15,6 +19,11 @@ Future firebaseBacjgroundNotification(RemoteMessage msg) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //payment
+  await dotenv.load(fileName: ".env");
+  Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
+  //
+  await Stripe.instance.applySettings();
   // Platform.isAndroid
   if (kIsWeb) {
     print('some web app is running');
@@ -43,7 +52,13 @@ void main() async {
           projectId: 'flutterproject-1a0ba'),
     );
     // await Firebase.initializeApp();
-    runApp(MyApp());
+    // runApp(MyApp());
+    runApp(
+      ChangeNotifierProvider<Providercurrency>(
+        create: (context) => Providercurrency(),
+        child: MyApp(),
+      ),
+    );
   }
 
   /*
