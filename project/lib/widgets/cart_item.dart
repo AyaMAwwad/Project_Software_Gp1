@@ -5,14 +5,16 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 //import 'package:flutter/material.dart' as material;
-import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/payment.dart';
+import 'package:project/src/screen/providercurrency.dart';
 import 'package:project/widgets/button_2.dart';
+import 'package:project/widgets/delivery_page.dart';
 import 'package:project/widgets/demo_counter.dart';
 import 'package:get/get.dart';
+import 'package:project/widgets/search_page.dart';
 
 class CartItem extends StatefulWidget {
   @override
@@ -20,6 +22,48 @@ class CartItem extends StatefulWidget {
 }
 
 class CartItemState extends State<CartItem> {
+  void _showDeliveryModal(
+      BuildContext context, String deliveryOption, int productId) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return DeliveryPage(
+          isFree: false,
+          deliveryOption: deliveryOption,
+          productId: productId,
+          onPaymentSuccess: refreshCart,
+        );
+      },
+    );
+  }
+
+  ////////
+  static String selectedCurr = Providercurrency.selectedCurrency;
+  String prevselectedCurr = 'ILS';
+  static String getsymbol() {
+    String sympol = '';
+    switch (selectedCurr) {
+      case 'USD':
+        sympol = '\$';
+        break;
+      case 'DIN':
+        sympol = 'JOD';
+        break;
+      case 'ILS':
+        sympol = '₪';
+        break;
+
+      default:
+        sympol = '';
+
+      //return
+    }
+    return '$sympol';
+  }
+
+  static String? deliveryOption;
+  static int? productId;
   List<Map<String, dynamic>> cartShopContain = [];
   List<Map<String, dynamic>> productInCart = [];
   List<Map<String, dynamic>> allProductDetails = [];
@@ -50,47 +94,28 @@ class CartItemState extends State<CartItem> {
     return totalPrice;
   }
 
-  void functionPayed() {
-    print('****************** in functionPayed');
-    //CartItemState instance = new CartItemState();
-    allCheckboxChecked = false;
-    for (int i = 0; i < selectedListOfUserToPay.length; i++) {
-      if (selectedListOfUserToPay[i] != 0) {
-        // instance.
-        deleteProduct(i);
-        selectedCheckboxes.removeAt(i);
-        productCount.removeAt(i);
-        selectedListOfUserToPay[i] = 0;
-      }
-    }
-    print(selectedCheckboxes);
-    print(productCount);
-    print(selectedListOfUserToPay);
-    print(cartShopContain);
-  }
-
-/*
-  double calculateTotalPrice() {
-    double totalPrice = 0.0;
-    for (int i = 0; i < productInCart.length; i++) {
-      if (selectedCheckboxes[i]) {
-        Map<String, dynamic> details = allProductDetails[i];
-        double price = double.parse(details['price']);
-
-        int count = productCount[i];
-
-        totalPrice += price * count;
-      }
-    }
-    return totalPrice;
-  }
-*/
   void deleteProduct(int index) {
     setState(() {
       productInCart.removeAt(index);
       allProductDetails.removeAt(index);
       cartShopContain.removeAt(index);
       selectedListOfUserToPay.removeAt(index);
+      selectedCheckboxes.removeAt(index);
+    });
+  }
+
+  void deleteProductAll(int start, int end) {
+    setState(() {
+      productInCart = List.from(productInCart);
+      cartShopContain = List.from(cartShopContain);
+      allProductDetails = List.from(allProductDetails);
+      selectedListOfUserToPay = List.from(selectedListOfUserToPay);
+      selectedCheckboxes = List.from(selectedCheckboxes);
+      productInCart.removeRange(start, end);
+      allProductDetails.removeRange(start, end);
+      cartShopContain.removeRange(start, end);
+      selectedListOfUserToPay.removeRange(start, end);
+      selectedCheckboxes.removeRange(start, end);
     });
   }
 
@@ -102,22 +127,25 @@ class CartItemState extends State<CartItem> {
   }
 
   void refreshCart() {
-    // functionPayed();
-    // Fetch cart items again to update the UI
     fetchCart();
   }
 
-  static double amount = 0;
+  static double? amount;
   void fetchCart() async {
+    getsymbol();
     await getProductCart(Login.idd);
-    /* if (Payment.isPay) {
-      functionPayed();
-    }*/
 
     setState(() {
-      amount = calculateTotalPrice();
       if (selectedCheckboxes.isEmpty) {
         allCheckboxChecked = false;
+      }
+      if (allCheckboxChecked && Payment.isPay) {
+        //for (int i = 0; i < selectedCheckboxes.length; i++) {
+        // deleteProduct(i);
+        // }
+        Payment.isPay = false;
+        allCheckboxChecked = false;
+        deleteProductAll(0, selectedCheckboxes.length);
       }
       if (selectedCheckboxes.isEmpty ||
           selectedCheckboxes.length != productInCart.length) {
@@ -143,10 +171,15 @@ class CartItemState extends State<CartItem> {
         }
       }
       //// new 8_MAY
+      if (selectedListOfUserToPay.isEmpty ||
+          selectedListOfUserToPay.length != productInCart.length) {
+        selectedListOfUserToPay =
+            List.generate(productInCart.length, (index) => 0);
+      }
       selectedListOfUserToPay =
           List.from(selectedListOfUserToPay, growable: true);
 
-      while (selectedListOfUserToPay.length < productInCart.length) {
+      while (selectedListOfUserToPay.length < selectedCheckboxes.length) {
         selectedListOfUserToPay.add(0);
       }
 
@@ -265,6 +298,15 @@ merchantCountryCode: 'US', testEnv: true,
 /////////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
+    amount = calculateTotalPrice();
+    print('**********amount: $amount ');
+    print('***************selectedCheckboxes: $selectedCheckboxes');
+    print('***************selectedListOfUserToPay: $selectedListOfUserToPay');
+    print('************* calculateTotalPrice() ${calculateTotalPrice()}');
+    print('************* prevselectedCurr ${prevselectedCurr}');
+    String currpriceAll =
+        SearchPage.priceprosearch(calculateTotalPrice(), prevselectedCurr);
+    String Totalprice = SearchPage.getsymbol(currpriceAll);
     return Scaffold(
       //   height: MediaQuery.of(context).size.height,
       body: Column(
@@ -290,12 +332,20 @@ merchantCountryCode: 'US', testEnv: true,
                         value: allCheckboxChecked,
                         onChanged: (value) {
                           setState(() {
+                            print(
+                                '********* setState prevselectedCurr: $prevselectedCurr');
+                            currpriceAll = SearchPage.priceprosearch(
+                                calculateTotalPrice(), prevselectedCurr);
+                            if (selectedCurr != prevselectedCurr) {
+                              prevselectedCurr = selectedCurr;
+                            }
+                            Totalprice = SearchPage.getsymbol(currpriceAll);
                             allCheckboxChecked = value ?? false;
                             // Update the state of all individual checkboxes
                             selectedCheckboxes = List.filled(
                                 selectedCheckboxes.length, allCheckboxChecked);
                             for (int i = 0;
-                                i < selectedListOfUserToPay.length;
+                                i < selectedCheckboxes.length;
                                 i++) {
                               selectedListOfUserToPay[i] = allCheckboxChecked
                                   ? productInCart[i]['product_id']
@@ -334,7 +384,8 @@ merchantCountryCode: 'US', testEnv: true,
                   ],
                 ),
                 Text(
-                  '\$${calculateTotalPrice().toStringAsFixed(2)}',
+                  //calculateTotalPrice().toStringAsFixed(2) SearchPage.getsymbol(currpriceAll) //
+                  '${Totalprice.split(":")[1]}',
                   style: TextStyle(
                     color: Color.fromARGB(255, 13, 60, 99),
                     fontSize: 19,
@@ -352,10 +403,17 @@ merchantCountryCode: 'US', testEnv: true,
                   ),
                 ),
                 CustomeButton2(
-                  text: "121".tr,
+                  text: "150".tr,
                   onPressed: () async {
-                    try {
-                      Payment.onPaymentSuccess = () {
+                    /* DeliveryPageState.onPressedSuccess = () {
+                      refreshCart();
+                    };*/
+                    Payment.onPaymentSuccess = () {
+                      refreshCart();
+                    };
+                    //  try {
+                    _showDeliveryModal(context, deliveryOption!, productId!);
+                    /* Payment.onPaymentSuccess = () {
                         refreshCart();
                       };
                       //  Payment.onPaymentSuccess = refreshCart;
@@ -364,32 +422,7 @@ merchantCountryCode: 'US', testEnv: true,
                       print('Payment sheet initialized successfully.');
                     } catch (e) {
                       print('Error initializing payment sheet: $e');
-                    }
-                    /*
-                    await PaymentClass.initPaymentSheet();
-                    try {
-                      await stripe.Stripe.instance.presentPaymentSheet();
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          "payment Done",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        backgroundColor: Colors.green,
-                      ));
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          "payment Failed",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        backgroundColor: Colors.redAccent,
-                      ));
-                      print(e);
                     }*/
-                    //  Payment pay = Payment();
-                    //pay.makePayment();
-                    //Navigator.push(context,
-                    //  MaterialPageRoute(builder: (context) => Login()));
                   },
                 ),
               ],
@@ -409,7 +442,12 @@ merchantCountryCode: 'US', testEnv: true,
 
                 ///
                 String theState = theproduct['product_type'];
-                int productId = theproduct['product_id'];
+                productId = theproduct['product_id'];
+                deliveryOption = theproduct['Delivery_option'];
+                String curr = theproduct['currency'];
+                String currprice =
+                    SearchPage.priceprosearch(details['price'], curr);
+
                 /* if (selectedCheckboxes[index]) {
                   selectedListOfUserToPay[index] = productId;
                 } */
@@ -420,7 +458,7 @@ merchantCountryCode: 'US', testEnv: true,
                         theState == 'Used' ||
                         theState == 'مستعمل' ||
                         theState == 'جديد')
-                    ? details['price']
+                    ? SearchPage.getsymbol(currprice)
                     : 'Free';
                 String qunt = "101".tr;
                 String pr = "110".tr;
@@ -456,7 +494,9 @@ merchantCountryCode: 'US', testEnv: true,
                                   if (selectedCheckboxes[index] == false) {
                                     selectedListOfUserToPay[index] = 0;
                                   } else {
-                                    selectedListOfUserToPay[index] = productId;
+                                    selectedListOfUserToPay[index] =
+                                        productInCart[index]
+                                            ['product_id']; // productId!;
                                   }
                                 });
                               },
@@ -494,12 +534,12 @@ merchantCountryCode: 'US', testEnv: true,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '$pr: $thepriceOfProd',
-                            style: TextStyle(fontSize: 16),
+                            '$thepriceOfProd',
+                            style: TextStyle(fontSize: 15),
                           ),
                           Text(
                             '$qunt: $quantity1',
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 15),
                           ),
                         ],
                       ),
@@ -517,7 +557,7 @@ merchantCountryCode: 'US', testEnv: true,
                               productCount[index] =
                                   repos.getCount(context, index);
                               updateItemOnShopCart(
-                                  repos.getCount(context, index), productId);
+                                  repos.getCount(context, index), productId!);
                               /////
                             } else {
                               showDialog(
@@ -590,7 +630,7 @@ merchantCountryCode: 'US', testEnv: true,
                                   repos.getCount(context, index);
                               ////
                               updateItemOnShopCart(
-                                  repos.getCount(context, index), productId);
+                                  repos.getCount(context, index), productId!);
                             } else {
                               showDialog(
                                 context: context,
@@ -686,7 +726,7 @@ merchantCountryCode: 'US', testEnv: true,
                                                   deleteProduct(index);
                                                   Navigator.of(context).pop();
                                                   getProductTypeState(
-                                                      productId);
+                                                      productId!);
                                                   fetchCart();
                                                 },
                                                 style: ElevatedButton.styleFrom(

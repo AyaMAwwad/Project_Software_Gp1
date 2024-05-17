@@ -476,19 +476,100 @@ oldpassword(email, oldPassword) {
   });
 }
 
+//// 12/5 new userInteraction
 
 
 
+userInteraction(req,res) {
+  const { productId, userId,view,addToCart,purchased } = req.body;
+  return new Promise((resolve, reject) => {
+  
+    db.query(
+      'SELECT * from user_interaction ? WHERE product_id =?',[productId],
+      (error, results) => {
+        if (error) {
+          console.error('Error :', error);
+          return reject('Failed to  select user interaction ');
+        }
+        else{
+          if(results.length==0){
+                 
+          }
+          else if(results.length !=0){
+            b.query(
+              'INSERT INTO user_interaction (product_id, user_id,viewed, added_to_cart, purchased) VALUES (?, ?, ?, ?, ?) ',[productId, userId,view,addToCart,purchased],
+              (error1, results1) => {
+                if (error1) {}}
+            );
 
+          }
 
+          //return resolve('Profile updated successfully');
+        }
+        
+      }
+    );
+  });
+}
 
+//deliverydetials 15_MAY
+deliveryEmployee(type) {
+  return new Promise((resolve, reject) => {
+  
+ 
+    db.query('SELECT user_id,first_name,last_name,email,phone_number,address,user_type FROM user WHERE user_type = ?', [type], (error, results) => {
+      if (error || results.length==0) {
+        console.error(error);
+        reject(' not found');
+      } 
+      else{
+        resolve({results});}
+  });
+  });
+}
 
+//deliveryFromSellar
+deliveryFromSellar(productId) {
+  return new Promise((resolve, reject) => {
+    console.log({productId});
+    db.query('SELECT user_id FROM product WHERE product_id = ?', [productId], (error, results) => {
+      if (error || results.length==0) {
+        console.error(error);
+        reject(' not found');
+      } 
+      else{
+        const userId=results[0].user_id;
+        console.log({userId});
+       // resolve({results});
+       db.query('SELECT user_id,first_name,last_name,email,phone_number,address,user_type FROM user WHERE user_id = ?', [userId], (error, results) => {
+        if (error || results.length==0) {
+          console.error(error);
+          reject(' not found');
+        } 
+        else{
+          resolve({results});}
+    });
+      }
+  });
+ 
+  });
+}
 
-
-
-
-
-
+//deliverydetialsOfBuyer
+deliverydetialsOfBuyer(userId) {
+  return new Promise((resolve, reject) => {
+  
+ 
+    db.query('SELECT first_name,last_name,email,phone_number,address,user_type FROM user WHERE user_id = ?', [userId], (error, results) => {
+      if (error || results.length==0) {
+        console.error(error);
+        reject(' not found');
+      } 
+      else{
+        resolve({results});}
+  });
+  });
+}
 
 
 

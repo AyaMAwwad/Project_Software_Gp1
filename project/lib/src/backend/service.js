@@ -27,18 +27,19 @@ app.use('/tradetryst/Product',product);
 
 
 app.use('/tradetryst/getNameOfUser',user);
-app.use('/tradetryst/Product',product);
+//app.use('/tradetryst/Product',product);
 app.use('/tradetryst/shoppingcart',product);
 
 app.use('/tradetryst/search',product);
 
 // delete account 
 app.use('/tradetryst/deleteaccount',user);
-app.use('/tradetryst/user',user);
+//app.use('/tradetryst/user',user);
 app.use('/tradetryst/old',user);
 // 8_MAY 
 app.use('/tradetryst/payment',payment);
-app.use('/tradetryst/payment',payment);
+
+
 
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server is listening on port ${port}`);

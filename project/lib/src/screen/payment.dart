@@ -2,47 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-/*
-Future createPaymentIntent({
-  required String name,
-  // required String address,
-  // required String pin,
-  // required String city,
-  // required String state,
-  // required String country,
-  required String currency,
-  required String amount,
-}) async {
-  final url = Uri.parse("https://api.stripe.com/v1/payment_intents");
-  final secretKey = dotenv.env["STRIPE_SECRET_KEY"]!;
-  final body = {
-    'amount': amount,
-    'currency': currency.toLowerCase(),
-    'automatic_payment_methods[enabled]': 'true',
-    'description': 'Test Payment of cart',
-    /* 'shipping[name]': name,
-    'shipping[address][line1]': address,
-    'shipping[address][postal_code]': pin,
-    'shipping[address][city]': city,
-    'shipping[address][state]': state,
-    'shipping[address][country]': country,*/
-  };
-  final response = await http.post(url,
-      headers: {
-        "Authorization": "Bearer $secretKey",
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: body);
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    var json = jsonDecode(response.body);
-    print(json);
-    return json;
-  } else {
-    print('error in calling payment intent');
-  }
-}
-*/
-
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
@@ -73,22 +32,23 @@ class Payment {
 
   static void displayPaymentIntent(BuildContext context, double amount) async {
     try {
+      print('***********before');
       await Stripe.instance.presentPaymentSheet();
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      print('***********after');
+      /* ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           "payment Done",
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.green,
-      ));
+      ));*/
 
       await updateQuantityOfProduct(CartItemState.selectedListOfUserToPay);
 
       await StoreToPay(Login.idd, amount, 'visa');
       await deleteProductPaidFromShopCart(
           CartItemState.selectedListOfUserToPay);
-      //isPay = true;
+      isPay = true;
       print('Done');
       if (onPaymentSuccess != null) {
         onPaymentSuccess!();

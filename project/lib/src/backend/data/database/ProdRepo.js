@@ -6,6 +6,7 @@ const mysql = require('mysql2');
 const path = require('path');
 const fs = require('fs');
 const { Console } = require('console');
+const { use } = require('../../routes/userRoute');
 
 // Inside your addProduct function
 
@@ -89,13 +90,14 @@ class ProductRepository {
 addProduct(req, res) {
   
 //numberofimage
-  const { email,name, category, state, description, price, quantity,image, numberofimage,detailsOfState,typeOfCategory,productFreeCond,imagedata,currency } = req.body;
+  const { email,name, category, state, description, price, quantity,image, numberofimage,detailsOfState,typeOfCategory,productFreeCond,imagedata,currency,delivery } = req.body;
 
   console.log(email,name, category, state, description, price, quantity,image,numberofimage,detailsOfState,typeOfCategory,productFreeCond,imagedata,currency);
   
  let prodID=0;
   return new Promise((resolve, reject) => {
    
+    
    
 
     db.query(
@@ -105,6 +107,7 @@ addProduct(req, res) {
         if (error) {
           return reject('you are not user');
         }
+        console.log('aaaaa');
        const userid=results[0].user_id;
           db.query(
             'INSERT INTO Category (name, type) VALUES (?, ?)',
@@ -126,8 +129,8 @@ addProduct(req, res) {
              
                 if(i==0) {
              db.query(
-              'INSERT INTO product (name, description, quantity, category_id, user_id,image,product_type,currency) VALUES ( ?, ?, ?, ?, ?,?,?,?)',
-              [name, description, quantity, categoryid, userid, data,state,currency
+              'INSERT INTO product (name, description, quantity, category_id, user_id,image,product_type,currency,Delivery_option) VALUES ( ?, ?, ?, ?, ?,?,?,?,?)',
+              [name, description, quantity, categoryid, userid, data,state,currency,delivery
         
 
               ],
@@ -264,7 +267,7 @@ gettypeofproduct(category,type,state) {
         theRes.forEach(categoryRow => {
           const categoryId = categoryRow.category_id; // Assuming your category ID column name is category_id
           // Perform a query to retrieve product data for the current category ID
-          db.query('SELECT product_id,name,description,quantity,user_id,image FROM product WHERE category_id = ? AND product_type = ?', [categoryId,state], (error1, res1) => {
+          db.query('SELECT product_id,name,description,quantity,user_id,image,Delivery_option,currency FROM product WHERE category_id = ? AND product_type = ?', [categoryId,state], (error1, res1) => {
             if (error1) {
               console.error(error1);
               reject('Failed to retrieve product data');
@@ -290,6 +293,7 @@ gettypeofproduct(category,type,state) {
             allProductData.forEach(product => {
           //  console.log(allProductData[0]['product_id']); =allProductData[0]['product_id']; 
                  const productId =product.product_id;
+                 let prevId='';
                  db.query(Query, [productId], (error2, res2) => {
                   if (error2) {
                       console.error(error2);
@@ -298,15 +302,18 @@ gettypeofproduct(category,type,state) {
                       // Add the retrieved data to allProductDetails
                       res2.forEach(entry => {
                         const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
-                        if (!found) {
+                        if (!found || prevId!=productId) {
                             allProductDetails.push(entry);
+                            prevId=productId;
                         }
                     });
                      // allProductDetails.push(...res2);
                      
                       console.log(allProductDetails);
+                      console.log('aaaayyya ouuuuut ');
                       // Check if all products have been processed
                     if (allProductDetails.length == allProductData.length) {
+                      console.log('aaaayyya');
                         resolve({ allProductData, allProductDetails });// resolve(allProductDetails);
                       }
                       else if(allProductDetails.length==0) {
@@ -441,9 +448,9 @@ getToShopCart(userId) {
                  else if(state=='Used'|| state== 'used'|| state== 'مستعمل'){
                    Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
                  }
-                 else if(state=='Free'|| state== 'free' ||state== 'مجاني'){
+                /* else if(state=='Free'|| state== 'free' ||state== 'مجاني'){
                    Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
-                 }
+                 }*/
                  db.query(Query, [productId], (error2, res2) => {
                   if (error2) {
                       console.error(error2);
@@ -544,11 +551,12 @@ retriveWordOfsearch(name) {
           console.error(error);
           reject('Failed to Search ');
         } else {
-       
+          console.log('ayyyyyyyyyyya');
           console.log( results);
           results.forEach(product => {
            
                    const productId =product.product_id;
+                   let prevId='';
                    const state= product.product_type;
                    console.log(state);
                    let Query='';
@@ -569,11 +577,13 @@ retriveWordOfsearch(name) {
                        
                         res2.forEach(entry => {
                           const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
-                          if (!found) {
+                          if (!found || prevId!=productId) {
                               allProductDetails.push(entry);
+                              prevId=productId;
                           }
                       });
-                  
+                      console.log(allProductDetails);
+                      console.log(allProductDetails.length);
                       if (allProductDetails.length == results.length) {
                           resolve({results, allProductDetails });
                         }
@@ -611,7 +621,65 @@ retriveWordOfsearch(name) {
   
       });
   }
-  
+  ///// sallerProduct 12/5
+  sallerProduct(userId) {
+    return new Promise((resolve, reject) => {
+      const allProductDetails = [];
+  console.log(userId);
+      db.query('SELECT * FROM product WHERE user_id = ? ', [userId],  (error, results) => {
+        if (error ) {
+          console.error(error);
+          reject('Failed to retrive ');
+        } else {
+          if(results.length==0){
+            reject('Not have data to retrieve ');
+          }
+          else{
+          console.log('product saller results:', results);
+          results.forEach(product => {
+           
+            const productId =product.product_id;
+            const state= product.product_type;
+            console.log(state);
+            let Query='';
+            if(state== 'New' || state== 'new'|| state== 'جديد'){
+              Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
+            }
+            else if(state=='Used'|| state== 'used'|| state== 'مستعمل'){
+              Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
+            }
+            else if(state=='Free'|| state== 'free' ||state== 'مجاني'){
+              Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
+            }
+            db.query(Query, [productId], (error2, res2) => {
+             if (error2) {
+                 console.error(error2);
+                 reject('Failed to retrieve data from new_product table');
+             } else {
+                
+                 res2.forEach(entry => {
+                   const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
+                   if (!found) {
+                       allProductDetails.push(entry);
+                   }
+               });
+           
+               if (allProductDetails.length == results.length) {
+                   resolve({results, allProductDetails });
+                 }
+                 else if(allProductDetails.length==0) {
+                   reject('Not have data to retrieve ');
+                 }
+               
+             }
+         });
+        });
+          //resolve(results);
+          }
+        }
+      });
+    });}
+
 
 }
    

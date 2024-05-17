@@ -315,7 +315,7 @@ class SearchAppBar extends StatelessWidget {
 
     try {
       response = await http.get(Uri.parse(
-          'http://192.168.1.126:3000/tradetryst/search/retriveProductOfsearch?name=$name'));
+          'http://192.168.0.114:3000/tradetryst/search/retriveProductOfsearch?name=$name'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         dynamic responseData = jsonDecode(response.body);

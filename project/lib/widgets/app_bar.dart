@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
-// ignore_for_file: prefer_const_literals_to_create_immutables
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,6 +10,7 @@ import 'package:project/src/screen/chat_screen.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/notification_page.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
+import 'package:ficonsax/ficonsax.dart';
 
 class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String text;
@@ -156,11 +155,12 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             CircleAvatar(
-              backgroundColor: Color.fromARGB(255, 255, 251, 254),
+              backgroundColor: Color.fromARGB(255, 253, 246, 254),
               child: IconButton(
                 icon: Icon(
                   // FontAwesomeIcons.bell,
-                  Icons.notifications,
+                  IconsaxBold.notification,
+                  //Icons.notifications,
                   color: Color.fromARGB(255, 2, 92, 123),
                   size: 26,
                 ),
@@ -175,10 +175,12 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             CircleAvatar(
-              backgroundColor: Color.fromARGB(255, 255, 251, 254),
+              backgroundColor: Color.fromARGB(255, 253, 246, 254),
               child: IconButton(
                 icon: Icon(
-                  FontAwesomeIcons.facebookMessenger,
+                  IconsaxBold.messages,
+
+                  // FontAwesomeIcons.facebookMessenger,
                   color: Color.fromARGB(255, 2, 92, 123),
                   // size: 30,
                   //  color: kTextColor,

@@ -2,6 +2,7 @@
 
 // the my code
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:ficonsax/ficonsax.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {
@@ -28,11 +29,13 @@ class NavBar extends StatelessWidget {
       height: 50,
       index: selectedIndex,
       items: [
-        Icon(Icons.home, color: Colors.white),
-        Icon(Icons.add_circle_outline_rounded, color: Colors.white),
-        Icon(Icons.shopping_cart_outlined,
+        Icon(IconsaxBold.home_2, color: Colors.white),
+        Icon(IconsaxBold.box_add, //Icons.add_circle_outline_rounded,
+            color: Colors.white),
+        Icon(Icons.add_shopping_cart,
             color: Colors.white), //shopping_cart_outlined
-        Icon(Icons.person_outline_outlined, color: Colors.white),
+        Icon(IconsaxBold.profile_circle, //Icons.person_outline_outlined,
+            color: Colors.white),
       ],
       animationCurve: Curves.easeInOutBack, //easeInQuart,
       letIndexChange: (index) => true,

@@ -188,3 +188,20 @@ exports.updateItemOnShopCart = (req, res) => {
     });
   };
   
+  ///sallerProduct 12/5
+  exports.sallerProduct = (req, res) => {
+    const { userId } = req.query;
+    
+  
+    prod.sallerProduct(userId)
+        .then((res1) => {
+            //console.log({res1});
+          
+            res.status(200).json(res1);
+        })
+        .catch((error) => {
+            console.error({error});
+            res.status(500).json({ message: 'Not have thing to retrieve' });
+        });
+  };
+  

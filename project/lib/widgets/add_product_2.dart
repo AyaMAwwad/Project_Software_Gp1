@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/saller_product_page.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -21,6 +22,7 @@ import 'package:project/widgets/cart_shop.dart';
 import 'package:project/widgets/counter_item.dart';
 
 import 'package:project/widgets/list_for_add.dart';
+import 'package:project/widgets/sellar_delivery_option.dart';
 import 'package:project/widgets/textfield_add_prod.dart';
 
 import 'package:project/widgets/user_profile.dart';
@@ -57,6 +59,7 @@ class AddProductState extends State<AddProductPageTwo> {
   @override
   void initState() {
     super.initState();
+    productCondition = null;
     // Initialize state variables with passed data
     name = widget.name;
     category = widget.category;
@@ -401,6 +404,7 @@ class AddProductState extends State<AddProductPageTwo> {
                                 size: 30,
                               ),
                               onPressed: () async {
+                                _showDeliveryOptionsModal(context);
                                 // Navigate to the next page when IconButton is pressed
                                 if (_formKey.currentState != null) {
                                   //formKey.currentState!.reset();
@@ -410,7 +414,8 @@ class AddProductState extends State<AddProductPageTwo> {
                                           .isNotEmpty && //  images.isNotEmpty
                                       repo.getCount(context, 20) > 0) {
                                     _formKey.currentState!.save();
-                                    uploadAyosh(
+                                    DeliveryOptionsModalContentState
+                                        .addProductToDatabase(
                                       name,
                                       category,
                                       state,
@@ -422,64 +427,80 @@ class AddProductState extends State<AddProductPageTwo> {
                                       type,
                                       conditionOfFreeProduct,
                                     );
+                                    /* uploadAyosh(
+                                      name,
+                                      category,
+                                      state,
+                                      description,
+                                      priceContr.text,
+                                      repo.getCount(context, 20),
+                                      imagesayyya,
+                                      detailsOfState,
+                                      type,
+                                      conditionOfFreeProduct,
+                                    );*/
 
                                     /// this true
                                     /* uploadimageAyosh(
-                                      name,
-                                      category,
-                                      state,
-                                      description,
-                                      priceContr.text,
-                                      repo.getCount(context, 20),
-                                      imagesayyya,
-                                      detailsOfState,
-                                      type,
-                                      conditionOfFreeProduct,
-                                    );
-*/
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return SuccessDialog(message: "105".tr);
-                                      },
-                                    );
-                                    /* showDialog(
+                                        name,
+                                        category,
+                                        state,
+                                        description,
+                                        priceContr.text,
+                                        repo.getCount(context, 20),
+                                        imagesayyya,
+                                        detailsOfState,
+                                        type,
+                                        conditionOfFreeProduct,
+                                      );
+                                      
+      */
+
+                                    // Get.dialog(DeliveryOptionsSheet());
+                                    /*  showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return BaseDialogWidget(
-                                            child: PaymentDialog(
-                                              icon: Icon(
-                                                Icons.check_circle_outline,
-                                                color: Color.fromRGBO(
+                                          return SuccessDialog(message: "105".tr);
+                                        },
+                                      );
+                                      */
+                                    /* showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return BaseDialogWidget(
+                                              child: PaymentDialog(
+                                                icon: Icon(
+                                                  Icons.check_circle_outline,
+                                                  color: Color.fromRGBO(
+                                                      126, 211, 33, 1),
+                                                  size: 50,
+                                                ),
+                                                iconColor: Color.fromRGBO(
                                                     126, 211, 33, 1),
-                                                size: 50,
+                                                iconSize: 50,
+                                                paymentStatus: 'SUCCESSFUL',
+                                                message:
+                                                    'Thank you for Add Product',
+                                                buttonName: 'OK',
+                                                onPressButton: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          HomePage(),
+                                                    ),
+                                                  );
+                                                  print('On Press!');
+                                                },
                                               ),
-                                              iconColor: Color.fromRGBO(
-                                                  126, 211, 33, 1),
-                                              iconSize: 50,
-                                              paymentStatus: 'SUCCESSFUL',
-                                              message:
-                                                  'Thank you for Add Product',
-                                              buttonName: 'OK',
-                                              onPressButton: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HomePage(),
-                                                  ),
-                                                );
-                                                print('On Press!');
-                                              },
-                                            ),
-                                          );
-                                        });*/
+                                            );
+                                          });*/
                                     /*  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CartShop(),
-                                      ),
-                                    );*/
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CartShop(),
+                                        ),
+                                      );*/
                                   }
                                 }
                               },
@@ -496,7 +517,7 @@ class AddProductState extends State<AddProductPageTwo> {
         ),
         //  ),
       ),
-      bottomNavigationBar: NavBar(
+      /*  bottomNavigationBar: NavBar(
         selectedIndex: selectedIndex,
         onTabSelected: (index) {
           setState(() {
@@ -531,10 +552,11 @@ class AddProductState extends State<AddProductPageTwo> {
             }
           });
         },
-        // context: context,
-      ), /*BottomNavBar(
-        selectedMenu: MenuState.profile,
+        
       ),*/
+      /*BottomNavBar(
+          selectedMenu: MenuState.profile,
+        ),*/
     );
   }
 
@@ -930,18 +952,18 @@ class AddProductState extends State<AddProductPageTwo> {
 
   //////////////////////////////////////////////
 
-  Future<void> uploadAyosh(
-    String name,
-    String category,
-    String state,
-    String description,
-    String price,
-    int quantity,
-    List<File> imageA,
-    String? details,
-    String typeOfCategory,
-    String? productFreeCond,
-  ) async {
+  static Future<void> uploadAyosh(
+      String name,
+      String category,
+      String state,
+      String description,
+      String price,
+      int quantity,
+      List<File> imageA,
+      String? details,
+      String typeOfCategory,
+      String? productFreeCond,
+      String? delivery) async {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('http://192.168.0.114:3000/tradetryst/Product/AddProduct'),
@@ -950,7 +972,7 @@ class AddProductState extends State<AddProductPageTwo> {
     for (int i = 0; i < imageA.length; i++) {
       print('File $i path: ${imageA[i].path}');
     }*/
-
+    print(state + name + delivery!);
     request.fields['email'] = Login.Email;
     request.fields['name'] = name;
     request.fields['category'] = category;
@@ -962,7 +984,11 @@ class AddProductState extends State<AddProductPageTwo> {
     request.fields['detailsOfState'] = details ?? '';
     request.fields['typeOfCategory'] = typeOfCategory;
     request.fields['productFreeCond'] = productFreeCond ?? '';
-    request.fields['currency'] = custemFieldforProductPageState.Currecncy!;
+    request.fields['currency'] =
+        (state == 'Free' || state == 'free' || state == 'مجاني')
+            ? 'ILS'
+            : custemFieldforProductPageState.Currecncy!;
+    request.fields['delivery'] = delivery;
 
     for (int i = 0; i < imageA.length; i++) {
       var stream = http.ByteStream(
@@ -990,6 +1016,16 @@ class AddProductState extends State<AddProductPageTwo> {
       print('Error: $e');
       // Handle error
     }
+  }
+
+  void _showDeliveryOptionsModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return DeliveryOptionsModalContent();
+      },
+    );
   }
 }
 
