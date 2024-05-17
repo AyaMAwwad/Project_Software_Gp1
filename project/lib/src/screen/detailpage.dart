@@ -406,7 +406,13 @@ class _DetailPageState extends State<DetailPage> {
         // Text('Buy Now'
         //style: Color.white,
         //),
-        text: widget.quantity == 0 ? 'SOLD OUT' : 'ADD TO CART',
+        text: widget.quantity == 0
+            ? 'SOLD OUT'
+            : (widget.Typeproduct == "Free" ||
+                    widget.Typeproduct == "free" ||
+                    widget.Typeproduct == "مجاني")
+                ? 'Order'
+                : 'ADD TO CART',
         borderRadius: BorderRadius.circular(30.0),
       ),
     );

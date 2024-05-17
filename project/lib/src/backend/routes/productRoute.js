@@ -51,7 +51,8 @@ router.delete('/deleteCartItem', productController.deleteFromShopCart);
 router.put('/updateItemOnShopCart', productController.updateItemOnShopCart);
 
 router.get('/retriveWordOfsearch', productController.retriveWordOfsearch);
-//newwwww 1-MAY
-router.get('/retriveProductOfsearch', productController.retriveProductOfsearch);
 
+router.get('/retriveProductOfsearch', productController.retriveProductOfsearch);
+// new 12/5 
+router.get('/sallerProduct', productController.sallerProduct);
 module.exports = router;

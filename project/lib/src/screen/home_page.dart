@@ -5,6 +5,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ficonsax/ficonsax.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -33,6 +34,7 @@ import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
 import 'package:project/widgets/cart_shop.dart';
+import 'package:project/widgets/delivery_page.dart';
 import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
@@ -133,6 +135,7 @@ class HomePageState extends State<HomePage> {
             product.product_type,
             product.description,
             product.quantity,
+            product.delivery,
           );
         }
       },
@@ -637,6 +640,23 @@ UserAccountsDrawerHeader(
               },
             ),
             ListTile(
+              leading: Icon(Icons.production_quantity_limits_outlined,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                '144'.tr,
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    //  color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () {
+                Get.to(() => NotificationPage());
+              },
+            ),
+            //new
+            ListTile(
               leading: Icon(Icons.notifications,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
               title: Text(
@@ -652,6 +672,7 @@ UserAccountsDrawerHeader(
                 Get.to(() => NotificationPage());
               },
             ),
+            // new
             ListTile(
               leading: Icon(Icons.monetization_on,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
@@ -1181,7 +1202,8 @@ UserAccountsDrawerHeader(
       int productId,
       String type,
       String description,
-      int quantity) {
+      int quantity,
+      String delivery) {
     List<int> bytes = List<int>.from(imagePath['data']);
 
     return GestureDetector(
@@ -1247,8 +1269,8 @@ UserAccountsDrawerHeader(
                       ),
                       GestureDetector(
                         child: Icon(
-                          FontAwesomeIcons.facebookMessenger,
-                          size: 18,
+                          IconsaxBold.messages,
+                          size: 21,
                           color: Color.fromARGB(255, 2, 92, 123),
                         ),
                         onTap: () async {
@@ -1260,14 +1282,41 @@ UserAccountsDrawerHeader(
                       ),
                       GestureDetector(
                         child: Icon(
-                          Icons.shopping_cart_checkout,
+                          quantity == 0
+                              ? Icons.remove_shopping_cart
+                              : (type == 'Free' ||
+                                      type == 'free' ||
+                                      type == 'مجاني')
+                                  ? Icons.arrow_circle_right_outlined
+                                  : Icons.shopping_cart_checkout,
                           //FontAwesomeIcons.cartShopping,
                           size: 20,
                           color: Color.fromARGB(255, 2, 92, 123),
                         ),
                         onTap: () async {
-                          RecentSingleProdState.shoppingCartStore(
-                              '1', '', itemName, type, description);
+                          if (quantity != 0) {
+                            if (type == 'Free' ||
+                                type == 'free' ||
+                                type == 'مجاني') {
+                              print('********* the state:$type');
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return DeliveryPage(
+                                    isFree: true,
+                                    deliveryOption: delivery,
+                                    productId: productId,
+                                    onPaymentSuccess: () {},
+                                  );
+                                },
+                              );
+                              // DeliveryPage(isFree: true);
+                            } else {
+                              RecentSingleProdState.shoppingCartStore(
+                                  '1', '', itemName, type, description);
+                            }
+                          }
                         },
                       ),
                     ],
@@ -1307,6 +1356,7 @@ UserAccountsDrawerHeader(
     String itemName,
     String imagePath,
     String price, //String type,String description
+    // int quantity,
   ) {
     return Card(
       elevation: 4,
@@ -1347,8 +1397,8 @@ UserAccountsDrawerHeader(
                     ),
                     GestureDetector(
                       child: Icon(
-                        FontAwesomeIcons.facebookMessenger,
-                        size: 18,
+                        IconsaxBold.messages,
+                        size: 21,
                         color: Color.fromARGB(255, 2, 92, 123),
                       ),
                       onTap: () async {
@@ -1360,7 +1410,12 @@ UserAccountsDrawerHeader(
                     ),
                     GestureDetector(
                       child: Icon(
-                        Icons.shopping_cart_checkout,
+                        (RecentProd.thestate == 'Free' ||
+                                RecentProd.thestate == 'free' ||
+                                RecentProd.thestate == 'مجاني')
+                            ? Icons.arrow_circle_right_outlined
+                            : Icons.shopping_cart_checkout,
+                        // Icons.shopping_cart_checkout,
                         //FontAwesomeIcons.cartShopping,
                         size: 20,
                         color: Color.fromARGB(255, 2, 92, 123),
@@ -1468,6 +1523,7 @@ class ProductService {
                   userId: data['user_id'],
                   imageData: data['image'],
                   currency: data['currency'],
+                  delivery: data['Delivery_option'],
                   //imageData1: data['image1'],
                 ))
             .toList();
@@ -1553,7 +1609,8 @@ class Product {
   final int userId;
   final String product_type;
   final Map<String, dynamic> imageData;
-  final String currency;
+  final String currency; //delivery
+  final String delivery;
   //final Map<String, dynamic> imageData1;
 
   Product({
@@ -1567,6 +1624,7 @@ class Product {
     required this.imageData,
     required this.product_type,
     required this.currency,
+    required this.delivery,
   });
 }
 

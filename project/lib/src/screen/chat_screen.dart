@@ -1122,7 +1122,7 @@ class ChatScreenState extends State<ChatScreen> {
     // print(email);
     try {
       response = await http.get(Uri.parse(
-          'http://192.168.1.126:3000/tradetryst/user/userName?email=$email'));
+          'http://192.168.0.114:3000/tradetryst/user/userName?email=$email'));
       if (response.statusCode == 200) {
         dynamic responseData = jsonDecode(response.body);
         if (responseData is List && responseData.isNotEmpty) {

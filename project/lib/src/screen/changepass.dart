@@ -239,7 +239,7 @@ class changepasspage extends State<changepass> {
     print(email);
     print(newPassword);
     final response = await http.put(
-      Uri.parse('http://192.168.1.126:3000/tradetryst/user/UpdatePass'),
+      Uri.parse('http://192.168.0.114:3000/tradetryst/user/UpdatePass'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

@@ -124,3 +124,65 @@ exports.UpdatePass = (req, res) => {
       res.status(400).json({ message: error }); 
     });
   };
+
+  ////// new 12/5 userInteraction
+  exports.userInteraction = (req, res) => {
+    userRepository
+      .userInteraction(req, res)
+      .then((message) => {
+        res.status(200).json({ message }); 
+      })
+      .catch((error) => {
+        res.status(500).json({ error });
+      });
+  };
+  //// 15_MAY deliverydetials
+  
+exports.deliveryEmployee = (req, res) => {
+  const { type } = req.query;
+  console.log({type});
+
+  userRepository.deliveryEmployee(type)
+      .then((result) => {
+          console.log({result});
+      
+          res.status(200).json(result);
+      })
+      .catch((error) => {
+          console.error({error});
+          res.status(500).json({ message: 'Internal server error' });
+      });
+};
+
+//deliveryFromSellar
+exports.deliveryFromSellar = (req, res) => {
+  const { productId } = req.query;
+ 
+
+  userRepository.deliveryFromSellar(productId)
+      .then((result) => {
+          console.log({result});
+      
+          res.status(200).json(result);
+      })
+      .catch((error) => {
+          console.error({error});
+          res.status(500).json({ message: 'Internal server error' });
+      });
+};
+///deliverydetialsOfBuyer
+exports.deliverydetialsOfBuyer = (req, res) => {
+  const { userId } = req.query;
+ 
+
+  userRepository.deliverydetialsOfBuyer(userId)
+      .then((result) => {
+          console.log({result});
+      
+          res.status(200).json(result);
+      })
+      .catch((error) => {
+          console.error({error});
+          res.status(500).json({ message: 'Internal server error' });
+      });
+};

@@ -67,13 +67,14 @@ class LoginScreen extends State<Login> with ValidationMixin {
             height: 80.0,
           ),
           Image.asset(
-            'images/icon/logo3.png',
+            // 'images/icon/logo3.png',
+            'images/icon/FLOGO1.png',
             width: 900.0,
-            height: 200.0,
+            height: 180.0,
           ),
 
           SizedBox(
-            height: 10.0,
+            height: 20.0,
           ),
           custemField(
             hintText: 'UserName',
@@ -290,10 +291,11 @@ class LoginScreen extends State<Login> with ValidationMixin {
       body: Stack(
         children: [
           Positioned(
-            top: MediaQuery.of(context).size.height * -0.02,
-            left: 0,
-            right: MediaQuery.of(context).size.width * -0.05, //-20,
+            top: MediaQuery.of(context).size.height * -0.04,
+            left: -10,
+            right: MediaQuery.of(context).size.width * -0.08, //-20,
             child: Image.asset(
+              //'images/icon/DS1.png',
               'images/icon/designB.png', // Path to your image asset
               //'images/icon/svg.png',
               // Adjust height as needed

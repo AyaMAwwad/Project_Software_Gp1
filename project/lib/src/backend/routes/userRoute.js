@@ -21,4 +21,10 @@ router.post('/delete', userController.deleteacountt);
 
 router.put('/UpdatePass', userController.UpdatePass);
 router.post('/oldpassword', userController.oldpassword); 
+/////////// 12/5 new 
+router.post('/Interaction', userController.userInteraction);
+// 15_MAY 
+router.get('/deliveryEmployee', userController.deliveryEmployee);
+router.get('/deliveryFromSellar', userController.deliveryFromSellar);
+router.get('/deliverydetialsOfBuyer', userController.deliverydetialsOfBuyer);
 module.exports = router;
