@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -435,8 +435,7 @@ class EditProfileScreen extends State<editprofile> {
 
   Future<void> profiledata(int id, String firstName, String lastName,
       String email, String address, String phoneNumber, String gender) async {
-    final url =
-        Uri.parse('http://192.168.0.114:3000/tradetryst/edit/editprofile');
+    final url = Uri.parse('http://$ip:3000/tradetryst/edit/editprofile');
     try {
       final response = await http.post(
         url,

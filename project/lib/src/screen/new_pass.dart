@@ -9,6 +9,7 @@ import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/button_2.dart';
 import 'package:project/widgets/design.dart';
 import 'package:project/widgets/pass_field.dart';
+import 'package:project/src/screen/ipaddress.dart';
 
 class NewPass extends StatefulWidget {
   @override
@@ -128,7 +129,7 @@ class NewPassword extends State<NewPass> {
     //  print(email);
     // print(newPassword);
     final response = await http.put(
-      Uri.parse('http://192.168.0.114:3000/tradetryst/user/UpdatePass'),
+      Uri.parse('http://$ip:3000/tradetryst/user/UpdatePass'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

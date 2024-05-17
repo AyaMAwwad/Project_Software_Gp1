@@ -9,7 +9,7 @@ import 'package:ficonsax/ficonsax.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +28,7 @@ import 'package:project/src/screen/notification_page.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/src/screen/providercurrency.dart';
+import 'package:project/src/screen/saller_product_page.dart';
 import 'package:project/src/screen/security.dart';
 import 'package:project/src/screen/settings.dart';
 import 'package:project/widgets/add_product.dart';
@@ -640,7 +641,7 @@ UserAccountsDrawerHeader(
               },
             ),
             ListTile(
-              leading: Icon(Icons.production_quantity_limits_outlined,
+              leading: Icon(IconsaxBold.bag,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
               title: Text(
                 '144'.tr,
@@ -652,7 +653,7 @@ UserAccountsDrawerHeader(
                 ),
               ),
               onTap: () {
-                Get.to(() => NotificationPage());
+                Get.to(() => SellarPage());
               },
             ),
             //new
@@ -1484,8 +1485,8 @@ UserAccountsDrawerHeader(
 class ProductService {
   Future<List<Product>> fetchProducts() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://192.168.0.114:3000/tradetryst/home/products'));
+      final response =
+          await http.get(Uri.parse('http://$ip:3000/tradetryst/home/products'));
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = jsonDecode(response.body);
         print('Response Body: $jsonResponse'); // Print API response
@@ -1543,7 +1544,7 @@ Future<String> fetchPriceFromNewProduct(int productId) async {
   http.Response? response;
   try {
     response = await http.get(Uri.parse(
-        'http://192.168.0.114:3000/tradetryst/productnew/pricenew?id=$productId'));
+        'http://$ip:3000/tradetryst/productnew/pricenew?id=$productId'));
     if (response.statusCode == 200) {
       dynamic responseData = jsonDecode(response.body);
       if (responseData is List && responseData.isNotEmpty) {
@@ -1573,7 +1574,7 @@ Future<String> fetchPriceFromusedProduct(int productId) async {
   http.Response? response;
   try {
     response = await http.get(Uri.parse(
-        'http://192.168.0.114:3000/tradetryst/productused/usedprice?id=$productId'));
+        'http://$ip:3000/tradetryst/productused/usedprice?id=$productId'));
     if (response.statusCode == 200) {
       dynamic responseData = jsonDecode(response.body);
       if (responseData is List && responseData.isNotEmpty) {

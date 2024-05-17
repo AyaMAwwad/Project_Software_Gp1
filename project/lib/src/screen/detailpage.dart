@@ -3,7 +3,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
-
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +69,7 @@ class _DetailPageState extends State<DetailPage> {
   Future<List<Map<String, dynamic>>> fetchImageData(int productId) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/product/productImages?productId=$productId'));
+          'http://$ip:3000/tradetryst/product/productImages?productId=$productId'));
 //?productId=$productId
       if (response.statusCode == 200) {
         List<dynamic> responseData = json.decode(response.body);

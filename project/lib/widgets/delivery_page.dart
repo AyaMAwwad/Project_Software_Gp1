@@ -9,6 +9,7 @@ import 'package:project/widgets/button_2.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/widgets/cart_item.dart';
 import 'package:project/widgets/search_page.dart';
+import 'package:project/src/screen/ipaddress.dart';
 
 class DeliveryPage extends StatefulWidget {
   final bool isFree;
@@ -287,7 +288,7 @@ class DeliveryPageState extends State<DeliveryPage> {
     print('****************** type: $type');
     try {
       response = await http.get(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/user/deliveryEmployee?type=$type'));
+          'http://$ip:3000/tradetryst/user/deliveryEmployee?type=$type'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         dynamic responseData = jsonDecode(response.body);
 
@@ -324,7 +325,7 @@ class DeliveryPageState extends State<DeliveryPage> {
     print('****************** productId: $productId');
     try {
       response = await http.get(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/user/deliveryFromSellar?productId=$productId'));
+          'http://$ip:3000/tradetryst/user/deliveryFromSellar?productId=$productId'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         dynamic responseData = jsonDecode(response.body);
 

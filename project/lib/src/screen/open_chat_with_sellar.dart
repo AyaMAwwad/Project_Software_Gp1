@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:project/src/screen/chat_page.dart';
 import 'package:project/src/screen/chat_screen.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/ipaddress.dart';
 
 class OpenChatWithSellar {
   //  static String NameSend1 = '';
@@ -19,7 +20,7 @@ class OpenChatWithSellar {
 
     try {
       response = await http.get(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/user/sellarChat?productName=$productName'));
+          'http://$ip:3000/tradetryst/user/sellarChat?productName=$productName'));
       if (response.statusCode == 200) {
         dynamic responseData = jsonDecode(response.body);
         if (responseData is List && responseData.isNotEmpty) {

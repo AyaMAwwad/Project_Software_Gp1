@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -966,7 +966,7 @@ class AddProductState extends State<AddProductPageTwo> {
       String? delivery) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://192.168.0.114:3000/tradetryst/Product/AddProduct'),
+      Uri.parse('http://$ip:3000/tradetryst/Product/AddProduct'),
     );
     /* print('Number of files: ${imageA.length}');
     for (int i = 0; i < imageA.length; i++) {

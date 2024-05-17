@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:project/src/screen/category_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/home_page.dart';
@@ -316,7 +316,7 @@ class ProductPageState extends State<ProductPage> {
 
     try {
       response = await http.get(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/Product/typeofproduct?category=$category&type=$type&state=$state'));
+          'http://$ip:3000/tradetryst/Product/typeofproduct?category=$category&type=$type&state=$state'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         dynamic responseData = jsonDecode(response.body);
         if (responseData is Map<String, dynamic> &&

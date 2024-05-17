@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/src/screen/changepass.dart';
@@ -210,8 +210,7 @@ class PrivacySecurity extends State<PrivacySecurityPage> {
 
   // delete account
   Future<void> deleteaccount(String userId) async {
-    final url =
-        Uri.parse('http://192.168.0.114:3000/tradetryst/deleteaccount/delete');
+    final url = Uri.parse('http://$ip:3000/tradetryst/deleteaccount/delete');
 
     try {
       final response = await http.post(

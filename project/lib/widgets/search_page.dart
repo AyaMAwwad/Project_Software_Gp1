@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/widgets/delivery_page.dart';
-
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/src/screen/detailpage.dart';
 import 'package:project/src/screen/home_page.dart';
@@ -361,7 +361,7 @@ class SearchPage extends StatelessWidget {
 
     try {
       response = await http.get(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/search/retriveWordOfsearch?name=$name'));
+          'http://$ip:3000/tradetryst/search/retriveWordOfsearch?name=$name'));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         dynamic responseData = jsonDecode(response.body);
