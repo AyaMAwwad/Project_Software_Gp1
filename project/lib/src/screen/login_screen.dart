@@ -9,7 +9,7 @@
 
 //import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 import 'dart:convert';
-
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -373,7 +373,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
 //// new
   Future<void> loginnn(String email, String password) async {
     //172.19.240.81  --- 192.168.0.114  ---172.19.240.81
-    final url = Uri.parse('http://192.168.0.114:3000/tradetryst/user/login');
+    final url = Uri.parse('http://$ip:3000/tradetryst/user/login');
     try {
       final response = await http.post(
         url,
@@ -465,7 +465,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
     // print(email);
     try {
       response = await http.get(Uri.parse(//192.168.0.114
-          'http://192.168.0.114:3000/tradetryst/user/userName?email=$email'));
+          'http://$ip:3000/tradetryst/user/userName?email=$email'));
       if (response.statusCode == 200) {
         dynamic responseData = jsonDecode(response.body);
         if (responseData is List && responseData.isNotEmpty) {

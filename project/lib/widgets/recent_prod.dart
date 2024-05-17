@@ -9,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:project/src/screen/detailpage.dart';
-//import 'package:project/src/screen/ipaddress.dart';
+import 'package:project/src/screen/ipaddress.dart';
 
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/multiLanguage.dart';
@@ -821,8 +821,7 @@ class RecentSingleProdState extends State<RecentSingleProd> {
     String state,
     String description,
   ) async {
-    final url =
-        Uri.parse('http://192.168.0.114:3000/tradetryst/shoppingcart/add');
+    final url = Uri.parse('http://$ip:3000/tradetryst/shoppingcart/add');
     try {
       final response = await http.post(
         url,

@@ -10,6 +10,7 @@ import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/button_2.dart';
 import 'package:project/widgets/design.dart';
 import 'package:project/widgets/pass_field.dart';
+import 'package:project/src/screen/ipaddress.dart';
 
 class changepass extends StatefulWidget {
   @override
@@ -239,7 +240,7 @@ class changepasspage extends State<changepass> {
     print(email);
     print(newPassword);
     final response = await http.put(
-      Uri.parse('http://192.168.0.114:3000/tradetryst/user/UpdatePass'),
+      Uri.parse('http://$ip:3000/tradetryst/user/UpdatePass'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -270,7 +271,7 @@ class changepasspage extends State<changepass> {
     print(" hi $oldPassword \n \n");
     // Make an HTTP request to your backend API to verify the old password
     final response = await http.post(
-      Uri.parse('http://192.168.0.114:3000/tradetryst/old/oldpassword'),
+      Uri.parse('http://$ip:3000/tradetryst/old/oldpassword'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

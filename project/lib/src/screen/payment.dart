@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/cart_item.dart';
 
@@ -110,7 +110,7 @@ class Payment {
     print(productIds);
     final response = await http.put(
       Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/payment/updateTheQuantityToPayment'),
+          'http://$ip:3000/tradetryst/payment/updateTheQuantityToPayment'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -133,7 +133,7 @@ class Payment {
     print(amount);
     print(payMethod);
     final response = await http.post(
-      Uri.parse('http://192.168.0.114:3000/tradetryst/payment/add'),
+      Uri.parse('http://$ip:3000/tradetryst/payment/add'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -158,7 +158,7 @@ class Payment {
 
     try {
       response = await http.delete(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/payment/deleteFromCartProductThatPaied?productIds=$productIds'));
+          'http://$ip:3000/tradetryst/payment/deleteFromCartProductThatPaied?productIds=$productIds'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('deleted cart item');
       } else {

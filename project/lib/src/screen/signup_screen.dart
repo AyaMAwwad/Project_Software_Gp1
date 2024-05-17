@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, avoid_print, use_build_context_synchronously, unused_local_variable, non_constant_identifier_names
 
 import 'dart:convert';
-
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
@@ -351,7 +351,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
       String birthday,
       String phone_number) async {
     final url = Uri.parse(
-        'http://192.168.0.114:3000/tradetryst/user/signup'); // Update with your server IP
+        'http://$ip:3000/tradetryst/user/signup'); // Update with your server IP
     try {
       final response = await http.post(
         url,

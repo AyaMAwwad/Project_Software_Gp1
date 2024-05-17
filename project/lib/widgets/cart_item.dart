@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:project/src/screen/ipaddress.dart';
 //import 'package:flutter/material.dart' as material;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -790,7 +791,7 @@ merchantCountryCode: 'US', testEnv: true,
 
     try {
       response = await http.get(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/shoppingcart/getCartItem?userId=$userId'));
+          'http://$ip:3000/tradetryst/shoppingcart/getCartItem?userId=$userId'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         dynamic responseData = jsonDecode(response.body);
 
@@ -823,7 +824,7 @@ merchantCountryCode: 'US', testEnv: true,
 
     try {
       response = await http.delete(Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/shoppingcart/deleteCartItem?product_id=$productid'));
+          'http://$ip:3000/tradetryst/shoppingcart/deleteCartItem?product_id=$productid'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('deleted cart item');
       } else {
@@ -840,8 +841,7 @@ merchantCountryCode: 'US', testEnv: true,
     print(item);
     print(productId);
     final response = await http.put(
-      Uri.parse(
-          'http://192.168.0.114:3000/tradetryst/shoppingcart/updateItemOnShopCart'),
+      Uri.parse('http://$ip:3000/tradetryst/shoppingcart/updateItemOnShopCart'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
