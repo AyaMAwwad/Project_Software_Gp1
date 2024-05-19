@@ -190,6 +190,7 @@ exports.updateItemOnShopCart = (req, res) => {
   
   ///sallerProduct 12/5
   exports.sallerProduct = (req, res) => {
+    console.log('*** in controller userId');
     const { userId } = req.query;
     
   
@@ -204,4 +205,33 @@ exports.updateItemOnShopCart = (req, res) => {
             res.status(500).json({ message: 'Not have thing to retrieve' });
         });
   };
-  
+  /// 18/5 deleteItemSellar
+  exports.deleteItemSellar = (req, res) => {
+    const productId = req.query.productid; 
+    const state = req.query.state;
+    if (!productId) {
+        return res.status(400).json({ message: 'Product ID is required' });
+    }
+    prod.deleteItemSellar(productId,state)
+        .then((result) => {
+            console.log('Item deleted successfully');
+            res.status(200).json({ message: 'Item deleted successfully' });
+        })
+        .catch((error) => {
+            console.error('Error deleting item:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        });
+};
+
+//updateSellarProduct
+exports.updateSellarProduct = (req, res) => {
+  prod
+    .updateSellarProduct(req, res)
+    .then((message) => {
+      console.log(message);
+      res.status(201).json({ message }); 
+    })
+    .catch((error) => {
+      res.status(400).json({ message: error }); 
+    });
+  };

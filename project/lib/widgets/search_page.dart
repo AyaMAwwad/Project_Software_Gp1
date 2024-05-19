@@ -74,7 +74,7 @@ class SearchPage extends StatelessWidget {
               filed = 'condition';
               theVal = productDetails['product_condition'];
               //ibt
-              curr = productDetails['currency']; // price 8
+              curr = productData['currency']; // price 8
             } else if (theState == 'Free' ||
                 theState == 'free' ||
                 theState == 'مجاني') {
@@ -82,7 +82,7 @@ class SearchPage extends StatelessWidget {
               filed = 'condition';
               theVal = productDetails['product_condition'];
               // ibt
-              curr = productDetails['currency']; // price 8
+              curr = productData['currency']; // price 8
             }
             String updatedPrice = priceprosearch(price, curr); // price 8
             //
@@ -348,7 +348,7 @@ class SearchPage extends StatelessWidget {
         break;
 
       default:
-        sympol = '';
+        sympol = ' ';
 
       //return
     }
@@ -419,7 +419,6 @@ class SearchPage extends StatelessWidget {
     return null;
   }
 }
-
 
 /*
 import 'dart:convert';

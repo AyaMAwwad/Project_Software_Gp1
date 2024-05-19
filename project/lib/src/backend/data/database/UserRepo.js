@@ -59,7 +59,7 @@ class UserRepository {
     const { email, password } = req.body;
 
   db.query(
-    'SELECT email,password, first_name, last_name , address, phone_number, user_id , birthday FROM user WHERE email = ? ',
+    'SELECT email,password, first_name, last_name , address, phone_number, user_id , birthday , user_type FROM user WHERE email = ? ',
     [email],
     (err, results) => {
       if (err) {
@@ -95,6 +95,8 @@ class UserRepository {
             phone_number: user.phone_number,
             user_id: user.user_id,
             birthday: user.birthday,
+            user_type: user.user_type,
+  
         };
           return res.json({ message: 'Login successful.', user: userData });
           
@@ -328,44 +330,56 @@ deleteacountt(userId) {
                   console.error('Error deleting productimage records:', error);
                   return reject('Failed to delete account');
                 }
+               
                 
-                // SQL query to delete the products associated with the user
                 db.query(
                   'DELETE FROM shopping_cart WHERE user_id = ?',
                   [userId],
                   (error, results) => {
                     if (error) {
-                      console.error('Error deleting products:', error);
+                      console.error('Error deleting shopping_cart records:', error);
                       return reject('Failed to delete account');
                     }
                     
-                    // SQL query to delete records from the shoppingcart table
+                  
                     db.query(
                       'DELETE FROM product WHERE user_id = ?',
                       [userId],
                       (error, results) => {
                         if (error) {
-                          console.error('Error deleting shoppingcart:', error);
+                          console.error('Error deleting product records:', error);
                           return reject('Failed to delete account');
                         }
                         
-                        // SQL query to delete the user account
+                        
                         db.query(
-                          'DELETE FROM user WHERE user_id = ?',
+                          'DELETE FROM pay WHERE user_id = ?',
                           [userId],
                           (error, results) => {
                             if (error) {
-                              console.error('Error deleting account:', error);
+                              console.error('Error deleting pay records:', error);
                               return reject('Failed to delete account');
                             }
-                            
-                            if (results.affectedRows === 0) {
-                              // No rows affected, meaning no user with the specified ID found
-                              return reject('User not found');
-                            }
-                            
-                            console.log('Account deleted successfully');
-                            return resolve('Account deleted successfully');
+
+                            // SQL query to delete the user account
+                            db.query(
+                              'DELETE FROM user WHERE user_id = ?',
+                              [userId],
+                              (error, results) => {
+                                if (error) {
+                                  console.error('Error deleting account:', error);
+                                  return reject('Failed to delete account');
+                                }
+
+                                if (results.affectedRows === 0) {
+                                  // No rows affected, meaning no user with the specified ID found
+                                  return reject('User not found');
+                                }
+
+                                console.log('Account deleted successfully');
+                                return resolve('Account deleted successfully');
+                              }
+                            );
                           }
                         );
                       }
@@ -380,6 +394,9 @@ deleteacountt(userId) {
     );
   });
 }
+
+
+
 
   /// product home page 
 
@@ -573,6 +590,59 @@ deliverydetialsOfBuyer(userId) {
 
 
 
+
+
+// ibtisam 
+
+getdatauser(req, res){
+  
+  return new Promise((resolve, reject) => {
+    // Check if the user already exists (Checking the email)
+    db.query(
+      'SELECT first_name, last_name,email, user_type , user_id  FROM user ',  // change alsooooo 
+   
+      (error, results) => {
+        if (error) {
+          return reject('Internal server error.');
+        }
+
+        return resolve(results);
+
+      
+        
+     
+      },
+    );
+  });
+}
+
+updateadminofuser(req, res) {
+  const { first_name, last_name, email, user_type } = req.body;
+
+  db.query(
+    'UPDATE user SET first_name = ?, last_name = ?, user_type = ? WHERE email = ?',
+    [first_name, last_name, user_type, email],
+    (err, result) => {
+      if (err) {
+        res.status(500).send({ error: 'Failed to update user' });
+      } else {
+        res.status(201).send();
+      }
+    }
+  );
+
+  /*
+  const { first_name, last_name, email, user_type } = req.body;
+  db.query('UPDATE user  SET first_name = ?, last_name = ?, user_type = ? WHERE email = ?',
+  [first_name, last_name, email, user_type ],
+    (error, results) => {
+    if (error) {
+      return reject('Internal server error.');
+    }
+    return resolve(results);
+  },
+  );*/
+}
 
 
 

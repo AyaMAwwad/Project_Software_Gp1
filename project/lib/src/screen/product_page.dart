@@ -201,7 +201,7 @@ class ProductPageState extends State<ProductPage> {
                             updateSelectedType: updateSelectedType,
                             //selectedtype: TypeState.newprod,
                           ),
-                          /**ProductType(
+                          /*ProductType(
   press: () {
     updateType('Used'); // Update to 'Used' product type
     updateSelectedType(TypeProductState.usedprod); // Update the selected type state

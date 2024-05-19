@@ -27,4 +27,9 @@ router.post('/Interaction', userController.userInteraction);
 router.get('/deliveryEmployee', userController.deliveryEmployee);
 router.get('/deliveryFromSellar', userController.deliveryFromSellar);
 router.get('/deliverydetialsOfBuyer', userController.deliverydetialsOfBuyer);
+
+// ibtisam 
+router.get('/list', userController.getdatauser );
+router.put('/updateadmin', userController.updateadminofuser);
+
 module.exports = router;

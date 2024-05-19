@@ -8,60 +8,6 @@ import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/widgets/enam.dart';
 import 'dart:ui';
 
-final LinearGradient activeGradient = LinearGradient(
-  begin: Alignment.topLeft,
-  end: Alignment.bottomRight,
-  colors: [
-    Color.fromARGB(255, 147, 198, 215),
-    Color.fromARGB(255, 95, 150, 168),
-    Color.fromARGB(255, 66, 119, 138),
-    Color.fromARGB(255, 95, 150, 168),
-    Color.fromARGB(255, 147, 198, 215),
-  ],
-);
-
-final LinearGradient inactiveGradient = LinearGradient(
-  begin: Alignment.topLeft,
-  end: Alignment.bottomRight,
-  colors: [
-    // Colors.grey.withOpacity(0.9),
-    // Colors.grey.withOpacity(0.9),
-    Colors.white,
-    Colors.grey,
-    //  Color.fromARGB(255, 147, 198, 215),
-
-    // Color.fromARGB(255, 95, 150, 168),
-    // Color.fromARGB(255, 66, 119, 138),
-    // Color.fromARGB(255, 95, 150, 168),
-
-    // Color.fromARGB(255, 147, 198, 215),
-    Colors.grey,
-    Colors.white,
-  ],
-);
-
-final BoxDecoration activeBoxDecoration = BoxDecoration(
-  gradient: activeGradient,
-  borderRadius: BorderRadius.circular(10),
-  boxShadow: [
-    BoxShadow(
-      color: Colors.black38,
-      blurRadius: 30,
-    ),
-  ],
-);
-
-final BoxDecoration inactiveBoxDecoration = BoxDecoration(
-  gradient: inactiveGradient,
-  borderRadius: BorderRadius.circular(10),
-  boxShadow: [
-    BoxShadow(
-      color: Colors.black38,
-      blurRadius: 30,
-    ),
-  ],
-);
-
 class ProductType extends StatelessWidget {
   final String name;
   final VoidCallback press;

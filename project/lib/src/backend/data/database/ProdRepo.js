@@ -639,30 +639,33 @@ retriveWordOfsearch(name) {
           results.forEach(product => {
            
             const productId =product.product_id;
+            let prevId='';
             const state= product.product_type;
             console.log(state);
+            console.log(productId);
             let Query='';
             if(state== 'New' || state== 'new'|| state== 'جديد'){
-              Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
+              Query='SELECT * FROM new_product WHERE product_id = ?'
             }
             else if(state=='Used'|| state== 'used'|| state== 'مستعمل'){
-              Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
+              Query='SELECT * FROM used_product WHERE product_id = ?'
             }
             else if(state=='Free'|| state== 'free' ||state== 'مجاني'){
-              Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
+              Query='SELECT * FROM free_product WHERE product_id = ?'
             }
             db.query(Query, [productId], (error2, res2) => {
              if (error2) {
                  console.error(error2);
                  reject('Failed to retrieve data from new_product table');
              } else {
-                
-                 res2.forEach(entry => {
-                   const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
-                   if (!found) {
-                       allProductDetails.push(entry);
-                   }
-               });
+                console.log(res2);
+                res2.forEach(entry => {
+                  const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
+                  if (!found || prevId!=productId) {
+                      allProductDetails.push(entry);
+                      prevId=productId;
+                  }
+              });
            
                if (allProductDetails.length == results.length) {
                    resolve({results, allProductDetails });
@@ -673,14 +676,112 @@ retriveWordOfsearch(name) {
                
              }
          });
+         console.log('product saller :', allProductDetails);
         });
           //resolve(results);
           }
         }
       });
     });}
+// 18/5 deleteItemSellar
+
+deleteItemSellar(productId,state) {
+  return new Promise((resolve, reject) => {
+
+    
+    db.query('DELETE FROM shopping_cart WHERE product_id = ?',[productId], (error, results) => {
+      if (error) {
+        console.error(error);
+        reject('Failed to Delete ');
+      } else {
+        db.query('DELETE FROM user_interaction WHERE product_id = ?',[productId], (error, results) => {
+          if (error) {
+            console.error(error);
+            reject('Failed to Delete ');
+          } else {
+            db.query('DELETE FROM productimage WHERE product_id = ?',[productId], (error, results) => {
+              if (error) {
+                console.error(error);
+                reject('Failed to Delete ');
+              } else {
+                let Query='';
+                if(state== 'New' || state== 'new'|| state== 'جديد'){
+                  Query='DELETE FROM new_product WHERE product_id = ?'
+                }
+                else if(state=='Used'|| state== 'used'|| state== 'مستعمل'){
+                  Query='DELETE FROM used_product WHERE product_id = ?'
+                }
+                else if(state=='Free'|| state== 'free' ||state== 'مجاني'){
+                  Query='DELETE FROM free_product WHERE product_id = ?'
+                }
+                db.query(Query, [productId], (error2, res2) => {
+                 if (error2) {
+                     console.error(error2);
+                     reject('Failed to delete data from  table');
+                 } else {
+                  db.query('DELETE FROM product WHERE product_id = ?', [productId], (error2, res2) => {
+                    if (error2) {
+                        console.error(error2);
+                        reject('Failed to delete data from table');
+                    } else {
+                      resolve("success deleted");
+                    }});
+                 }});
+               // resolve("success deleted");
+              }
+            });
+           // resolve("success deleted");
+          }
+        });
+        //resolve("success deleted");
+      }
+    });
+  });
+  
+};
+
+updateSellarProduct(req, res) {
+  let { productId,name,type,prodState,quantity,cond } = req.body;
+
+  console.log(productId,name,type,prodState,quantity,cond);
+  return new Promise((resolve, reject) => {
+  
+      db.query(
+        'UPDATE product SET name = ?, quantity = ?, product_type = ? WHERE product_id = ?',
+        [name,quantity,type,productId],
+        (error, results) => {
+            if (error) {
+                reject('Failed to update ');
+            } else {
+              let Query='';
+                if(type== 'New' || type== 'new'|| type== 'جديد'){
+                  Query='UPDATE new_product SET warranty_period =?, price = ? WHERE product_id = ?'
+                }
+                else if(type=='Used'|| type== 'used'|| type== 'مستعمل'){
+                  Query='UPDATE used_product SET product_condition = ?, price = ? WHERE product_id = ?'
+                }
+                else if(type=='Free'|| type== 'free' ||type== 'مجاني'){
+                  Query='UPDATE free_product SET product_condition = ?, state_free = ? WHERE product_id = ?'
+                }
+            
+console.log(prodState,cond);
+                
+                db.query(Query, [cond,prodState ,productId], (error2, res2) => {
+                  if (error2) {
+                      console.error(error2);
+                      reject('Failed to update data from  table');
+                  } else {
+                resolve('item updated successfully');
+                  } 
+                });
+            }
+        }
+    );
 
 
+
+  });
+}
 }
    
 

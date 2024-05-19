@@ -44,7 +44,7 @@ class CustomeButton extends StatelessWidget {
                 textStyle: TextStyle(
                   color: const Color.fromARGB(255, 255, 255, 255),
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
 
@@ -62,7 +62,7 @@ class CustomeButton extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+              padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 35.0),
               //elevation: 1.5,
               shadowColor: Color.fromARGB(192, 64, 128, 122),
             ),
