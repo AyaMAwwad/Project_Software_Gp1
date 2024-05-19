@@ -55,4 +55,8 @@ router.get('/retriveWordOfsearch', productController.retriveWordOfsearch);
 router.get('/retriveProductOfsearch', productController.retriveProductOfsearch);
 // new 12/5 
 router.get('/sallerProduct', productController.sallerProduct);
+// 18/5 deleteItemSellar
+router.delete('/deleteItemSellar', productController.deleteItemSellar);
+// 19/5 updateSellarProduct
+router.put('/updateSellarProduct', productController.updateSellarProduct);
 module.exports = router;

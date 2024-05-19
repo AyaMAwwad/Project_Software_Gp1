@@ -186,3 +186,26 @@ exports.deliverydetialsOfBuyer = (req, res) => {
           res.status(500).json({ message: 'Internal server error' });
       });
 };
+
+//ibtisam 
+
+
+exports.getdatauser = (req, res) => {
+  userRepository
+    .getdatauser(req, res)
+    .then((message) => {
+      res.status(201).json({ message }); // Registration was successful, return the success message
+    })
+    .catch((error) => {
+      res.status(400).json({ message: error }); // Registration encountered an error, return the error message
+    });
+};
+
+exports.updateadminofuser = (req, res) => {
+
+
+  userRepository.updateadminofuser(req, res);
+
+};
+
+// ibtisam end 

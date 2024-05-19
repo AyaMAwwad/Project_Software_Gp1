@@ -5,37 +5,37 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ficonsax/ficonsax.dart';
 import 'package:flutter/cupertino.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:project/src/screen/ipaddress.dart';
+import 'package:ficonsax/ficonsax.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/src/screen/adminscreen.dart';
 import 'package:project/src/screen/cat_screen.dart';
 import 'package:project/src/screen/category_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/chat_page.dart';
 import 'package:project/src/screen/chat_screen.dart';
 import 'package:project/src/screen/currency.dart';
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/notification.dart';
 import 'package:project/src/screen/notification_page.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/src/screen/providercurrency.dart';
-import 'package:project/src/screen/saller_product_page.dart';
 import 'package:project/src/screen/security.dart';
 import 'package:project/src/screen/settings.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
 import 'package:project/widgets/cart_shop.dart';
-import 'package:project/widgets/delivery_page.dart';
 import 'package:project/widgets/enam.dart';
 import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
@@ -43,6 +43,7 @@ import 'package:project/widgets/search_page.dart';
 import 'package:project/widgets/slider.dart';
 import 'package:project/src/screen/detailpage.dart';
 import 'package:project/widgets/user_profile.dart';
+import 'package:project/widgets/delivery_page.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -344,7 +345,7 @@ class HomePageState extends State<HomePage> {
 
 // ibtisam
 
-  String convertusd(String priceInILS) {
+  static String convertusd(String priceInILS) {
     double price = double.tryParse(priceInILS) ?? 0.0;
 
     double conversionRate = 0.3;
@@ -470,6 +471,14 @@ class HomePageState extends State<HomePage> {
   //
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    print(' \n $screenWidth \n \n \n hiiiii');
+    double categoryCardWidth = 120.0;
+    int maxCategoriesPerRow = (screenWidth / categoryCardWidth).floor();
+    print('maxCategoriesPerRow: $maxCategoriesPerRow');
+    double containerWidth = MediaQuery.of(context).size.width;
+
+    //
     print('*************** in Home ');
     print(isPressTosearch);
     print('*************** isPressTosearchButton');
@@ -641,7 +650,7 @@ UserAccountsDrawerHeader(
               },
             ),
             ListTile(
-              leading: Icon(IconsaxBold.bag,
+              leading: Icon(Icons.production_quantity_limits_outlined,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
               title: Text(
                 '144'.tr,
@@ -653,27 +662,10 @@ UserAccountsDrawerHeader(
                 ),
               ),
               onTap: () {
-                Get.to(() => SellarPage());
-              },
-            ),
-            //new
-            ListTile(
-              leading: Icon(Icons.notifications,
-                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
-              title: Text(
-                '61'.tr,
-                style: GoogleFonts.aBeeZee(
-                  textStyle: TextStyle(
-                    fontSize: 18,
-                    //  color: Color.fromARGB(255, 2, 92, 123),
-                  ),
-                ),
-              ),
-              onTap: () {
                 Get.to(() => NotificationPage());
               },
             ),
-            // new
+            //new
             ListTile(
               leading: Icon(Icons.monetization_on,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
@@ -696,6 +688,36 @@ UserAccountsDrawerHeader(
                 Get.to(() => currency());
               },
             ),
+
+            // admin ********************
+
+            if (Login.usertypee == 'Admin')
+              ListTile(
+                leading: Icon(Icons.admin_panel_settings,
+                    size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+                title: Text(
+                  'Admin Dashboard',
+                  style: GoogleFonts.aBeeZee(
+                    textStyle: TextStyle(
+                      fontSize: 18,
+                      // color: Color.fromARGB(255, 2, 92, 123),
+                    ),
+                  ),
+                ),
+                onTap: () //async
+                    {
+                  // Navigator.pushReplacement(
+                  //  context,
+                  //  MaterialPageRoute(builder: (context) => currency()),
+                  // );
+
+                  Get.to(() => AdminDashboard());
+                },
+              ),
+
+            //   },
+
+            // admin ***********************
             ListTile(
               leading: Icon(Icons.logout,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
@@ -886,25 +908,42 @@ UserAccountsDrawerHeader(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SliderPage(),
+                  SliderPage(), // ********************** slider
+
+                  //  if(kIsWeb)
+
+                  if (containerWidth > 1000)
+                    SizedBox(
+                      // width: 180,
+                      // Row(
+                      //        mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      height: 180, // Adjust the height as needed
+                      child: buildCategoryRow(categories, context), //],),
+                    ),
+
                   SizedBox(
-                    height: 10,
+                    height: 20,
                     //  child:Carousel(),
                   ),
                   //Expanded(child:
-                  SizedBox(
-                    height: 180, // Set the height of the category list section
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: categories.length,
-                      itemBuilder: (context, index) {
-                        // SizedBox(height: 16);
+                  if (containerWidth < 500)
+                    SizedBox(
+                      height:
+                          180, // Set the height of the category list section
+                      // child: Center(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length,
+                        itemBuilder: (context, index) {
+                          // SizedBox(height: 16);
 
-                        return buildCategoryCard(categories[index], context);
-                      },
+                          return buildCategoryCard(categories[index], context);
+                          // return Align(alignment: Alignment.center, child:  buildCategoryCard(categories[index], context),);
+                        },
+                      ),
+                      //  ),
                     ),
-                  ),
-                  // ),
                   // SizedBox(height: 16),
                   Padding(
                     padding: EdgeInsets.only(right: 170),
@@ -1033,9 +1072,49 @@ UserAccountsDrawerHeader(
 
   // card with catogery
   Widget buildCategoryCard(Category category, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: GestureDetector(
+    double containerWidth = MediaQuery.of(context).size.width;
+
+    if (containerWidth < 500) {
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: GestureDetector(
+          onTap: () {
+            CategorySelected = category.name;
+            // Navigate to a new page when the image is tapped
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ScreenCategory(category)),
+            );
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // ClipRRect
+              ClipOval(
+                // borderRadius: BorderRadius.circular(14),
+                child: Image.asset(
+                  category.imagePath,
+                  width: 100, // Adjust the width as needed
+                  height: 100, // Adjust the height as needed
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                category.name,
+                // ibt
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ), //,
+      ); // ibt
+    } else {
+      return // Padding(
+
+          //  padding: const EdgeInsets.all(10.0),
+          //  child:
+          GestureDetector(
         onTap: () {
           CategorySelected = category.name;
           // Navigate to a new page when the image is tapped
@@ -1058,13 +1137,49 @@ UserAccountsDrawerHeader(
               ),
             ),
             SizedBox(height: 8),
-            Text(category.name),
+            Text(
+              category.name,
+              // ibt
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
+      ); //,
+      // );/
+
+      // end else
+    }
+  }
+// new
+
+  Widget buildCategoryRow(List<Category> categories, BuildContext context) {
+    return Center(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          double categoryCardWidth = 120.0;
+          int maxCategoriesPerRow =
+              (constraints.maxWidth / categoryCardWidth).floor();
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: categories.map((category) {
+                return Container(
+                  //   padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: 10), // Adjust the horizontal margin as needed
+
+                  child: buildCategoryCard(category, context),
+                );
+              }).toList(),
+            ),
+          );
+        },
       ),
     );
   }
 
+// new
   Widget buildBottomSection() {
     return Padding(
       padding: EdgeInsets.all(8.0),
@@ -1295,6 +1410,8 @@ UserAccountsDrawerHeader(
                           color: Color.fromARGB(255, 2, 92, 123),
                         ),
                         onTap: () async {
+                          // RecentSingleProdState.shoppingCartStore(
+                          //    '1', '', itemName, type, description);
                           if (quantity != 0) {
                             if (type == 'Free' ||
                                 type == 'free' ||
@@ -1357,7 +1474,6 @@ UserAccountsDrawerHeader(
     String itemName,
     String imagePath,
     String price, //String type,String description
-    // int quantity,
   ) {
     return Card(
       elevation: 4,
@@ -1411,6 +1527,7 @@ UserAccountsDrawerHeader(
                     ),
                     GestureDetector(
                       child: Icon(
+                        // Icons.shopping_cart_checkout,
                         (RecentProd.thestate == 'Free' ||
                                 RecentProd.thestate == 'free' ||
                                 RecentProd.thestate == 'مجاني')
@@ -1610,7 +1727,7 @@ class Product {
   final int userId;
   final String product_type;
   final Map<String, dynamic> imageData;
-  final String currency; //delivery
+  final String currency;
   final String delivery;
   //final Map<String, dynamic> imageData1;
 

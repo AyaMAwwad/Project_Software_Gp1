@@ -9,7 +9,7 @@
 
 //import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 import 'dart:convert';
-import 'package:project/src/screen/ipaddress.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -21,6 +21,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project/src/screen/forget_pass.dart';
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:project/src/screen/signup_screen.dart';
 import 'package:project/src/screen/verify_email.dart';
 import 'package:project/widgets/button.dart';
@@ -41,6 +42,7 @@ class Login extends StatefulWidget {
   static String phonenumberr = '';
   static int idd = 0;
   static String birthdaylogin = '';
+  static String usertypee = ''; // admin
   // @override
   //LoginScreen Login.createState({super.key}) => LoginScreen();
 
@@ -64,73 +66,116 @@ class LoginScreen extends State<Login> with ValidationMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 80.0,
+            height: 80.0, //80.0
           ),
           Image.asset(
-            // 'images/icon/logo3.png',
-            'images/icon/FLOGO1.png',
+            'images/icon/logo3.png',
             width: 900.0,
-            height: 180.0,
+            height: 200.0,
           ),
 
           SizedBox(
-            height: 20.0,
+            height: 10.0,
           ),
-          custemField(
-            hintText: 'UserName',
-            controller: emailController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your email';
-              } else if (validatemail(value)) {
-                return null;
-              } else {
-                return 'Please enter your valid email';
-              }
-            },
-            icon: Icons.email,
+          Container(
+            width: 300, // Set the width
+            // children:[],
+            // height: 50, // Set the height
+            child: custemField(
+              hintText: 'UserName',
+              controller: emailController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your email';
+                } else if (validatemail(value)) {
+                  return null;
+                } else {
+                  return 'Please enter your valid email';
+                }
+              },
+              // width:MediaQuery.of(context).size.width ,
+              icon: Icons.email,
+            ),
           ),
+          // custemField(
+          //   hintText: 'UserName',
+          //   controller: emailController,
+          //   validator: (value) {
+          //     if (value == null || value.isEmpty) {
+          //       return 'Please enter your email';
+          //     } else if (validatemail(value)) {
+          //       return null;
+          //     } else {
+          //       return 'Please enter your valid email';
+          //     }
+          //   },
+          //   // width:MediaQuery.of(context).size.width ,
+          //   icon: Icons.email,
+          // ),
 
           SizedBox(
             height: 25.0,
           ),
-          textField2(),
+          Container(
+            width: 300,
+            child: textField2(),
+          ),
           SizedBox(
             height: 15,
           ),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ForgetPassword()));
-                },
-                child: Text(
-                  'Forget Your password?',
-                  style: GoogleFonts.aBeeZee(
-                    textStyle: TextStyle(
-                      color: Color.fromARGB(255, 2, 92, 123),
-                      fontSize: 14,
+          Container(
+            width: 300,
+            child: Row(
+              //  width: 300,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ForgetPassword()));
+                  },
+                  child: Container(
+                    // width: 300, // Set the width/
+                    // left:20,
+                    // mainAxisAlignment: MainAxisAlignment.center,
 
-                      // decoration: TextDecoration.underline,
-                      decorationThickness: 1,
-                      // fontWeight: FontWeight.bold,
+                    // alignment: Alignment.bottomRight,
+                    child: Text(
+                      'Forget Your password?',
+                      // textAlign: TextAlign.left,
+                      // textDirection: TextDirection.rtl,
+                      // width: 200,
+                      style: GoogleFonts.aBeeZee(
+                        textStyle: TextStyle(
+                          color: Color.fromARGB(255, 2, 92, 123),
+                          fontSize: 14,
+                          // textA
+                          // textBaseline: TextBaseline.,
+
+                          // decoration: TextDecoration.underline,
+                          decorationThickness: 1,
+                          // fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
 ////
-            ],
+              ],
+            ),
           ),
 
+////////
           SizedBox(
             height: 25,
           ),
-
+//  Container(
+//           width: 300, // Set the width
+//           // height: 50, // Set the height
+//           child:
           CustomeButton(
             text: 'Login',
             onPressed: () async {
@@ -139,12 +184,9 @@ class LoginScreen extends State<Login> with ValidationMixin {
               String ii = emailController.text;
               Login.Email = emailController.text;
               String jj = passwordController.text;
-              // print("hi $ii\n");
-              // print("hi $jj\n");
+              print("hi $ii\n");
+              print("hi $jj\n");
               await getTheName(Login.Email);
-              print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ');
-              print(Login.FirstName);
-              print(Login.LastName);
               await loginnn(ii, jj);
 
               //ayaaaaa
@@ -291,23 +333,29 @@ class LoginScreen extends State<Login> with ValidationMixin {
       body: Stack(
         children: [
           Positioned(
-            top: MediaQuery.of(context).size.height * -0.04,
-            left: -10,
-            right: MediaQuery.of(context).size.width * -0.08, //-20,
+            // top:0,  // ibti web
+            // left:0, ayy
+            //  right: 0,  // ibti web
+            top: MediaQuery.of(context).size.height * -0.042, // -0.02
+            // left: 0,
+            left: MediaQuery.of(context).size.width * -0.042,
+            right: MediaQuery.of(context).size.width * -0.05, //-20,
             child: Image.asset(
-              //'images/icon/DS1.png',
-              'images/icon/designB.png', // Path to your image asset
+              'images/icon/DS1.png', //designB.png, // Path to your image asset
               //'images/icon/svg.png',
               // Adjust height as needed
-              fit: BoxFit.cover, // Adjust BoxFit as needed
+              fit: BoxFit.fill, // Adjust BoxFit as needed
+              width: MediaQuery.of(context).size.width,
+              // pri
+              height: 250,
             ),
           ),
           // This widget holds the content of your app
           SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.all(55.0),
-              child:
-                  textfield1(), /*FirebaseAuth.instance.currentUser == null
+              child: textfield1(),
+              /*FirebaseAuth.instance.currentUser == null
                   ? textfield1()
                   : FirebaseAuth.instance.currentUser!.emailVerified
                       ? textfield1()
@@ -372,7 +420,6 @@ class LoginScreen extends State<Login> with ValidationMixin {
 
 //// new
   Future<void> loginnn(String email, String password) async {
-    //172.19.240.81  --- 192.168.0.114  ---172.19.240.81
     final url = Uri.parse('http://$ip:3000/tradetryst/user/login');
     try {
       final response = await http.post(
@@ -398,9 +445,11 @@ class LoginScreen extends State<Login> with ValidationMixin {
             Login.phonenumberr = user['phone_number'];
             Login.idd = user['user_id'];
             Login.birthdaylogin = user['birthday'];
-            //  print('First Name: ${Login.first_name}');
-            //  print('id user: ${Login.idd}');
-            //  print('id user: ${Login.birthdaylogin}');
+            Login.usertypee = user['user_type']; // admin
+            print('First Name: ${Login.first_name}');
+            print('id user: ${Login.idd}');
+            print('id user: ${Login.birthdaylogin}');
+            print('typehh  user: ${Login.usertypee}');
           }
         }
         setState(() {});
@@ -418,8 +467,8 @@ class LoginScreen extends State<Login> with ValidationMixin {
               .set({
             'uid': credential.user!.uid,
             'email': emailController.text,
-            'first_name': Login.first_name,
-            'last_name': Login.last_name,
+            'first_name': Login.FirstName,
+            'last_name': Login.LastName,
           }, SetOptions(merge: true));
         }
 
@@ -452,9 +501,6 @@ class LoginScreen extends State<Login> with ValidationMixin {
         print('Failed to authenticate. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Invalid email or password"),
-      ));
       print('Error: $e');
     }
   }
@@ -464,16 +510,21 @@ class LoginScreen extends State<Login> with ValidationMixin {
 
     // print(email);
     try {
-      response = await http.get(Uri.parse(//192.168.0.114
-          'http://$ip:3000/tradetryst/user/userName?email=$email'));
+      response = await http.get(
+          Uri.parse('http://$ip:3000/tradetryst/user/userName?email=$email'));
       if (response.statusCode == 200) {
         dynamic responseData = jsonDecode(response.body);
         if (responseData is List && responseData.isNotEmpty) {
+          // Extract price from the first item in the list
+
           dynamic user = responseData[0];
           // print(responseData[0]);
 
           Login.FirstName = user['first_name'];
           Login.LastName = user['last_name'];
+
+          print(Login.FirstName);
+          print(Login.LastName);
 
           //  dynamic userId = responseData[2];
 
@@ -485,10 +536,10 @@ class LoginScreen extends State<Login> with ValidationMixin {
         throw Exception('Failed . Status code: ${response.statusCode}');
       }
     } catch (e) {
-      //  print('Error: $e, Response body:'); // ${response?.body}
+      print('Error: $e, Response body: ${response?.body}');
       throw Exception('Failed  : $e');
     }
-    /*  var snapshot = await FirebaseFirestore.instance
+    var snapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('email', isEqualTo: email)
         .get();
@@ -496,7 +547,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
       return snapshot.docs.first.data();
     } else {
       return null;
-    }*/
+    }
   }
 /*
 loginnn(email , password) async {
