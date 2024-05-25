@@ -30,6 +30,7 @@ import 'package:project/src/screen/notification_page.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/src/screen/providercurrency.dart';
+import 'package:project/src/screen/saller_product_page.dart';
 import 'package:project/src/screen/security.dart';
 import 'package:project/src/screen/settings.dart';
 import 'package:project/widgets/add_product.dart';
@@ -650,7 +651,7 @@ UserAccountsDrawerHeader(
               },
             ),
             ListTile(
-              leading: Icon(Icons.production_quantity_limits_outlined,
+              leading: Icon(IconsaxBold.bag,
                   size: 30, color: Color.fromARGB(255, 2, 92, 123)),
               title: Text(
                 '144'.tr,
@@ -662,7 +663,7 @@ UserAccountsDrawerHeader(
                 ),
               ),
               onTap: () {
-                Get.to(() => NotificationPage());
+                Get.to(() => SellarPage());
               },
             ),
             //new
@@ -1324,6 +1325,7 @@ UserAccountsDrawerHeader(
 
     return GestureDetector(
       onTap: () {
+        InteractionOfUser(Login.idd, productId, 1, 0, 0);
         // Navigate to the new page here
         Navigator.push(
           context,
@@ -1410,8 +1412,6 @@ UserAccountsDrawerHeader(
                           color: Color.fromARGB(255, 2, 92, 123),
                         ),
                         onTap: () async {
-                          // RecentSingleProdState.shoppingCartStore(
-                          //    '1', '', itemName, type, description);
                           if (quantity != 0) {
                             if (type == 'Free' ||
                                 type == 'free' ||
@@ -1431,6 +1431,8 @@ UserAccountsDrawerHeader(
                               );
                               // DeliveryPage(isFree: true);
                             } else {
+                              HomePageState.InteractionOfUser(
+                                  Login.idd, productId, 0, 1, 0);
                               RecentSingleProdState.shoppingCartStore(
                                   '1', '', itemName, type, description);
                             }
@@ -1539,6 +1541,8 @@ UserAccountsDrawerHeader(
                         color: Color.fromARGB(255, 2, 92, 123),
                       ),
                       onTap: () async {
+                        // HomePageState.InteractionOfUser(
+                        //  Login.idd, productId, 0, 1, 0);
                         RecentSingleProdState.shoppingCartStore('1', '',
                             itemName, 'New', ''); /////////////// need to update
                       },
@@ -1596,6 +1600,31 @@ UserAccountsDrawerHeader(
         ),
       ),
     );
+  }
+
+  ///////////// new  view, addToCart, purchased
+  static Future<void> InteractionOfUser(
+      int userId, int productId, int view, int addToCart, int purchased) async {
+    print(productId);
+    final response = await http.put(
+      Uri.parse('http://$ip:3000/tradetryst/user/Interaction'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<dynamic, dynamic>{
+        'userId': userId,
+        'productId': productId,
+        'view': view,
+        'addToCart': addToCart,
+        'purchased': purchased,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print('interaction of user saved');
+    } else {
+      print('Failed to save interaction of user');
+    }
   }
 }
 

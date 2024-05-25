@@ -209,3 +209,15 @@ exports.updateadminofuser = (req, res) => {
 };
 
 // ibtisam end 
+
+exports.adduserfromadmin = (req, res) => {
+  userRepository
+    .adduserfromadmin(req, res)
+    .then((message) => {
+      res.status(201).json({ message }); 
+    })
+    .catch((error) => {
+      res.status(400).json({ message: error }); // Registration encountered an error, return the error message
+    });
+};
+

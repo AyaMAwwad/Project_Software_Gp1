@@ -512,7 +512,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
     try {
       response = await http.get(
           Uri.parse('http://$ip:3000/tradetryst/user/userName?email=$email'));
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         dynamic responseData = jsonDecode(response.body);
         if (responseData is List && responseData.isNotEmpty) {
           // Extract price from the first item in the list
@@ -537,7 +537,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
       }
     } catch (e) {
       print('Error: $e, Response body: ${response?.body}');
-      throw Exception('Failed  : $e');
+      //    throw Exception('Failed  : $e');
     }
     var snapshot = await FirebaseFirestore.instance
         .collection('users')

@@ -59,4 +59,9 @@ router.get('/sallerProduct', productController.sallerProduct);
 router.delete('/deleteItemSellar', productController.deleteItemSellar);
 // 19/5 updateSellarProduct
 router.put('/updateSellarProduct', productController.updateSellarProduct);
+// 20/5
+router.post('/addRatingProduct', productController.addRatingProduct);
+
+// 22/5
+router.get('/retriveProductHomeRecomendedSystem', productController.retriveProductHomeRecomendedSystem);
 module.exports = router;

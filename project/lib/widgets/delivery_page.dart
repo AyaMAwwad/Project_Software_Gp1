@@ -264,7 +264,8 @@ class DeliveryPageState extends State<DeliveryPage> {
                         totalAmount = totalAmount + 20;
                       }
                       Payment.onPaymentSuccess = widget.onPaymentSuccess;
-                      Payment.makePayment(context, totalAmount);
+                      Payment.makePayment(
+                          context, totalAmount, widget.productId);
 
                       print('Payment sheet initialized successfully.');
                     } catch (e) {

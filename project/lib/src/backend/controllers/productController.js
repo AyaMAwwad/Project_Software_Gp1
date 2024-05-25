@@ -235,3 +235,31 @@ exports.updateSellarProduct = (req, res) => {
       res.status(400).json({ message: error }); 
     });
   };
+
+  //addRatingProduct
+  exports.addRatingProduct = (req, res) => {
+    prod
+      .addRatingProduct(req, res)
+      .then((message) => {
+        res.status(201).json({ message }); 
+      })
+      .catch((error) => {
+        res.status(400).json({ message: error }); 
+      });
+    }
+    //retriveProductHomeRecomendedSystem
+    exports.retriveProductHomeRecomendedSystem = (req, res) => {
+      const { userId } = req.query;
+      
+    
+      prod.retriveProductHomeRecomendedSystem(userId)
+          .then((res1) => {
+              console.log({res1});
+            
+              res.status(200).json(res1);
+          })
+          .catch((error) => {
+              console.error({error});
+              res.status(500).json({ message: 'Not have thing to retrieve' });
+          });
+    };
