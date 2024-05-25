@@ -43,6 +43,7 @@ app.use('/tradetryst/payment',payment);
 // ibtisam 
 app.use('/tradetryst/usermanage',user);
 app.use('/tradetryst/useradmin',user);
+app.use('/tradetryst/manageadmin',user);
 
 
 app.listen(port, '0.0.0.0', () => {

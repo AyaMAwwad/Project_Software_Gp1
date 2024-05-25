@@ -1,13 +1,11 @@
 
-
-
 const mysql = require('mysql2');
-
+const { PythonShell } = require('python-shell');
 const path = require('path');
 const fs = require('fs');
 const { Console } = require('console');
 const { use } = require('../../routes/userRoute');
-
+const recommendations = require('../../AI/collaborative-filtering');
 // Inside your addProduct function
 
 
@@ -782,6 +780,284 @@ console.log(prodState,cond);
 
   });
 }
+//addRatingProduct
+addRatingProduct(req, res) {
+  const {userId,ratings} = req.body; // Assuming req.body contains a list of ratings
+
+  return new Promise((resolve, reject) => {
+    const insertQueries = [];
+    const updateQueries = [];
+    console.log(userId);
+    console.log(ratings);
+
+    ratings.forEach((rating) => {
+      const { productId, ratingValue } = rating;
+      console.log(productId, ratingValue);
+      db.query(
+        'SELECT product_id FROM ProductRating WHERE user_id = ? AND product_id = ?',
+        [userId,productId],
+        (err, results) => {
+          if (err) {
+            console.error(err);
+            return reject('Failed to fetch interactions');
+          }
+  
+         
+  
+          if (results.length === 0) {
+            db.query(
+              'INSERT INTO ProductRating (user_id, product_id, rating) VALUES (?, ?, ?)',
+              [ userId,productId,ratingValue],
+              (error2, results2) => {
+                  if (error2) {
+                      return reject('Failed to store rating');
+                  }
+                  else {
+                    
+                  }
+                });
+              }
+     else{
+              db.query(
+                `UPDATE Product p
+                JOIN (
+                    SELECT product_id, AVG(rating) as avg_rating
+                    FROM ProductRating
+                    WHERE product_id = ?
+                    GROUP BY product_id
+                ) pr ON p.product_id = pr.product_id
+                SET p.average_rating = pr.avg_rating
+                WHERE p.product_id = ?;
+                `,
+                [productId,productId],
+                (error2, results2) => {
+                    if (error2) {
+                        return reject('Failed to store rating');
+                    }
+                }
+            );
+          }
+        }
+    );
+  //});
+  
+    });
+    return resolve('rate the product successfully');
+      
+      
+  });
+}
+/*addRatingProduct(req, res) {
+  
+ 
+    const { userId,rateing} = req.body;
+  
+
+    return new Promise((resolve, reject) => {
+
+      db.query(
+        'INSERT INTO ProductRating (user_id, product_id, rating) VALUES (?, ?, ?)',
+        [ userId,rateing],
+        (error2, results2) => {
+            if (error2) {
+                return reject('Failed to store rating');
+            }else{
+              db.query(
+                `UPDATE Product p
+                JOIN (
+                    SELECT product_id, AVG(rating) as avg_rating
+                    FROM ProductRating
+                    WHERE product_id = ?
+                    GROUP BY product_id
+                ) pr ON p.product_id = pr.product_id
+                SET p.average_rating = pr.avg_rating
+                WHERE p.product_id = ?;
+                `,
+                [productId,productId],
+                (error2, results2) => {
+                    if (error2) {
+                        return reject('Failed to store rating');
+                    }
+                }
+            );
+            return resolve('rate the product successfully')}
+        }
+    );
+   
+ } );
+  
+    
+}
+*/
+//retriveProductHomeRecomendedSystem
+ retriveProductHomeRecomendedSystem(userId) {
+  console.log(userId);
+  return new Promise((resolve, reject) => {
+    // Step 1: Fetch the last five product interactions
+    db.query(
+      'SELECT product_id FROM user_interaction WHERE user_id = ? ORDER BY created_at DESC LIMIT 5',
+      [userId],
+      (err, results) => {
+        if (err) {
+          console.error(err);
+          return reject('Failed to fetch interactions');
+        }
+
+        const productIds = results.map(row => row.product_id);
+
+        if (productIds.length === 0) {
+          return resolve('No interactions found');
+        }
+
+        const placeholders = productIds.map(() => '?').join(',');
+        
+        // Step 2: Fetch product metadata for these interactions
+        db.query(
+          `SELECT p.product_id, p.name, p.description, p.category_id, c.name AS category_name, c.type AS category_type 
+          FROM Product p 
+          JOIN Category c ON p.category_id = c.category_id 
+          WHERE p.product_id IN (${placeholders})`,
+          productIds,
+          (err2, productResults) => {
+            if (err2) {
+              console.error(err2);
+              return reject('Failed to fetch product metadata');
+            }
+
+            const categoryTypes = productResults.map(p => p.category_type);
+            const uniqueCategoryTypes = [...new Set(categoryTypes)]; // Get unique category types
+            const typePlaceholders = uniqueCategoryTypes.map(() => '?').join(',');
+
+            // Step 3: Fetch all category IDs that match these category types
+            db.query(
+              `SELECT category_id FROM Category WHERE type IN (${typePlaceholders})`,
+              uniqueCategoryTypes,
+              (err3, categoryResults) => {
+                if (err3) {
+                  console.error(err3);
+                  return reject('Failed to fetch related categories');
+                }
+
+                const categoryIds = categoryResults.map(row => row.category_id);
+                const categoryPlaceholders = categoryIds.map(() => '?').join(',');
+
+                // Step 4: Fetch all products that belong to these categories
+                db.query(
+                  `SELECT * FROM Product WHERE category_id IN (${categoryPlaceholders})`,
+                  categoryIds,
+                  (err4, allProducts) => {
+                    if (err4) {
+                      console.error(err4);
+                      return reject('Failed to fetch related products');
+                    }
+                    console.log(allProducts);
+                    const ratings = [
+                      [0, 1, 1],
+                      [1, 1, 1],
+                      [1, 0, 0],
+                    ];
+                    const a = recommendations.cFilter(ratings, 2);
+console.log(  a);
+                    resolve(a);
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
+    );
+  });
+}
+
+
+/*
+ 
+                    // Prepare product data to pass to Python script
+                    const allProductsData = allProducts.map(product => ({
+                      product_id: product.product_id,
+                      name: product.name,
+                      description: product.description,
+                      price: product.price,
+                      category_id: product.category_id,
+                    }));
+
+                    const options = {
+                      mode: 'text',
+                      pythonPath: 'C:/Users/awwad/AppData/Local/Programs/Python/Python312/Python.exe', // Ensure this is 'python' if it's in the PATH
+                      scriptPath: '../AI/',
+ // Adjust this path to where your Python script is located
+                      args: [JSON.stringify(allProductsData)]
+                    };
+console.log(options);
+console.log('--------------------------------');
+                    PythonShell.run('get_recommendations.py', options, function (err5, recommendations) {
+                      if (err5) {
+                        console.error(err5);
+                        return reject('Failed to fetch recommendations');
+                      }
+
+                      resolve(JSON.parse(recommendations[0]));
+                    });
+
+
+
+
+retriveProductHomeRecomendedSystem(userId) {
+  console.log(userId);
+  return new Promise((resolve, reject) => {
+   db.query(
+    'SELECT product_id FROM user_interaction WHERE user_id = ? ',
+    [userId],
+    (err, results) => {
+      if (err) {
+        
+        return reject('Failed to fetch interactions');
+        console.error(err);
+      }
+      console.log('ayyyyyyyyyya');
+      console.log(results);
+      const productIds = results.map(row => row.product_id);
+      
+      db.query(
+        'SELECT p.product_id, p.name, p.description, p.price, p.category_id, c.name AS category_name, c.type AS category_type ' +
+        'FROM Product p JOIN Category c ON p.category_id = c.category_id WHERE p.product_id IN (?, ?,?,?,?)',
+        productIds,
+        (err2, productResults) => {
+          if (err2) {
+            console.error(err2);
+            return reject('Failed to fetch product metadata');
+          }
+          console.log(productResults);
+          
+          const categoryIds = productResults.map(p => p.category_id);
+          
+          db.query(
+            'SELECT * FROM Product WHERE category_id IN (?, ?, ?, ?, ?)',
+            categoryIds,
+            (err3, allProducts) => {
+              if (err3) {
+                console.error(err3);
+                return reject('Failed to fetch related products');
+              }
+              console.log(allProducts);
+
+              // Run AI model to get recommendations
+           /*   PythonShell.run('get_recommendations.py', { args: [JSON.stringify(allProducts)] }, function (err4, recommendations) {
+                if (err4) {
+                  console.error(err4);
+                 // return res.status(500).send('Failed to fetch recommendations');
+                }
+                
+               // res.json(JSON.parse(recommendations[0]));
+              });*/
+          /*  }
+          );
+        }
+      );
+    }
+  );
+  });}*/
 }
    
 

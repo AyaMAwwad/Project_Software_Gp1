@@ -65,6 +65,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   icons_plus: ^5.0.0
   ficonsax: ^0.0.3
+  flutter_rating_bar: ^4.0.1
 
 
 

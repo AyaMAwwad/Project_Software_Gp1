@@ -494,40 +494,157 @@ oldpassword(email, oldPassword) {
 }
 
 //// 12/5 new userInteraction
+userInteraction(req, res) {
+  let { productId, userId, view, addToCart, purchased } = req.body;
+  
+  return new Promise((resolve, reject) => {
+    db.query(
+      'SELECT * FROM user_interaction WHERE product_id = ? AND user_id = ?', [productId, userId],
+      (error, results) => {
+        if (error) {
+          console.log(error);
+          return reject('Failed to select user interaction');
+        } else {
+          if (results.length == 0) {
+            db.query(
+              'INSERT INTO user_interaction (product_id, user_id, viewed, added_to_cart, purchased) VALUES (?, ?, ?, ?, ?)',
+              [productId, userId, view, addToCart, purchased],
+              (error1, results1) => {
+                if (error1) {
+                  console.log(error1);
+                  return reject('Failed to insert user interaction');
+                } else {
+              
+                  db.query(
+                    'SELECT * FROM user_interaction WHERE user_id = ? ORDER BY created_at ASC',
+                    [userId],
+                    (error2, results2) => {
+                      if (error2) {
+                        console.log(error2);
+                        return reject('Failed to fetch user interactions');
+                      } else if (results2.length > 5) {
+                        const oldestInteractionId = results2[0].interaction_id;
+                        db.query(
+                          'DELETE FROM user_interaction WHERE interaction_id = ?',
+                          [oldestInteractionId],
+                          (error3, results3) => {
+                            if (error3) {
+                              console.log(error3);
+                              return reject('Failed to delete oldest user interaction');
+                            } else {
+                              return resolve('Stored user interaction successfully and maintained the limit of 5 interactions');
+                            }
+                          }
+                        );
+                      } else {
+                        return resolve('Stored user interaction successfully');
+                      }
+                    }
+                  );
+                }
+              }
+            );
+          } else {
+           
+            let viewProd = results[0].viewed;
+            let addedToCart = results[0].added_to_cart;
+            let purchasedProd = results[0].purchased;
+
+            if (view == 0 && viewProd == 1) {
+              view = 1;
+            }
+            if (addToCart == 0 && addedToCart == 1) {
+              addToCart = 1;
+            }
+            if (purchased == 0 && purchasedProd == 1) {
+              purchased = 1;
+            }
+console.log('hhhhhhhellllllo');
+            db.query(
+              'UPDATE user_interaction SET viewed = ?, added_to_cart = ?, purchased = ? WHERE user_id = ? AND product_id = ?',
+              [view, addToCart, purchased, userId, productId],
+              (error2, results2) => {
+                if (error2) {
+                  console.log(error2);
+                  return reject('Failed to update user interaction');
+                } else {
+                  return resolve('Updated user interaction successfully');
+                }
+              }
+            );
+          }
+        }
+      }
+    );
+  });
+}
 
 
-
+/*
 userInteraction(req,res) {
-  const { productId, userId,view,addToCart,purchased } = req.body;
+  let { productId, userId,view,addToCart,purchased } = req.body;
   return new Promise((resolve, reject) => {
   
     db.query(
-      'SELECT * from user_interaction ? WHERE product_id =?',[productId],
+      'SELECT * from user_interaction WHERE product_id =? AND user_id',[productId,userId],
       (error, results) => {
         if (error) {
-          console.error('Error :', error);
+          console.log( error);
           return reject('Failed to  select user interaction ');
         }
         else{
           if(results.length==0){
-                 
+            console.log(results);
+            console.log(productId, userId,view,addToCart,purchased);
+            db.query(
+              'INSERT INTO user_interaction (product_id, user_id,viewed, added_to_cart, purchased) VALUES (?, ?, ?, ?, ?)',[productId, userId,view,addToCart,purchased],
+              (error1, results1) => {
+                if (error1) {
+                  console.log(error1);
+                  return reject('Failed to  insert user interaction ');
+                }
+              else{
+                return resolve('stored user interaction successfully');
+              }
+            }
+            );
           }
           else if(results.length !=0){
-            b.query(
-              'INSERT INTO user_interaction (product_id, user_id,viewed, added_to_cart, purchased) VALUES (?, ?, ?, ?, ?) ',[productId, userId,view,addToCart,purchased],
-              (error1, results1) => {
-                if (error1) {}}
+            let viewPord = results[0].viewed;
+            let added_to_cart =results[0].added_to_cart;
+            let purchasedProd = results[0].purchased;
+            if(view==0 && viewPord==1 ){
+              view = 1;
+            }
+            if(addToCart==0 && added_to_cart==1 ){
+              addToCart = 1;
+            }
+            if(purchased==0 && purchasedProd==1 ){
+              purchased = 1;
+            }
+            db.query(
+              'UPDATE user_interaction SET viewed = ? , added_to_cart = ? , purchased = ? WHERE user_id = ? AND product_id = ? ',[view,addToCart,purchased, userId,productId],
+              (error2, results1) => {
+                if (error2) {
+                  console.log(error2);
+                  return reject('Failed to  update user interaction ');
+                }
+              else{
+                return resolve('update user interaction successfully');
+              }
+            }
             );
+           
 
           }
 
-          //return resolve('Profile updated successfully');
+          
         }
         
       }
     );
   });
-}
+}*/
 
 //deliverydetials 15_MAY
 deliveryEmployee(type) {
@@ -643,9 +760,50 @@ updateadminofuser(req, res) {
   },
   );*/
 }
+adduserfromadmin(req, res) {
+  const { first_name,last_name, email, user_type,password,phone_number,address,  birthday} = req.body;
 
+  return new Promise((resolve, reject) => {
+    // Check if the user already exists (Checking the email)
+    db.query(
+      'SELECT * FROM User WHERE email = ? ',
+      [email],
+      (error, results) => {
+        if (error) {
+          return reject('Internal server error.');
+        }
 
+        if (results.length > 0) {
+          return reject('Email or username already in use.');
+        }
 
+        // Hash the password before storing it
+        bcrypt.hash(password, 10, (hashError, hashedPassword) => {
+          if (hashError) {
+            return reject('User registration failed.');
+          }
+          const birthdayDate = new Date(birthday);
+
+         
+          db.query(
+            'INSERT INTO user (first_name, last_name,email, password, address,birthday,phone_number, user_type) VALUES (?, ?, ?, ?, ?, ?, ?,?)',
+            [first_name,last_name, email, hashedPassword, address,birthday,phone_number, user_type],
+            
+            (insertError) => {
+              if (insertError) {
+                console.log(password);
+
+                return reject('User registration failed.please try again');
+              }
+
+              return resolve('User registered successfully.');
+            },
+          );
+        });
+      },
+    );
+  });
+}
 
 
 

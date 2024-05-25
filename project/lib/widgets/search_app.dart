@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/category_screen.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/home_page.dart';
+import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

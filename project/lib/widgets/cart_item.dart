@@ -66,7 +66,7 @@ class CartItemState extends State<CartItem> {
   static String? deliveryOption;
   static int? productId;
   List<Map<String, dynamic>> cartShopContain = [];
-  List<Map<String, dynamic>> productInCart = [];
+  static List<Map<String, dynamic>> productInCart = [];
   List<Map<String, dynamic>> allProductDetails = [];
   static List<int> productCount = [];
   static List<bool> selectedCheckboxes = [];
@@ -97,11 +97,19 @@ class CartItemState extends State<CartItem> {
 
   void deleteProduct(int index) {
     setState(() {
-      productInCart.removeAt(index);
+      if (index < productInCart.length) productInCart.removeAt(index);
+      if (index < allProductDetails.length) allProductDetails.removeAt(index);
+      if (index < cartShopContain.length) cartShopContain.removeAt(index);
+      if (index < selectedListOfUserToPay.length)
+        selectedListOfUserToPay.removeAt(index);
+      if (index < selectedCheckboxes.length) selectedCheckboxes.removeAt(index);
+
+      /*  productInCart.removeAt(index);
       allProductDetails.removeAt(index);
       cartShopContain.removeAt(index);
       selectedListOfUserToPay.removeAt(index);
       selectedCheckboxes.removeAt(index);
+  */
     });
   }
 
@@ -300,8 +308,8 @@ merchantCountryCode: 'US', testEnv: true,
   @override
   Widget build(BuildContext context) {
     amount = calculateTotalPrice();
-    print('**********amount: $amount ');
-    print('***************selectedCheckboxes: $selectedCheckboxes');
+    print('**********allProductDetails: $allProductDetails ');
+    print('***************productInCart: $productInCart');
     print('***************selectedListOfUserToPay: $selectedListOfUserToPay');
     print('************* calculateTotalPrice() ${calculateTotalPrice()}');
     print('************* prevselectedCurr ${prevselectedCurr}');
@@ -433,6 +441,11 @@ merchantCountryCode: 'US', testEnv: true,
             child: ListView.builder(
               itemCount: productInCart.length,
               itemBuilder: (context, index) {
+                if (index >= productInCart.length ||
+                    index >= allProductDetails.length) {
+                  return Container();
+                }
+
                 final theproduct = productInCart[index];
                 final details = allProductDetails[index];
                 final imageData = theproduct['image'];
