@@ -2,7 +2,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:project/src/app.dart';
 import 'package:project/src/chat/notification_service.dart';
-
 import 'package:project/src/screen/login_screen.dart';
 
 class FirebaseNotification {

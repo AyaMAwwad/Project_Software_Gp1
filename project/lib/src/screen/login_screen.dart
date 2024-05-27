@@ -336,12 +336,12 @@ class LoginScreen extends State<Login> with ValidationMixin {
             // top:0,  // ibti web
             // left:0, ayy
             //  right: 0,  // ibti web
-            top: MediaQuery.of(context).size.height * -0.042, // -0.02
+            top: MediaQuery.of(context).size.height * -0.027, // -0.02
             // left: 0,
             left: MediaQuery.of(context).size.width * -0.042,
             right: MediaQuery.of(context).size.width * -0.05, //-20,
             child: Image.asset(
-              'images/icon/DS1.png', //designB.png, // Path to your image asset
+              'images/icon/DESIGNFF.png', //'images/icon/DS1.png', //designB.png, // Path to your image asset
               //'images/icon/svg.png',
               // Adjust height as needed
               fit: BoxFit.fill, // Adjust BoxFit as needed
