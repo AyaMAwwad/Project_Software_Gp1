@@ -847,71 +847,28 @@ addRatingProduct(req, res) {
       
   });
 }
-/*addRatingProduct(req, res) {
-  
- 
-    const { userId,rateing} = req.body;
-  
 
-    return new Promise((resolve, reject) => {
-
-      db.query(
-        'INSERT INTO ProductRating (user_id, product_id, rating) VALUES (?, ?, ?)',
-        [ userId,rateing],
-        (error2, results2) => {
-            if (error2) {
-                return reject('Failed to store rating');
-            }else{
-              db.query(
-                `UPDATE Product p
-                JOIN (
-                    SELECT product_id, AVG(rating) as avg_rating
-                    FROM ProductRating
-                    WHERE product_id = ?
-                    GROUP BY product_id
-                ) pr ON p.product_id = pr.product_id
-                SET p.average_rating = pr.avg_rating
-                WHERE p.product_id = ?;
-                `,
-                [productId,productId],
-                (error2, results2) => {
-                    if (error2) {
-                        return reject('Failed to store rating');
-                    }
-                }
-            );
-            return resolve('rate the product successfully')}
-        }
-    );
-   
- } );
-  
-    
-}
-*/
 //retriveProductHomeRecomendedSystem
  retriveProductHomeRecomendedSystem(userId) {
   console.log(userId);
   return new Promise((resolve, reject) => {
-    // Step 1: Fetch the last five product interactions
     db.query(
       'SELECT product_id FROM user_interaction WHERE user_id = ? ORDER BY created_at DESC LIMIT 5',
       [userId],
-      (err, results) => {
+      (err, interactionResults) => {
         if (err) {
           console.error(err);
           return reject('Failed to fetch interactions');
         }
 
-        const productIds = results.map(row => row.product_id);
+        const productIds = interactionResults.map(row => row.product_id);
 
         if (productIds.length === 0) {
           return resolve('No interactions found');
         }
 
         const placeholders = productIds.map(() => '?').join(',');
-        
-        // Step 2: Fetch product metadata for these interactions
+
         db.query(
           `SELECT p.product_id, p.name, p.description, p.category_id, c.name AS category_name, c.type AS category_type 
           FROM Product p 
@@ -924,41 +881,111 @@ addRatingProduct(req, res) {
               return reject('Failed to fetch product metadata');
             }
 
-            const categoryTypes = productResults.map(p => p.category_type);
-            const uniqueCategoryTypes = [...new Set(categoryTypes)]; // Get unique category types
-            const typePlaceholders = uniqueCategoryTypes.map(() => '?').join(',');
-
-            // Step 3: Fetch all category IDs that match these category types
             db.query(
-              `SELECT category_id FROM Category WHERE type IN (${typePlaceholders})`,
-              uniqueCategoryTypes,
-              (err3, categoryResults) => {
+              `SELECT p.product_id, p.name, p.description, p.category_id, c.name AS category_name, c.type AS category_type 
+              FROM Product p 
+              JOIN Category c ON p.category_id = c.category_id`,
+              (err3, allProducts) => {
                 if (err3) {
                   console.error(err3);
-                  return reject('Failed to fetch related categories');
+                  return reject('Failed to fetch all products');
                 }
 
-                const categoryIds = categoryResults.map(row => row.category_id);
-                const categoryPlaceholders = categoryIds.map(() => '?').join(',');
+                const productFeatures = allProducts.map(product => ({
+                  id: product.product_id,
+                  name: product.name,
+                  category: product.category_type,
+                  description: product.description
+                }));
 
-                // Step 4: Fetch all products that belong to these categories
+                const userInteractedProductIds = productResults.map(p => p.product_id);
+                const userInteractions = allProducts.map(product => (
+                  userInteractedProductIds.includes(product.product_id) ? 1 : 0
+                ));
+
+                const ratings = [
+                  userInteractions,
+                  ...new Array(4).fill(new Array(allProducts.length).fill(0))
+                ];
+                console.log(allProducts);
+
+                const userInteractedTypes = new Set(productResults.map(p => p.category_type));
+
+                const similarTypeProducts = allProducts.filter(product =>
+                  userInteractedTypes.has(product.category_type)
+                );
+
+                const similarTypeProductIds = similarTypeProducts.map(p => p.product_id);
+
+                const collabRecommendations = recommendations.cFilter(ratings, 0);
+                console.log('collabRecommendations :' + collabRecommendations);
+
+                const contentRecommendations = recommendations.contentBasedFiltering(productFeatures, productResults);
+                console.log('contentRecommendations :' + contentRecommendations);
+
+                const filteredContentRecommendations = contentRecommendations.filter(rec =>
+                  similarTypeProductIds.includes(rec)
+                );
+
+                console.log('filteredContentRecommendations :' + filteredContentRecommendations);
+
+                const hybridRecommendations = recommendations.combineRecommendations(collabRecommendations, filteredContentRecommendations);
+                console.log('hybridRecommendations :' + hybridRecommendations);
+
+                if (hybridRecommendations.length === 0) {
+                  return resolve('No recommendations found');
+                }
+
+                const hybridPlaceholders = hybridRecommendations.map(() => '?').join(',');
+
                 db.query(
-                  `SELECT * FROM Product WHERE category_id IN (${categoryPlaceholders})`,
-                  categoryIds,
-                  (err4, allProducts) => {
+                  `SELECT p.*, c.name AS category_name, c.type AS category_type 
+                  FROM Product p 
+                  JOIN Category c ON p.category_id = c.category_id 
+                  WHERE p.product_id IN (${hybridPlaceholders})`,
+                  hybridRecommendations,
+                  (err4, recommendedProducts) => {
                     if (err4) {
                       console.error(err4);
-                      return reject('Failed to fetch related products');
+                      return reject('Failed to fetch recommended product details');
                     }
-                    console.log(allProducts);
-                    const ratings = [
-                      [0, 1, 1],
-                      [1, 1, 1],
-                      [1, 0, 0],
-                    ];
-                    const a = recommendations.cFilter(ratings, 2);
-console.log(  a);
-                    resolve(a);
+
+                    const detailPromises = recommendedProducts.map(product => {
+                      const productId = product.product_id;
+                      const productType = product.product_type;
+
+                      let query;
+                      if (['New', 'جديد','new',].includes(productType)) {
+                        query = `SELECT * FROM New_Product WHERE product_id = ?`;
+                      } else if (['Used', 'used','مستعمل'].includes(productType)) {
+                        query = `SELECT * FROM Used_Product WHERE product_id = ?`;
+                      } else if (['Free', 'free','مجاني'].includes(productType)) {
+                        query = `SELECT * FROM Free_Product WHERE product_id = ?`;
+                      }
+
+                      return new Promise((resolveDetail, rejectDetail) => {
+                        if (query) {
+                          db.query(query, [productId], (err5, detailResults) => {
+                            if (err5) {
+                              console.error(err5);
+                              return rejectDetail(`Failed to fetch details for product ID ${productId}`);
+                            }
+                            resolveDetail({ ...product, ...detailResults[0] });
+                          });
+                        } else {
+                          resolveDetail(product);
+                        }
+                      });
+                    });
+
+                    Promise.all(detailPromises)
+                      .then(detailedProducts => {
+                        resolve(detailedProducts);
+                      })
+                      .catch(err => {
+                        console.error(err);
+                        reject('Failed to fetch detailed product information');
+                      });
                   }
                 );
               }
@@ -971,93 +998,127 @@ console.log(  a);
 }
 
 
-/*
+
+ /*
+ my code 
  
-                    // Prepare product data to pass to Python script
-                    const allProductsData = allProducts.map(product => ({
-                      product_id: product.product_id,
-                      name: product.name,
-                      description: product.description,
-                      price: product.price,
-                      category_id: product.category_id,
-                    }));
-
-                    const options = {
-                      mode: 'text',
-                      pythonPath: 'C:/Users/awwad/AppData/Local/Programs/Python/Python312/Python.exe', // Ensure this is 'python' if it's in the PATH
-                      scriptPath: '../AI/',
- // Adjust this path to where your Python script is located
-                      args: [JSON.stringify(allProductsData)]
-                    };
-console.log(options);
-console.log('--------------------------------');
-                    PythonShell.run('get_recommendations.py', options, function (err5, recommendations) {
-                      if (err5) {
-                        console.error(err5);
-                        return reject('Failed to fetch recommendations');
-                      }
-
-                      resolve(JSON.parse(recommendations[0]));
-                    });
-
-
-
-
-retriveProductHomeRecomendedSystem(userId) {
+ retriveProductHomeRecomendedSystem(userId) {
   console.log(userId);
   return new Promise((resolve, reject) => {
-   db.query(
-    'SELECT product_id FROM user_interaction WHERE user_id = ? ',
-    [userId],
-    (err, results) => {
-      if (err) {
-        
-        return reject('Failed to fetch interactions');
-        console.error(err);
-      }
-      console.log('ayyyyyyyyyya');
-      console.log(results);
-      const productIds = results.map(row => row.product_id);
-      
-      db.query(
-        'SELECT p.product_id, p.name, p.description, p.price, p.category_id, c.name AS category_name, c.type AS category_type ' +
-        'FROM Product p JOIN Category c ON p.category_id = c.category_id WHERE p.product_id IN (?, ?,?,?,?)',
-        productIds,
-        (err2, productResults) => {
-          if (err2) {
-            console.error(err2);
-            return reject('Failed to fetch product metadata');
-          }
-          console.log(productResults);
-          
-          const categoryIds = productResults.map(p => p.category_id);
-          
-          db.query(
-            'SELECT * FROM Product WHERE category_id IN (?, ?, ?, ?, ?)',
-            categoryIds,
-            (err3, allProducts) => {
-              if (err3) {
-                console.error(err3);
-                return reject('Failed to fetch related products');
-              }
-              console.log(allProducts);
-
-              // Run AI model to get recommendations
-           /*   PythonShell.run('get_recommendations.py', { args: [JSON.stringify(allProducts)] }, function (err4, recommendations) {
-                if (err4) {
-                  console.error(err4);
-                 // return res.status(500).send('Failed to fetch recommendations');
-                }
-                
-               // res.json(JSON.parse(recommendations[0]));
-              });*/
-          /*  }
-          );
+    db.query(
+      'SELECT product_id FROM user_interaction WHERE user_id = ? ORDER BY created_at DESC LIMIT 5',
+      [userId],
+      (err, interactionResults) => {
+        if (err) {
+          console.error(err);
+          return reject('Failed to fetch interactions');
         }
-      );
-    }
-  );
-  });}*/
+
+        const productIds = interactionResults.map(row => row.product_id);
+
+        if (productIds.length === 0) {
+          return resolve('No interactions found');
+        }
+
+        const placeholders = productIds.map(() => '?').join(',');
+
+        db.query(
+          `SELECT p.product_id, p.name, p.description, p.category_id, c.name AS category_name, c.type AS category_type 
+          FROM Product p 
+          JOIN Category c ON p.category_id = c.category_id 
+          WHERE p.product_id IN (${placeholders})`,
+          productIds,
+          (err2, productResults) => {
+            if (err2) {
+              console.error(err2);
+              return reject('Failed to fetch product metadata');
+            }
+
+            db.query(
+              `SELECT p.product_id, p.name, p.description, p.category_id, c.name AS category_name, c.type AS category_type 
+              FROM Product p 
+              JOIN Category c ON p.category_id = c.category_id`,
+              (err3, allProducts) => {
+                if (err3) {
+                  console.error(err3);
+                  return reject('Failed to fetch all products');
+                }
+
+                const productFeatures = allProducts.map(product => ({
+                  id: product.product_id,
+                  name: product.name,
+                  category: product.category_type,
+                  description: product.description
+                }));
+
+                const userInteractedProductIds = productResults.map(p => p.product_id);
+                const userInteractions = allProducts.map(product => (
+                  userInteractedProductIds.includes(product.product_id) ? 1 : 0
+                ));
+
+                const ratings = [
+                  userInteractions,
+                  ...new Array(4).fill(new Array(allProducts.length).fill(0))
+                ];
+                console.log(allProducts);
+   
+                const userInteractedTypes = new Set(productResults.map(p => p.category_type));
+
+                const similarTypeProducts = allProducts.filter(product =>
+                  userInteractedTypes.has(product.category_type)
+                );
+
+                const similarTypeProductIds = similarTypeProducts.map(p => p.product_id);
+
+                const collabRecommendations = recommendations.cFilter(ratings,0 );
+                console.log('collabRecommendations :' + collabRecommendations);
+
+            
+                const contentRecommendations = recommendations.contentBasedFiltering(productFeatures, productResults);
+                console.log('contentRecommendations :' + contentRecommendations);
+
+        
+                const filteredContentRecommendations = contentRecommendations.filter(rec =>
+                  similarTypeProductIds.includes(rec)
+                );
+
+                console.log('filteredContentRecommendations :' + filteredContentRecommendations);
+
+                const hybridRecommendations = recommendations.combineRecommendations(collabRecommendations, filteredContentRecommendations);
+                console.log('hybridRecommendations :' + hybridRecommendations);
+
+               
+              //  resolve(hybridRecommendations);
+              if (hybridRecommendations.length === 0) {
+                return resolve('No recommendations found');
+              }
+
+              const hybridPlaceholders = hybridRecommendations.map(() => '?').join(',');
+
+              db.query(
+                `SELECT p.*, c.name AS category_name, c.type AS category_type 
+                FROM Product p 
+                JOIN Category c ON p.category_id = c.category_id 
+                WHERE p.product_id IN (${hybridPlaceholders})`,
+                hybridRecommendations,
+                (err4, recommendedProducts) => {
+                  if (err4) {
+                    console.error(err4);
+                    return reject('Failed to fetch recommended product details');
+                  }
+                  resolve(recommendedProducts);
+                }
+              );
+              }
+            );
+          }
+        );
+      }
+    );
+  });
+}
+*/
+
 }
    
 

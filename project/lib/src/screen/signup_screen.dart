@@ -86,7 +86,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
             ),
 
             SizedBox(
-              height: 30.0,
+              height: 25.0,
             ),
 
             custemField(
@@ -101,7 +101,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               icon: Icons.person,
             ),
             SizedBox(
-              height: 30.0,
+              height: 25.0,
             ),
             // emailField(),
 
@@ -120,12 +120,12 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               icon: Icons.email,
             ),
             SizedBox(
-              height: 30.0,
+              height: 25.0,
             ),
             phoneField(3),
             //Style(child: 3),
             SizedBox(
-              height: 30.0,
+              height: 25.0,
             ),
 
             custemField(
@@ -140,7 +140,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               icon: Icons.location_on,
             ),
             SizedBox(
-              height: 30.0,
+              height: 25.0,
             ),
 ////////////////////////
             //
@@ -153,7 +153,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
             ),
 
             SizedBox(
-              height: 30.0,
+              height: 25.0,
             ),
             textField2(),
             SizedBox(
@@ -304,16 +304,16 @@ class SignupScreen extends State<Signup> with ValidationMixin {
       body: Stack(
         children: [
           Positioned(
-            top: MediaQuery.of(context).size.height * -0.001, //-20,
+            top: MediaQuery.of(context).size.height * -0.045, //-20,
             left: MediaQuery.of(context).size.width * -0.05,
             right: MediaQuery.of(context).size.width * -0.05,
             child: Stack(
               children: [
                 Image.asset(
-                  'images/icon/designB1.png',
+                  'images/icon/DESSIGNUP.png',
                 ),
                 Positioned.fill(
-                  top: MediaQuery.of(context).size.height * -0.6,
+                  top: MediaQuery.of(context).size.height * 0.01,
                   left: MediaQuery.of(context).size.width * -0.025,
                   child: Icon(
                     Icons.circle,
@@ -322,7 +322,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                   ),
                 ),
                 Positioned.fill(
-                  top: MediaQuery.of(context).size.height * -0.6,
+                  top: MediaQuery.of(context).size.height * 0.01,
                   left: MediaQuery.of(context).size.width * -0.025,
                   child: Icon(Icons.account_circle,
                       size: 50, // Adjust the size of the icon as needed
@@ -333,7 +333,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
           ),
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.only(top: 100, right: 50, left: 55),
+              padding: EdgeInsets.only(top: 90, right: 40, left: 40),
               child: textfield1(),
             ),
           ),
