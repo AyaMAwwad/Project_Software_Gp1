@@ -391,7 +391,8 @@ class DetailPageState extends State<DetailPage> {
                 '',
                 widget.name,
                 state, // theState,
-                widget.description);
+                widget.description,
+                context);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(

@@ -64,4 +64,6 @@ router.post('/addRatingProduct', productController.addRatingProduct);
 
 // 22/5
 router.get('/retriveProductHomeRecomendedSystem', productController.retriveProductHomeRecomendedSystem);
+// new 28/5
+router.get('/productThisMonth', productController.productThisMonth);
 module.exports = router;

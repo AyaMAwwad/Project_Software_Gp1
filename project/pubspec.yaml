@@ -66,6 +66,11 @@ dependencies:
   icons_plus: ^5.0.0
   ficonsax: ^0.0.3
   flutter_rating_bar: ^4.0.1
+  flutter_font_icons: ^2.2.7
+  carousel_slider: ^4.2.1
+  cached_network_image: ^3.3.1
+  another_flushbar: ^1.12.30
+ 
 
 
 

@@ -265,7 +265,7 @@ gettypeofproduct(category,type,state) {
         theRes.forEach(categoryRow => {
           const categoryId = categoryRow.category_id; // Assuming your category ID column name is category_id
           // Perform a query to retrieve product data for the current category ID
-          db.query('SELECT product_id,name,description,quantity,user_id,image,Delivery_option,currency FROM product WHERE category_id = ? AND product_type = ?', [categoryId,state], (error1, res1) => {
+          db.query('SELECT product_id,name,description,quantity,user_id,image,Delivery_option,currency,average_rating FROM product WHERE category_id = ? AND product_type = ?', [categoryId,state], (error1, res1) => {
             if (error1) {
               console.error(error1);
               reject('Failed to retrieve product data');
@@ -997,8 +997,27 @@ addRatingProduct(req, res) {
   });
 }
 
+//productThisMonth
+productThisMonth(req, res) {
+  
+  return new Promise((resolve, reject) => {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const formattedDate = oneWeekAgo.toISOString().slice(0, 19).replace('T', ' ');
 
-
+    db.query(
+        'SELECT * FROM Product WHERE created_at >= ?',
+        [formattedDate],
+        (error, results) => {
+            if (error) {
+                reject('Failed to retrieve products');
+            } else {
+                resolve(results);
+            }
+        }
+    );
+});
+}
  /*
  my code 
  

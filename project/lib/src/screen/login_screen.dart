@@ -66,12 +66,12 @@ class LoginScreen extends State<Login> with ValidationMixin {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 80.0, //80.0
+            height: 50.0, //80.0
           ),
           Image.asset(
-            'images/icon/logo3.png',
+            'images/icon/FinalLogo.png',
             width: 900.0,
-            height: 200.0,
+            height: 210.0,
           ),
 
           SizedBox(
@@ -336,16 +336,16 @@ class LoginScreen extends State<Login> with ValidationMixin {
             // top:0,  // ibti web
             // left:0, ayy
             //  right: 0,  // ibti web
-            top: MediaQuery.of(context).size.height * -0.027, // -0.02
+            top: MediaQuery.of(context).size.height * -0.026, // -0.02
             // left: 0,
-            left: MediaQuery.of(context).size.width * -0.042,
-            right: MediaQuery.of(context).size.width * -0.05, //-20,
+            left: MediaQuery.of(context).size.width * -0.4,
+            right: MediaQuery.of(context).size.width * -0.02, //-20,
             child: Image.asset(
-              'images/icon/DESIGNFF.png', //'images/icon/DS1.png', //designB.png, // Path to your image asset
+              'images/icon/FINALDES.png', //'images/icon/DS1.png', //designB.png, // Path to your image asset
               //'images/icon/svg.png',
               // Adjust height as needed
               fit: BoxFit.fill, // Adjust BoxFit as needed
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery.of(context).size.width ,
               // pri
               height: 250,
             ),
