@@ -642,6 +642,7 @@ class _ScreenCategoryState extends State<ScreenCategory> {
                 );
                 break;
               case 2:
+                CartState().resetCart();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => CartShop()),
@@ -656,6 +657,7 @@ class _ScreenCategoryState extends State<ScreenCategory> {
             }
           });
         },
+
         //  context: context,
       ), /*BottomNavBar(
         selectedMenu: MenuState.home,

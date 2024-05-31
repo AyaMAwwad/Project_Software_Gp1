@@ -196,83 +196,115 @@ class SearchPage extends StatelessWidget {
                                 ),
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  GestureDetector(
-                                    child: Icon(
-                                      IconsaxBold.messages,
-                                      size: 18,
-                                      color: Color.fromARGB(255, 2, 92, 123),
-                                    ),
-                                    onTap: () async {
-                                      OpenChatWithSellar.functionForChar(
-                                          productData['name'], context);
-                                    },
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        child: Icon(
+                                          Icons.star,
+                                          size: 21,
+                                          color:
+                                              Color.fromARGB(255, 244, 203, 20),
+                                        ),
+                                        onTap: () async {
+                                          //   OpenChatWithSellar.functionForChar(itemName, context);
+                                        },
+                                      ),
+                                      Text(
+                                        productData['average_rating'] == '0.00'
+                                            ? ''
+                                            : productData['average_rating'],
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(width: 10),
-                                  GestureDetector(
-                                    child: Icon(
-                                      productData['quantity'] == 0
-                                          ? Icons.remove_shopping_cart
-                                          : (theState == 'Free' ||
-                                                  theState == 'free' ||
-                                                  theState == 'مجاني')
-                                              ? Icons
-                                                  .arrow_circle_right_outlined
-                                              : Icons.shopping_cart_checkout,
-                                      // Icons.shopping_cart_checkout,
-                                      size: 14,
-                                      color: Color.fromARGB(255, 2, 92, 123),
-                                    ),
-                                    onTap: () async {
-                                      if (productData['quantity'] != 0) {
-                                        if (theState == 'Free' ||
-                                            theState == 'free' ||
-                                            theState == 'مجاني') {
-                                          print(
-                                              '********* the state:$theState');
-                                          showModalBottomSheet(
-                                            context: context,
-                                            isScrollControlled: true,
-                                            builder: (BuildContext context) {
-                                              return DeliveryPage(
-                                                isFree: true,
-                                                deliveryOption: productData[
-                                                    'Delivery_option'],
-                                                productId:
-                                                    productData['product_id'],
-                                                onPaymentSuccess: () {},
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      GestureDetector(
+                                        child: Icon(
+                                          IconsaxBold.messages,
+                                          size: 18,
+                                          color:
+                                              Color.fromARGB(255, 2, 92, 123),
+                                        ),
+                                        onTap: () async {
+                                          OpenChatWithSellar.functionForChar(
+                                              productData['name'], context);
+                                        },
+                                      ),
+                                      SizedBox(width: 10),
+                                      GestureDetector(
+                                        child: Icon(
+                                          productData['quantity'] == 0
+                                              ? Icons.remove_shopping_cart
+                                              : (theState == 'Free' ||
+                                                      theState == 'free' ||
+                                                      theState == 'مجاني')
+                                                  ? Icons
+                                                      .arrow_circle_right_outlined
+                                                  : Icons
+                                                      .shopping_cart_checkout,
+                                          // Icons.shopping_cart_checkout,
+                                          size: 14,
+                                          color:
+                                              Color.fromARGB(255, 2, 92, 123),
+                                        ),
+                                        onTap: () async {
+                                          if (productData['quantity'] != 0) {
+                                            if (theState == 'Free' ||
+                                                theState == 'free' ||
+                                                theState == 'مجاني') {
+                                              print(
+                                                  '********* the state:$theState');
+                                              showModalBottomSheet(
+                                                context: context,
+                                                isScrollControlled: true,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return DeliveryPage(
+                                                    isFree: true,
+                                                    deliveryOption: productData[
+                                                        'Delivery_option'],
+                                                    productId: productData[
+                                                        'product_id'],
+                                                    onPaymentSuccess: () {},
+                                                  );
+                                                },
                                               );
-                                            },
-                                          );
-                                          // DeliveryPage(isFree: true);
-                                        } else {
-                                          HomePageState.InteractionOfUser(
-                                              Login.idd,
-                                              productData['product_id'],
-                                              0,
-                                              1,
-                                              0);
-                                          await RecentSingleProdState
-                                              .shoppingCartStore(
-                                                  '1',
-                                                  '',
-                                                  productData['name'],
-                                                  theState,
-                                                  productData['description']);
-                                        }
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          content: Text(
-                                            "Product SOLD OUT\nCan not add Item to Shoppimg Card",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          backgroundColor: Colors.redAccent,
-                                        ));
-                                      }
-                                    },
+                                              // DeliveryPage(isFree: true);
+                                            } else {
+                                              HomePageState.InteractionOfUser(
+                                                  Login.idd,
+                                                  productData['product_id'],
+                                                  0,
+                                                  1,
+                                                  0);
+                                              await RecentSingleProdState
+                                                  .shoppingCartStore(
+                                                      '1',
+                                                      '',
+                                                      productData['name'],
+                                                      theState,
+                                                      productData[
+                                                          'description'],
+                                                      context);
+                                            }
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              content: Text(
+                                                "Product SOLD OUT\nCan not add Item to Shoppimg Card",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              backgroundColor: Colors.redAccent,
+                                            ));
+                                          }
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),

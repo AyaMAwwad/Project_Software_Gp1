@@ -43,7 +43,7 @@ class mylocale implements Translations {
           "55": "الأجهزة الذكية",
           "56": "أدوات منزلية",
           "57": "السلع المنتشرة",
-          "58": "البضائع المعروضة",
+          "58": "الموصى به",
           "59": "المعرض",
           // menu
           "60": "تسجيل خروج",
@@ -116,6 +116,7 @@ class mylocale implements Translations {
           "163": "المبلغ الكلي مع التوصيل ",
           "164": "تواصل مع",
           "165": "لمعرفة المزيد من المعلومات",
+          "166": "هذا الشهر",
         },
         "en": {
           "1": "Multi Language",
@@ -156,7 +157,7 @@ class mylocale implements Translations {
           "55": "Smart devices",
           "56": "Houseware",
           "57": "Popular goods",
-          "58": "Displayed goods",
+          "58": "Recommended",
           "59": "Home",
           // menu
           "60": "Sign Out",
@@ -231,6 +232,7 @@ class mylocale implements Translations {
           "163": "Total Price with Delivery",
           "164": "Contect with",
           "165": "to know other information.",
+          "166": "This Month",
         },
         "fr": {
           "1": "Langue multiple",

@@ -2,7 +2,7 @@
 // ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unnecessary_brace_in_string_interps, prefer_interpolation_to_compose_strings, unnecessary_string_interpolations
 
 import 'dart:typed_data';
-
+import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -130,6 +130,8 @@ class RecentProd extends StatelessWidget {
                   //
                   // curr2 = prod[index]['currency'];
                   //
+                  print('******************* avg rate ');
+                  print(prod[index]['average_rating']);
                   return SingleChildScrollView(
                     child: RecentSingleProd(
                       recet_prod_description: prod[index]['description'],
@@ -139,6 +141,7 @@ class RecentProd extends StatelessWidget {
                       recent_prod_quantity: prod[index]['quantity'],
                       recet_prod_currency: prod[index]['currency'], // price 8
                       recent_prod_productId: prod[index]['product_id'],
+                      recent_prod_avgRate: prod[index]['average_rating'],
                     ),
                   );
                 },
@@ -600,6 +603,7 @@ class RecentSingleProd extends StatefulWidget {
   //
   final recet_prod_currency; // price 8
   final recent_prod_productId;
+  final recent_prod_avgRate;
 
   const RecentSingleProd({
     super.key,
@@ -611,6 +615,7 @@ class RecentSingleProd extends StatefulWidget {
     //
     this.recet_prod_currency, // price 8
     this.recent_prod_productId,
+    this.recent_prod_avgRate,
   });
 
   @override
@@ -711,81 +716,110 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                           style: TextStyle(fontSize: 14, color: Colors.green),
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
-                              child: Icon(
-                                IconsaxBold.messages,
-                                size: 21,
-                                color: Color.fromARGB(255, 2, 92, 123),
-                              ),
-                              onTap: () async {
-                                OpenChatWithSellar.functionForChar(
-                                    widget.recet_prod_name, context);
-                              },
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  child: Icon(
+                                    Icons.star,
+                                    size: 21,
+                                    color: Color.fromARGB(255, 244, 203, 20),
+                                  ),
+                                  onTap: () async {
+                                    //   OpenChatWithSellar.functionForChar(itemName, context);
+                                  },
+                                ),
+                                Text(
+                                  widget.recent_prod_avgRate == '0.00'
+                                      ? ''
+                                      : widget.recent_prod_avgRate,
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            GestureDetector(
-                              child: Icon(
-                                widget.recent_prod_quantity == 0
-                                    ? Icons.remove_shopping_cart
-                                    : (RecentProd.thestate == 'Free' ||
-                                            RecentProd.thestate == 'free' ||
-                                            RecentProd.thestate == 'مجاني')
-                                        ? Icons.arrow_circle_right_outlined
-                                        : Icons.shopping_cart_checkout,
-                                //  Icons.shopping_cart_checkout,
-                                //FontAwesomeIcons.cartShopping,
-                                size: 17,
-                                color: Color.fromARGB(255, 2, 92, 123),
-                              ),
-                              onTap: () async {
-                                DateTime now = DateTime.now();
-                                String formattedDate =
-                                    DateFormat('yyyy-MM-dd – kk:mm').format(
-                                        now); // Format the date as per your requirement
-                                if (widget.recent_prod_quantity != 0) {
-                                  if (RecentProd.thestate == 'Free' ||
-                                      RecentProd.thestate == 'free' ||
-                                      RecentProd.thestate == 'مجاني') {
-                                    print(
-                                        '********* the RecentProd.thestate:${RecentProd.thestate}');
-                                    showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      builder: (BuildContext context) {
-                                        return DeliveryPage(
-                                          isFree: true,
-                                          deliveryOption:
-                                              RecentProd.deliveryOption!,
-                                          productId: RecentProd.theProdId!,
-                                          onPaymentSuccess: () {},
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  child: Icon(
+                                    IconsaxBold.messages,
+                                    size: 21,
+                                    color: Color.fromARGB(255, 2, 92, 123),
+                                  ),
+                                  onTap: () async {
+                                    OpenChatWithSellar.functionForChar(
+                                        widget.recet_prod_name, context);
+                                  },
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                GestureDetector(
+                                  child: Icon(
+                                    widget.recent_prod_quantity == 0
+                                        ? Icons.remove_shopping_cart
+                                        : (RecentProd.thestate == 'Free' ||
+                                                RecentProd.thestate == 'free' ||
+                                                RecentProd.thestate == 'مجاني')
+                                            ? Icons.arrow_circle_right_outlined
+                                            : Icons.shopping_cart_checkout,
+                                    //  Icons.shopping_cart_checkout,
+                                    //FontAwesomeIcons.cartShopping,
+                                    size: 17,
+                                    color: Color.fromARGB(255, 2, 92, 123),
+                                  ),
+                                  onTap: () async {
+                                    DateTime now = DateTime.now();
+                                    String formattedDate =
+                                        DateFormat('yyyy-MM-dd – kk:mm').format(
+                                            now); // Format the date as per your requirement
+                                    if (widget.recent_prod_quantity != 0) {
+                                      if (RecentProd.thestate == 'Free' ||
+                                          RecentProd.thestate == 'free' ||
+                                          RecentProd.thestate == 'مجاني') {
+                                        print(
+                                            '********* the RecentProd.thestate:${RecentProd.thestate}');
+                                        showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          builder: (BuildContext context) {
+                                            return DeliveryPage(
+                                              isFree: true,
+                                              deliveryOption:
+                                                  RecentProd.deliveryOption!,
+                                              productId: RecentProd.theProdId!,
+                                              onPaymentSuccess: () {},
+                                            );
+                                          },
                                         );
-                                      },
-                                    );
-                                  } else {
-                                    HomePageState.InteractionOfUser(Login.idd,
-                                        widget.recent_prod_productId, 0, 1, 0);
-                                    await shoppingCartStore(
-                                        '1',
-                                        formattedDate,
-                                        widget.recet_prod_name,
-                                        RecentProd.thestate!,
-                                        widget.recet_prod_description);
-                                  }
-                                } else {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(
-                                    content: Text(
-                                      "Product SOLD OUT\nCan not add Item to Shoppimg Card",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    backgroundColor: Colors.redAccent,
-                                  ));
-                                }
-                              },
+                                      } else {
+                                        HomePageState.InteractionOfUser(
+                                            Login.idd,
+                                            widget.recent_prod_productId,
+                                            0,
+                                            1,
+                                            0);
+                                        await shoppingCartStore(
+                                            '1',
+                                            formattedDate,
+                                            widget.recet_prod_name,
+                                            RecentProd.thestate!,
+                                            widget.recet_prod_description,
+                                            context);
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        content: Text(
+                                          "Product SOLD OUT\nCan not add Item to Shoppimg Card",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        backgroundColor: Colors.redAccent,
+                                      ));
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -798,6 +832,8 @@ class RecentSingleProdState extends State<RecentSingleProd> {
           ),
         ),
         onTap: () {
+          HomePageState.InteractionOfUser(
+              Login.idd, widget.recent_prod_productId, 1, 0, 0);
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -823,6 +859,7 @@ class RecentSingleProdState extends State<RecentSingleProd> {
     String name,
     String state,
     String description,
+    BuildContext context,
   ) async {
     final url = Uri.parse('http://$ip:3000/tradetryst/shoppingcart/add');
     try {
@@ -843,15 +880,34 @@ class RecentSingleProdState extends State<RecentSingleProd> {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         // Authentication successful
+        Flushbar(
+          message: "This product added to shopping cart.",
+          duration: Duration(seconds: 3),
+          // backgroundColor: Colors.red,
+          margin: EdgeInsets.all(8),
+          borderRadius: BorderRadius.circular(8),
+        ).show(context);
         print('store to cart  successful');
+        HomePageState.addItemToCart();
         // Navigate to the home page or perform any other actions
       } else if (response.statusCode == 401) {
-        //  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        // content: Text("not store"),
-        // ));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("not store"),
+        ));
         // Invalid email or password
         print('not store');
       } else {
+        /*ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Product in Shopping Cart"),
+        ));*/
+        Flushbar(
+          message:
+              "This product is already in your shopping cart and cannot be added again.",
+          duration: Duration(seconds: 3),
+          // backgroundColor: Colors.red,
+          margin: EdgeInsets.all(8),
+          borderRadius: BorderRadius.circular(8),
+        ).show(context);
         // Other error occurred
         print('failed to store Status code: ${response.statusCode}');
       }

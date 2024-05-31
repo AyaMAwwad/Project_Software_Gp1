@@ -307,6 +307,7 @@ class UserProfileState extends State<UserProfile> {
                 );
                 break;
               case 2:
+                CartState().resetCart();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => CartShop()),

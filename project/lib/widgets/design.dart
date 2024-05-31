@@ -22,13 +22,13 @@ class CustemDesign extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          top: MediaQuery.of(context).size.height * -0.016,
-          left: MediaQuery.of(context).size.width * 0.04,
-          right: MediaQuery.of(context).size.width * -0.05,
+          top: MediaQuery.of(context).size.height * -0.046,
+          left: MediaQuery.of(context).size.width * -0.289,
+          right: MediaQuery.of(context).size.width * -0.9,
           child: Stack(
             children: [
               Image.asset(
-                'images/icon/designB.png', // Path to your image asset
+                'images/icon/FINALDES.png', // Path to your image asset
                 // Adjust height as needed
                 fit: BoxFit.cover, // Adjust BoxFit as needed
               ),
@@ -65,13 +65,13 @@ class CustemDesign extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: MediaQuery.of(context).size.height * 0.13,
+          top: MediaQuery.of(context).size.height * 0.15,
           right: 0,
           left: 0,
           child: Image.asset(
-            'images/icon/logo3.png',
+            'images/icon/FinalLogo.png',
             //width: 900.0,
-            height: 230.0,
+            height: 200.0,
           ),
         ),
         Positioned(

@@ -263,3 +263,20 @@ exports.updateSellarProduct = (req, res) => {
               res.status(500).json({ message: 'Not have thing to retrieve' });
           });
     };
+
+    //productThisMonth
+    exports.productThisMonth = (req, res) => {
+      //const { userId } = req.query;
+      
+    
+      prod.productThisMonth(req, res)
+          .then((res1) => {
+              console.log({res1});
+            
+              res.status(200).json(res1);
+          })
+          .catch((error) => {
+              console.error({error});
+              res.status(500).json({ message: 'Not have thing to retrieve' });
+          });
+    };

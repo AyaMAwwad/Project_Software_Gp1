@@ -509,6 +509,7 @@ class AddProductState extends State<AddProduct> {
       ),
       bottomNavigationBar: NavBar(
         selectedIndex: selectedIndex,
+
         onTabSelected: (index) {
           setState(() {
             selectedIndex = index;
@@ -528,6 +529,7 @@ class AddProductState extends State<AddProduct> {
                 );
                 break;
               case 2:
+                CartState().resetCart();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => CartShop()),
