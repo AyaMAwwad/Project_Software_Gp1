@@ -45,6 +45,10 @@ app.use('/tradetryst/usermanage',user);
 app.use('/tradetryst/useradmin',user);
 app.use('/tradetryst/manageadmin',user);
 
+app.use('/tradetryst/orderproduct',product);
+// new ibtisam delete////
+app.use('/tradetryst/deletepayorder',payment);
+
 
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server is listening on port ${port}`);

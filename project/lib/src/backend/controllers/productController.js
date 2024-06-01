@@ -280,3 +280,14 @@ exports.updateSellarProduct = (req, res) => {
               res.status(500).json({ message: 'Not have thing to retrieve' });
           });
     };
+
+    exports.gettproducttoadmin = (req, res) => {
+      prod
+        .gettproducttoadmin(req, res)
+        .then((message) => {
+          res.status(201).json({ message }); // Registration was successful, return the success message
+        })
+        .catch((error) => {
+          res.status(400).json({ message: error }); // Registration encountered an error, return the error message
+        });
+    };

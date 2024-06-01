@@ -13,7 +13,7 @@ class PaymentRepository {
     addPayment(req, res) {
   
         //numberofimage
-          const { userId,amount,payMethod } = req.body;
+          const { userId,amount,payMethod , productIds} = req.body;
           return new Promise((resolve, reject) => {
 
             let allProductInShopCartOfUser = [];
@@ -29,17 +29,30 @@ class PaymentRepository {
             else{
                 const theDate = new Date();
                 allProductInShopCartOfUser=results;
+                //
+                if (!productIds || productIds.length === 0) {
+                  reject('Invalid product IDs');
+                  return;
+              }
+              const validProductIds = productIds.filter(id => id !== 0 && id !== undefined);
+
+              if (validProductIds.length === 0) {
+                  reject('No valid product IDs');
+                  return;
+              }
+                //(cartProduct, index)
                 console.log(allProductInShopCartOfUser);
-                allProductInShopCartOfUser.forEach(cartProduct => {
+                validProductIds.map((cartProduct, index) => {
                     const cartId =cartProduct.cart_id;
+                    const productId = productIds[index];
                     db.query(
-                        'INSERT INTO pay (user_id, payment_date, amount,payment_method) VALUES (?, ?, ?, ?)',
-                        [userId, theDate, amount, payMethod],
+                        'INSERT INTO pay (user_id, payment_date, amount,payment_method, idproduct) VALUES (?, ?, ?, ?,?)',
+                        [userId, theDate, amount, payMethod,productId ],
                         (error2, results2) => {
                             if (error2) {
-                                return reject('Failed payment');
+                                return reject('Failed payment faillll');
                             }
-                            return resolve('payment successfully');
+                            return resolve('payment successfully yesss');
                         }
                     );
                 });
@@ -236,6 +249,25 @@ updateTheQuantityToPayment(req, res) {
     });
             });
         }
+
+// ibtisam new 
+deletepaymentadmin(paymentId){
+  return new Promise((resolve, reject) => {
+    db.query('DELETE FROM pay where payment_id = ?',[paymentId], (error, results) => {
+      if (error) {
+        console.error(error);
+        reject('failed to Delete from payment index .. try again  ');
+      } else {
+        resolve("success deleted from pay ");
+      }
+    });});
+}
+
+
+
+
+
+
 }
 
 

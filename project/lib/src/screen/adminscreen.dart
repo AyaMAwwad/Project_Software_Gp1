@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/src/screen/rolemanagement.dart';
 import 'package:project/src/screen/usermanagement.dart';
 
 class AdminDashboard extends StatelessWidget {
@@ -108,7 +109,8 @@ class AdminDashboard extends StatelessWidget {
             title: 'Role Management',
             icon: Icons.security,
             onTap: () {
-              Navigator.pushNamed(context, '/role_management');
+              //  Navigator.pushNamed(context, '/role_management');
+              Get.to(() => rolemanagement());
             },
           ),
           AdminDashboardCard(

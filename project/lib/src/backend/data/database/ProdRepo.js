@@ -782,69 +782,99 @@ console.log(prodState,cond);
 }
 //addRatingProduct
 addRatingProduct(req, res) {
-  const {userId,ratings} = req.body; // Assuming req.body contains a list of ratings
+  const { userId, ratings } = req.body;
 
   return new Promise((resolve, reject) => {
     const insertQueries = [];
     const updateQueries = [];
+
     console.log(userId);
     console.log(ratings);
 
-    ratings.forEach((rating) => {
-      const { productId, ratingValue } = rating;
-      console.log(productId, ratingValue);
+    ratings.forEach((ratingV) => {
+      const { product_id, rating } = ratingV;
+      console.log(product_id, rating);
+
+  
       db.query(
-        'SELECT product_id FROM ProductRating WHERE user_id = ? AND product_id = ?',
-        [userId,productId],
+        'SELECT rating_id FROM ProductRating WHERE user_id = ? AND product_id = ?',
+        [userId, product_id],
         (err, results) => {
           if (err) {
             console.error(err);
             return reject('Failed to fetch interactions');
           }
-  
+
+          if (results.length == 0) {
          
-  
-          if (results.length === 0) {
             db.query(
               'INSERT INTO ProductRating (user_id, product_id, rating) VALUES (?, ?, ?)',
-              [ userId,productId,ratingValue],
+              [userId, product_id, rating],
               (error2, results2) => {
-                  if (error2) {
-                      return reject('Failed to store rating');
-                  }
-                  else {
-                    
-                  }
-                });
-              }
-     else{
-              db.query(
-                `UPDATE Product p
-                JOIN (
-                    SELECT product_id, AVG(rating) as avg_rating
-                    FROM ProductRating
-                    WHERE product_id = ?
-                    GROUP BY product_id
-                ) pr ON p.product_id = pr.product_id
-                SET p.average_rating = pr.avg_rating
-                WHERE p.product_id = ?;
-                `,
-                [productId,productId],
-                (error2, results2) => {
-                    if (error2) {
-                        return reject('Failed to store rating');
+                if (error2) {
+                  console.error(error2);
+                  return reject('Failed to store rating');
+                } else {
+         
+                  db.query(
+                    `UPDATE Product p
+                    JOIN (
+                      SELECT product_id, AVG(rating) AS avg_rating
+                      FROM ProductRating
+                      WHERE product_id = ?
+                      GROUP BY product_id
+                    ) pr ON p.product_id = pr.product_id
+                    SET p.average_rating = pr.avg_rating
+                    WHERE p.product_id = ?`,
+                    [product_id, product_id],
+                    (error3, results3) => {
+                      if (error3) {
+                        console.error(error3);
+                        return reject('Failed to update average rating');
+                      }
                     }
+                  );
                 }
+              }
+            );
+          } else {
+      
+            db.query(
+              'UPDATE ProductRating SET rating = ? WHERE user_id = ? AND product_id = ?',
+              [rating, userId, product_id],
+              (error2, results2) => {
+                if (error2) {
+                  console.error(error2);
+                  return reject('Failed to update rating');
+                } else {
+              
+                  db.query(
+                    `UPDATE Product p
+                    JOIN (
+                      SELECT product_id, AVG(rating) AS avg_rating
+                      FROM ProductRating
+                      WHERE product_id = ?
+                      GROUP BY product_id
+                    ) pr ON p.product_id = pr.product_id
+                    SET p.average_rating = pr.avg_rating
+                    WHERE p.product_id = ?`,
+                    [product_id, product_id],
+                    (error3, results3) => {
+                      if (error3) {
+                        console.error(error3);
+                        return reject('Failed to update average rating');
+                      }
+                    }
+                  );
+                }
+              }
             );
           }
         }
-    );
-  //});
-  
+      );
     });
-    return resolve('rate the product successfully');
-      
-      
+
+    return resolve('Rated the product successfully');
   });
 }
 
@@ -916,7 +946,13 @@ addRatingProduct(req, res) {
                 );
 
                 const similarTypeProductIds = similarTypeProducts.map(p => p.product_id);
-
+              /*  const r = [
+                  [1, 1, 1],
+                  [1, 0, 1],
+                  [1, 1, 0],
+                  [1, 1, 0],
+                ];
+*/
                 const collabRecommendations = recommendations.cFilter(ratings, 0);
                 console.log('collabRecommendations :' + collabRecommendations);
 
@@ -1017,6 +1053,28 @@ productThisMonth(req, res) {
         }
     );
 });
+}
+
+gettproducttoadmin(req, res){
+  
+  return new Promise((resolve, reject) => {
+    // Check if the user already exists (Checking the email)
+    db.query(
+      'SELECT * FROM pay JOIN user ON pay.user_id = user.user_id LEFT JOIN product ON pay.idproduct = product.product_id',  // change alsooooo 
+   
+      (error, results) => {
+        if (error) {
+          return reject('Internal server error.');
+        }
+
+        return resolve(results);
+
+      
+        
+     
+      },
+    );
+  });
 }
  /*
  my code 

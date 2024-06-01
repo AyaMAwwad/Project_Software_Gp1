@@ -55,11 +55,69 @@ class UserRepository {
     });
   }
 
+// ibtisam adduserfromadmin
+adduserfromadmin(req, res) {
+  const { first_name,last_name, email, user_type,password,phone_number,address,  birthday} = req.body;
+
+  return new Promise((resolve, reject) => {
+    // Check if the user already exists (Checking the email)
+    db.query(
+      'SELECT * FROM User WHERE email = ? ',
+      [email],
+      (error, results) => {
+        if (error) {
+          return reject('Internal server error.');
+        }
+
+        if (results.length > 0) {
+          return reject('Email or username already in use.');
+        }
+
+        // Hash the password before storing it
+        bcrypt.hash(password, 10, (hashError, hashedPassword) => {
+          if (hashError) {
+            return reject('User registration failed.');
+          }
+          const birthdayDate = new Date(birthday);
+
+         
+          db.query(
+            'INSERT INTO user (first_name, last_name,email, password, address,birthday,phone_number, user_type) VALUES (?, ?, ?, ?, ?, ?, ?,?)',
+            [first_name,last_name, email, hashedPassword, address,birthday,phone_number, user_type],
+            
+            (insertError) => {
+              if (insertError) {
+                console.log(password);
+
+                return reject('User registration failed.please try again');
+              }
+
+              return resolve('User registered successfully.');
+            },
+          );
+        });
+      },
+    );
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+  // new ibtisam end 
+// admin 
   loginUser(req, res) {
     const { email, password } = req.body;
 
   db.query(
-    'SELECT email,password, first_name, last_name , address, phone_number, user_id , birthday , user_type FROM user WHERE email = ? ',
+    'SELECT email,password, first_name, last_name , address, phone_number, user_id , birthday, user_type FROM user WHERE email = ? ',
     [email],
     (err, results) => {
       if (err) {
@@ -95,7 +153,7 @@ class UserRepository {
             phone_number: user.phone_number,
             user_id: user.user_id,
             birthday: user.birthday,
-            user_type: user.user_type,
+            user_type: user.user_type,  // admin 
   
         };
           return res.json({ message: 'Login successful.', user: userData });
@@ -397,7 +455,92 @@ deleteacountt(userId) {
 
 
 
-
+/*
+deleteacountt(userId) {
+  console.log('deleteacountt function called with userId:', userId);
+  return new Promise((resolve, reject) => {
+    // SQL query to delete records from the new_product table where product_id is associated with the user
+    db.query(
+      'DELETE FROM new_product WHERE product_id IN (SELECT product_id FROM product WHERE user_id = ?)',
+      [userId],
+      (error, results) => {
+        if (error) {
+          console.error('Error deleting new_product records:', error);
+          return reject('Failed to delete account');
+        }
+        
+        // SQL query to delete records from the used_product table where product_id is associated with the user
+        db.query(
+          'DELETE FROM used_product WHERE product_id IN (SELECT product_id FROM product WHERE user_id = ?)',
+          [userId],
+          (error, results) => {
+            if (error) {
+              console.error('Error deleting used_product records:', error);
+              return reject('Failed to delete account');
+            }
+            
+            // SQL query to delete records from the productimage table where product_id is associated with the user
+            db.query(
+              'DELETE FROM productimage WHERE product_id IN (SELECT product_id FROM product WHERE user_id = ?)',
+              [userId],
+              (error, results) => {
+                if (error) {
+                  console.error('Error deleting productimage records:', error);
+                  return reject('Failed to delete account');
+                }
+                
+                // SQL query to delete the products associated with the user
+                db.query(
+                  'DELETE FROM shopping_cart WHERE user_id = ?',
+                  [userId],
+                  (error, results) => {
+                    if (error) {
+                      console.error('Error deleting products:', error);
+                      return reject('Failed to delete account');
+                    }
+                    
+                    // SQL query to delete records from the shoppingcart table
+                    db.query(
+                      'DELETE FROM product WHERE user_id = ?',
+                      [userId],
+                      (error, results) => {
+                        if (error) {
+                          console.error('Error deleting shoppingcart:', error);
+                          return reject('Failed to delete account');
+                        }
+                        
+                        // SQL query to delete the user account
+                        db.query(
+                          'DELETE FROM user WHERE user_id = ?',
+                          [userId],
+                          (error, results) => {
+                            if (error) {
+                              console.error('Error deleting account:', error);
+                              return reject('Failed to delete account');
+                            }
+                            
+                            if (results.affectedRows === 0) {
+                              // No rows affected, meaning no user with the specified ID found
+                              return reject('User not found');
+                            }
+                            
+                            console.log('Account deleted successfully');
+                            return resolve('Account deleted successfully');
+                          }
+                        );
+                      }
+                    );
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
+    );
+  });
+}
+*/
   /// product home page 
 
 
@@ -433,13 +576,6 @@ deleteacountt(userId) {
 
     });
 }
-
-
-
-
-
-
-
 
 
 //
@@ -493,7 +629,61 @@ oldpassword(email, oldPassword) {
   });
 }
 
-//// 12/5 new userInteraction
+
+// ibtisam 
+
+getdatauser(req, res){
+  
+  return new Promise((resolve, reject) => {
+    // Check if the user already exists (Checking the email)
+    db.query(
+      'SELECT first_name, last_name,email, user_type , user_id  FROM user ',  // change alsooooo 
+   
+      (error, results) => {
+        if (error) {
+          return reject('Internal server error.');
+        }
+
+        return resolve(results);
+
+      
+        
+     
+      },
+    );
+  });
+}
+
+updateadminofuser(req, res) {
+  const { first_name, last_name, email, user_type } = req.body;
+
+  db.query(
+    'UPDATE user SET first_name = ?, last_name = ?, user_type = ? WHERE email = ?',
+    [first_name, last_name, user_type, email],
+    (err, result) => {
+      if (err) {
+        res.status(500).send({ error: 'Failed to update user' });
+      } else {
+        res.status(201).send();
+      }
+    }
+  );
+
+  /*
+  const { first_name, last_name, email, user_type } = req.body;
+  db.query('UPDATE user  SET first_name = ?, last_name = ?, user_type = ? WHERE email = ?',
+  [first_name, last_name, email, user_type ],
+    (error, results) => {
+    if (error) {
+      return reject('Internal server error.');
+    }
+    return resolve(results);
+  },
+  );*/
+}
+
+
+// aya newwww
 userInteraction(req, res) {
   let { productId, userId, view, addToCart, purchased } = req.body;
   
@@ -578,79 +768,11 @@ console.log('hhhhhhhellllllo');
     );
   });
 }
-
-
-/*
-userInteraction(req,res) {
-  let { productId, userId,view,addToCart,purchased } = req.body;
-  return new Promise((resolve, reject) => {
-  
-    db.query(
-      'SELECT * from user_interaction WHERE product_id =? AND user_id',[productId,userId],
-      (error, results) => {
-        if (error) {
-          console.log( error);
-          return reject('Failed to  select user interaction ');
-        }
-        else{
-          if(results.length==0){
-            console.log(results);
-            console.log(productId, userId,view,addToCart,purchased);
-            db.query(
-              'INSERT INTO user_interaction (product_id, user_id,viewed, added_to_cart, purchased) VALUES (?, ?, ?, ?, ?)',[productId, userId,view,addToCart,purchased],
-              (error1, results1) => {
-                if (error1) {
-                  console.log(error1);
-                  return reject('Failed to  insert user interaction ');
-                }
-              else{
-                return resolve('stored user interaction successfully');
-              }
-            }
-            );
-          }
-          else if(results.length !=0){
-            let viewPord = results[0].viewed;
-            let added_to_cart =results[0].added_to_cart;
-            let purchasedProd = results[0].purchased;
-            if(view==0 && viewPord==1 ){
-              view = 1;
-            }
-            if(addToCart==0 && added_to_cart==1 ){
-              addToCart = 1;
-            }
-            if(purchased==0 && purchasedProd==1 ){
-              purchased = 1;
-            }
-            db.query(
-              'UPDATE user_interaction SET viewed = ? , added_to_cart = ? , purchased = ? WHERE user_id = ? AND product_id = ? ',[view,addToCart,purchased, userId,productId],
-              (error2, results1) => {
-                if (error2) {
-                  console.log(error2);
-                  return reject('Failed to  update user interaction ');
-                }
-              else{
-                return resolve('update user interaction successfully');
-              }
-            }
-            );
-           
-
-          }
-
-          
-        }
-        
-      }
-    );
-  });
-}*/
-
-//deliverydetials 15_MAY
+//
 deliveryEmployee(type) {
   return new Promise((resolve, reject) => {
-  
- 
+
+
     db.query('SELECT user_id,first_name,last_name,email,phone_number,address,user_type FROM user WHERE user_type = ?', [type], (error, results) => {
       if (error || results.length==0) {
         console.error(error);
@@ -662,7 +784,6 @@ deliveryEmployee(type) {
   });
 }
 
-//deliveryFromSellar
 deliveryFromSellar(productId) {
   return new Promise((resolve, reject) => {
     console.log({productId});
@@ -685,15 +806,14 @@ deliveryFromSellar(productId) {
     });
       }
   });
- 
+
   });
 }
 
-//deliverydetialsOfBuyer
 deliverydetialsOfBuyer(userId) {
   return new Promise((resolve, reject) => {
-  
- 
+
+
     db.query('SELECT first_name,last_name,email,phone_number,address,user_type FROM user WHERE user_id = ?', [userId], (error, results) => {
       if (error || results.length==0) {
         console.error(error);
@@ -708,102 +828,12 @@ deliverydetialsOfBuyer(userId) {
 
 
 
+// end aya 
 
-// ibtisam 
 
-getdatauser(req, res){
-  
-  return new Promise((resolve, reject) => {
-    // Check if the user already exists (Checking the email)
-    db.query(
-      'SELECT first_name, last_name,email, user_type , user_id  FROM user ',  // change alsooooo 
-   
-      (error, results) => {
-        if (error) {
-          return reject('Internal server error.');
-        }
 
-        return resolve(results);
 
-      
-        
-     
-      },
-    );
-  });
-}
 
-updateadminofuser(req, res) {
-  const { first_name, last_name, email, user_type } = req.body;
-
-  db.query(
-    'UPDATE user SET first_name = ?, last_name = ?, user_type = ? WHERE email = ?',
-    [first_name, last_name, user_type, email],
-    (err, result) => {
-      if (err) {
-        res.status(500).send({ error: 'Failed to update user' });
-      } else {
-        res.status(201).send();
-      }
-    }
-  );
-
-  /*
-  const { first_name, last_name, email, user_type } = req.body;
-  db.query('UPDATE user  SET first_name = ?, last_name = ?, user_type = ? WHERE email = ?',
-  [first_name, last_name, email, user_type ],
-    (error, results) => {
-    if (error) {
-      return reject('Internal server error.');
-    }
-    return resolve(results);
-  },
-  );*/
-}
-adduserfromadmin(req, res) {
-  const { first_name,last_name, email, user_type,password,phone_number,address,  birthday} = req.body;
-
-  return new Promise((resolve, reject) => {
-    // Check if the user already exists (Checking the email)
-    db.query(
-      'SELECT * FROM User WHERE email = ? ',
-      [email],
-      (error, results) => {
-        if (error) {
-          return reject('Internal server error.');
-        }
-
-        if (results.length > 0) {
-          return reject('Email or username already in use.');
-        }
-
-        // Hash the password before storing it
-        bcrypt.hash(password, 10, (hashError, hashedPassword) => {
-          if (hashError) {
-            return reject('User registration failed.');
-          }
-          const birthdayDate = new Date(birthday);
-
-         
-          db.query(
-            'INSERT INTO user (first_name, last_name,email, password, address,birthday,phone_number, user_type) VALUES (?, ?, ?, ?, ?, ?, ?,?)',
-            [first_name,last_name, email, hashedPassword, address,birthday,phone_number, user_type],
-            
-            (insertError) => {
-              if (insertError) {
-                console.log(password);
-
-                return reject('User registration failed.please try again');
-              }
-
-              return resolve('User registered successfully.');
-            },
-          );
-        });
-      },
-    );
-  });
-}
 
 
 
