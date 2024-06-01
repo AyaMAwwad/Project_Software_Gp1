@@ -57,6 +57,7 @@ class ProductPageState extends State<ProductPage> {
     setState(() async {
       selectedProdState = prodState;
       StateGlobal = prodState;
+
       print(prodState);
       await getProductTypeState(widget.category.name, widget.type, prodState);
       setState(() {});
@@ -122,141 +123,96 @@ class ProductPageState extends State<ProductPage> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 6.0),
-          child: ListView(
-            //padding: EdgeInsets.all(8),
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustemAppBar(
-                text: selectedCategory,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CustemAppBar(
+              text: selectedCategory,
+            ),
+            SizedBox(height: 10),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ProductType(
+                    press: () {
+                      updateType(MultiLanguage.isEnglish ? 'New' : 'جديد');
+                      updateSelectedType(TypeProductState.newprod);
+                    },
+                    name: MultiLanguage.isEnglish ? 'New' : 'جديد',
+                    selectedType: TypeProductState.newprod,
+                    currentSelectedType: currentSelectedType,
+                    updateSelectedType: updateSelectedType,
+                  ),
+                  ProductType(
+                    press: () {
+                      updateType(MultiLanguage.isEnglish ? 'Used' : 'مستعمل');
+                      updateSelectedType(TypeProductState.usedprod);
+                    },
+                    name: MultiLanguage.isEnglish ? 'Used' : 'مستعمل',
+                    selectedType: TypeProductState.usedprod,
+                    currentSelectedType: currentSelectedType,
+                    updateSelectedType: updateSelectedType,
+                  ),
+                  ProductType(
+                    press: () {
+                      updateType(MultiLanguage.isEnglish ? 'Free' : 'مجاني');
+                      updateSelectedType(TypeProductState.freeprod);
+                    },
+                    name: MultiLanguage.isEnglish ? 'Free' : 'مجاني',
+                    selectedType: TypeProductState.freeprod,
+                    currentSelectedType: currentSelectedType,
+                    updateSelectedType: updateSelectedType,
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 40,
-                //  child:Carousel(),
-              ),
-              Container(
-                margin: EdgeInsets.only(right: 15, left: 15),
-                width: MediaQuery.of(context)
-                    .size
-                    .width, // Set the desired size of the circle
-                height: 50, // Set the desired size of the circle
-                // color: Color.fromARGB(255, 95, 150, 168),
-                /* decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color:
-                      Colors.transparent, //Color.fromARGB(255, 147, 176,186),
-                  // Color.fromARGB(255, 95, 150, 168), // Color.fromARGB(
-                  // 255, 134, 135, 134), // Color.fromARGB(255, 95, 150, 168),
-                  // borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(95, 218, 218, 218),
-                      blurRadius: 5,
+            ),
+            SizedBox(height: 10),
+            if (MediaQuery.of(context).size.width > 1000)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Container(
+                    //  scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center, // Center the row
+
+                      // children: List.generate(
+                      //   allProductData.length,
+                      //   (index) =>
+                      children: [
+                        MediaQuery.of(context).size.width > 1000
+                            ? Center(
+                                child: SizedBox(
+                                  width:
+                                      800, // Adjust the width as needed   // 600  3 0.7  5.0
+                                  child: RecentProd(
+                                    TypeOfCategory: selectedCategory,
+                                    prodState: selectedProdState,
+                                    prod: allProductData,
+                                    detail: allProductDetails,
+                                  ),
+                                ),
+                              )
+                            : RecentProd(
+                                // For mobile, directly render RecentProd
+                                TypeOfCategory: selectedCategory,
+                                prodState: selectedProdState,
+                                prod: allProductData,
+                                detail: allProductDetails,
+                              ),
+                      ],
+                      // ),
                     ),
-                  ],
-                ),*/
-                child: Container(
-                  height: 60,
-                  margin: EdgeInsets.all(5),
-                  child: Stack(
-                    children: [
-                      /*  Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border:
-                              Border.all(color: Colors.white.withOpacity(0.13)),
-                          gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color.fromARGB(255, 147, 198, 215),
-                                // .withOpacity(0.15),
-                                Color.fromARGB(255, 95, 150, 168),
-                                // .withOpacity(0.1),
-                                Color.fromARGB(255, 66, 119, 138),
-                                //  .withOpacity(0.05),
-                                Color.fromARGB(255, 95, 150, 168),
-                                // .withOpacity(0.1),
-                                Color.fromARGB(255, 147, 198, 215),
-                                // .withOpacity(0.15),
-                              ]),
-                        ),
-                        child:*/
-                      ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          ProductType(
-                            press: () {
-                              updateType(
-                                  MultiLanguage.isEnglish ? 'New' : 'جديد');
-                              //handleProductTypeSelection('New');
-
-                              updateSelectedType(TypeProductState.newprod);
-                            },
-                            //  image: 'images/icon/new.png',
-                            name: MultiLanguage.isEnglish ? 'New' : 'جديد',
-                            selectedType: TypeProductState.newprod,
-                            currentSelectedType: currentSelectedType,
-                            updateSelectedType: updateSelectedType,
-                            //selectedtype: TypeState.newprod,
-                          ),
-                          /*ProductType(
-  press: () {
-    updateType('Used'); // Update to 'Used' product type
-    updateSelectedType(TypeProductState.usedprod); // Update the selected type state
-  },
-  name: 'Used',
-  selectedType: TypeProductState.usedprod,
-  currentSelectedType: currentSelectedType,
-  updateSelectedType: updateSelectedType,
-), */
-                          ProductType(
-                            press: () {
-                              updateType(
-                                  MultiLanguage.isEnglish ? 'Used' : 'مستعمل');
-                              //handleProductTypeSelection('Used');
-
-                              updateSelectedType(TypeProductState.usedprod);
-                            },
-                            //  image: 'images/icon/used.png',
-                            name: MultiLanguage.isEnglish ? 'Used' : 'مستعمل',
-                            selectedType: TypeProductState.usedprod,
-                            currentSelectedType: currentSelectedType,
-                            updateSelectedType: updateSelectedType,
-                            //selectedtype: TypeState.usedprod,
-                          ),
-                          ProductType(
-                            press: () {
-                              updateType(
-                                  MultiLanguage.isEnglish ? 'Free' : 'مجاني');
-                              // handleProductTypeSelection('Free');
-
-                              updateSelectedType(TypeProductState.freeprod);
-                            },
-                            // image: 'images/icon/donate.png',
-                            name: MultiLanguage.isEnglish ? 'Free' : 'مجاني',
-                            selectedType: TypeProductState.freeprod,
-
-                            currentSelectedType: currentSelectedType,
-                            updateSelectedType: updateSelectedType,
-                            // selectedtype: TypeState.freeprod,
-                          ),
-                        ],
-                      ),
-                      //    ),
-
-                      ///////////
-                    ],
                   ),
                 ),
               ),
-              SizedBox(
-                height: 10,
-                //  child:Carousel(),
-              ),
+            //
+            if (MediaQuery.of(context).size.width < 700)
               Container(
-                height: 500,
+                //    height: 500,
                 padding: EdgeInsets.only(left: 3, right: 3),
                 child: RecentProd(
                   TypeOfCategory: selectedCategory,
@@ -265,13 +221,13 @@ class ProductPageState extends State<ProductPage> {
                   detail: allProductDetails,
                 ),
               ),
-            ],
-          ),
+
+            //
+          ],
         ),
       ),
       bottomNavigationBar: NavBar(
         selectedIndex: selectedIndex,
-
         onTabSelected: (index) {
           setState(() {
             selectedIndex = index;

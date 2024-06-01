@@ -13,6 +13,28 @@ exports.registerUser = (req, res) => {
     });
 };
 
+
+// ibtisam  new add user from admin 
+
+exports.adduserfromadmin = (req, res) => {
+  userRepository
+    .adduserfromadmin(req, res)
+    .then((message) => {
+      res.status(201).json({ message }); 
+    })
+    .catch((error) => {
+      res.status(400).json({ message: error }); // Registration encountered an error, return the error message
+    });
+};
+
+
+
+
+// ibtisam new end 
+
+
+
+
 //new   sellarChat  AllUserName
 exports.userName = (req, res) => {
   const { email } = req.query;
@@ -63,6 +85,7 @@ exports.loginUser = (req, res) => {
 };
 
 
+
 exports.Editprofile = (req, res) => {
   const { id, firstName, lastName, email, address, phoneNumber , gender } = req.body;
   userRepository
@@ -102,12 +125,12 @@ console.log('oldpassword controller method invoked with oldPassword:', oldPasswo
     if (result) {
       res.status(200).json({ message: 'Old password matches the stored password' });
     } else {
-     
+      // If the old password does not match, send unauthorized response
       res.status(401).json({ message: 'New password not matches the stored password' });
     }
   })
   .catch((error) => {
-    
+    // If an error occurs during the process, send internal server error response
     console.error('Error checking old password:', error);
     res.status(500).json({ message: 'Internal server error' });
   });
@@ -124,68 +147,6 @@ exports.UpdatePass = (req, res) => {
       res.status(400).json({ message: error }); 
     });
   };
-
-  ////// new 12/5 userInteraction
-  exports.userInteraction = (req, res) => {
-    userRepository
-      .userInteraction(req, res)
-      .then((message) => {
-        res.status(200).json({ message }); 
-      })
-      .catch((error) => {
-        res.status(500).json({ error });
-      });
-  };
-  //// 15_MAY deliverydetials
-  
-exports.deliveryEmployee = (req, res) => {
-  const { type } = req.query;
-  console.log({type});
-
-  userRepository.deliveryEmployee(type)
-      .then((result) => {
-          console.log({result});
-      
-          res.status(200).json(result);
-      })
-      .catch((error) => {
-          console.error({error});
-          res.status(500).json({ message: 'Internal server error' });
-      });
-};
-
-//deliveryFromSellar
-exports.deliveryFromSellar = (req, res) => {
-  const { productId } = req.query;
- 
-
-  userRepository.deliveryFromSellar(productId)
-      .then((result) => {
-          console.log({result});
-      
-          res.status(200).json(result);
-      })
-      .catch((error) => {
-          console.error({error});
-          res.status(500).json({ message: 'Internal server error' });
-      });
-};
-///deliverydetialsOfBuyer
-exports.deliverydetialsOfBuyer = (req, res) => {
-  const { userId } = req.query;
- 
-
-  userRepository.deliverydetialsOfBuyer(userId)
-      .then((result) => {
-          console.log({result});
-      
-          res.status(200).json(result);
-      })
-      .catch((error) => {
-          console.error({error});
-          res.status(500).json({ message: 'Internal server error' });
-      });
-};
 
 //ibtisam 
 
@@ -210,14 +171,70 @@ exports.updateadminofuser = (req, res) => {
 
 // ibtisam end 
 
-exports.adduserfromadmin = (req, res) => {
+// aya 
+exports.userInteraction = (req, res) => {
   userRepository
-    .adduserfromadmin(req, res)
+    .userInteraction(req, res)
     .then((message) => {
-      res.status(201).json({ message }); 
+      res.status(200).json({ message }); 
     })
     .catch((error) => {
-      res.status(400).json({ message: error }); // Registration encountered an error, return the error message
+      res.status(500).json({ error });
     });
 };
+//// 15_MAY deliverydetials
+
+exports.deliveryEmployee = (req, res) => {
+const { type } = req.query;
+console.log({type});
+
+userRepository.deliveryEmployee(type)
+    .then((result) => {
+        console.log({result});
+
+        res.status(200).json(result);
+    })
+    .catch((error) => {
+        console.error({error});
+        res.status(500).json({ message: 'Internal server error' });
+    });
+};
+
+//deliveryFromSellar
+exports.deliveryFromSellar = (req, res) => {
+const { productId } = req.query;
+
+
+userRepository.deliveryFromSellar(productId)
+    .then((result) => {
+        console.log({result});
+
+        res.status(200).json(result);
+    })
+    .catch((error) => {
+        console.error({error});
+        res.status(500).json({ message: 'Internal server error' });
+    });
+};
+///deliverydetialsOfBuyer
+exports.deliverydetialsOfBuyer = (req, res) => {
+const { userId } = req.query;
+
+
+userRepository.deliverydetialsOfBuyer(userId)
+    .then((result) => {
+        console.log({result});
+
+        res.status(200).json(result);
+    })
+    .catch((error) => {
+        console.error({error});
+        res.status(500).json({ message: 'Internal server error' });
+    });
+};
+
+
+
+//exports.oldpassword 
+
 

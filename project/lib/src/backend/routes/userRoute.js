@@ -21,15 +21,21 @@ router.post('/delete', userController.deleteacountt);
 
 router.put('/UpdatePass', userController.UpdatePass);
 router.post('/oldpassword', userController.oldpassword); 
-/////////// 12/5 new 
+
+// ibtisam 
+router.get('/list', userController.getdatauser );
+router.put('/updateadmin', userController.updateadminofuser);
+
+
+// aya 
 router.put('/Interaction', userController.userInteraction);
 // 15_MAY 
 router.get('/deliveryEmployee', userController.deliveryEmployee);
 router.get('/deliveryFromSellar', userController.deliveryFromSellar);
 router.get('/deliverydetialsOfBuyer', userController.deliverydetialsOfBuyer);
 
-// ibtisam 
-router.get('/list', userController.getdatauser );
-router.put('/updateadmin', userController.updateadminofuser);
-router.post('/adduseradmin', userController.adduserfromadmin);
+// ibtisam new data 
+router.post('/adduseradmin', userController.adduserfromadmin); // adduserfromadmin
+
+
 module.exports = router;

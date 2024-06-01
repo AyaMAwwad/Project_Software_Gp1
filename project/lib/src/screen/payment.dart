@@ -1,17 +1,22 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+import 'package:another_flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:project/src/screen/ipaddress.dart';
+import 'package:get/get.dart';
 import 'package:project/src/app.dart';
 import 'package:project/src/screen/home_page.dart';
-import 'package:project/src/screen/ipaddress.dart';
+
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/cart_item.dart';
+import 'dart:typed_data';
+import 'package:google_fonts/google_fonts.dart';
 
 class Payment {
   static Map<String, dynamic>? paymentIntent;
@@ -52,26 +57,35 @@ class Payment {
 
       await updateQuantityOfProduct(CartItemState.selectedListOfUserToPay);
       showRatingDialog();
-      await StoreToPay(Login.idd, amount, 'visa');
+      await StoreToPay(
+          Login.idd, amount, 'visa', CartItemState.selectedListOfUserToPay);
       await deleteProductPaidFromShopCart(
           CartItemState.selectedListOfUserToPay);
       isPay = true;
       print('Done');
       HomePageState.InteractionOfUser(Login.idd, productId, 0, 0, 1);
-
+      Flushbar(
+        message: "Payment Done",
+        duration: Duration(seconds: 3),
+        // backgroundColor: Colors.red,
+        margin: EdgeInsets.all(8),
+        borderRadius: BorderRadius.circular(8),
+      ).show(context);
       if (onPaymentSuccess != null) {
         onPaymentSuccess!();
       }
+      await sendAdminNotification(amount, CartItemState.selectedListOfUserToPay,
+          Login.Email); // ibtisam ****
 
       // CartItemState.functionPayed();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          "payment Failed",
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.redAccent,
-      ));
+      Flushbar(
+        message: "Payment Failed",
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        margin: EdgeInsets.all(8),
+        borderRadius: BorderRadius.circular(8),
+      ).show(context);
       print('Failed Pay');
     }
     // CartItemState cart = CartItemState();
@@ -138,9 +152,12 @@ class Payment {
 // store to pay table
 
   static Future<void> StoreToPay(
-      int userId, double amount, String payMethod) async {
+      int userId, double amount, String payMethod, List<int> productIds) async {
+    //
     print(amount);
     print(payMethod);
+    print(productIds);
+
     final response = await http.post(
       Uri.parse('http://$ip:3000/tradetryst/payment/add'),
       headers: <String, String>{
@@ -150,6 +167,8 @@ class Payment {
         'userId': userId,
         'amount': amount,
         'payMethod': payMethod,
+        'productIds':
+            productIds.where((id) => id != 0).toList(), // productIds, //
       }),
     );
 
@@ -175,12 +194,36 @@ class Payment {
       }
     } catch (e) {
       print(' Response body:');
+      // throw Exception('Failed to fetch data: $e');
     }
     return null;
   }
 
-  ///////// new
-  /// for rating done just need when prees to notification appear it
+  // ibtisam ****
+  static Future<void> sendAdminNotification(
+      double amount, List<int> productIds, String userEmail) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('notifications')
+          .doc('kharroushehahlam@gmail.com')
+          .collection('userNotifications')
+          .add({
+        'title': 'Payment Received',
+        //'body': 'A payment of ', // products: ${productIds.join(', ')}.
+        'body':
+            'A payment of \$${amount.toStringAsFixed(2)} has been received from $userEmail for order  ',
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      print('Admin notification sent successfully');
+    } catch (e) {
+      print('Failed to send admin notification: $e');
+    }
+  }
+
+  /// iiiibtisam ****
+  ///
+// ayaaaa   newww
+
   static void showRatingDialog() {
     final context = navigatorKey.currentState?.overlay?.context;
     if (context == null) {
@@ -370,4 +413,6 @@ class Payment {
       print('Failed to add rating number');
     }
   }
+
+  // enddd
 }

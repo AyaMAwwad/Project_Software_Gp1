@@ -57,3 +57,16 @@ exports.checkTheQuantityToPayment = (req, res) => {
       res.status(500).json({ message: 'the product sold out' });
   });
     };
+
+// new ibtisam 
+    exports.deletepaymentadmin = (req, res) => {
+      const paymentId = req.params.paymentId; 
+    // parameters order.paymentid 
+      paymentRepository.deletepaymentadmin(paymentId)
+        .then((message) => {
+          res.status(200).json({ message }); 
+        })
+        .catch((error) => {
+          res.status(400).json({ message: error }); 
+        });
+    };
