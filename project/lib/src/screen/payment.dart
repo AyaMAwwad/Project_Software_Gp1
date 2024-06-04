@@ -205,7 +205,7 @@ class Payment {
     try {
       await FirebaseFirestore.instance
           .collection('notifications')
-          .doc('kharroushehahlam@gmail.com')
+          .doc('ayamoeenawwad@gmail.com')
           .collection('userNotifications')
           .add({
         'title': 'Payment Received',

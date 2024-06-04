@@ -90,54 +90,86 @@ class SearchPage extends StatelessWidget {
             String sympolprice = getsymbol(updatedPrice); // price 8
             //
             final Map<String, dynamic> imageData = productData['image'];
+
+            /// aya
+            final isSelfProduct = Login.idd == productData['user_id'];
+
+            ///
             List<int> bytes = List<int>.from(imageData['data']);
             return SingleChildScrollView(
               child: Card(
                 child: GestureDetector(
-                  onTap: () {
-                    HomePageState.InteractionOfUser(
-                        Login.idd, productData['product_id'], 1, 0, 0);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailPage(
-                          categoryName: productData['name'],
-                          imagePaths: imageData,
-                          price: price,
-                          productid: productData['product_id'],
-                          Typeproduct: theState,
-                          quantity: productData['quantity'],
-                          name: productData['name'],
-                          description: productData['description'],
-                        ),
-                      ),
-                    );
-                  },
+                  onTap:
+
+                      ///aya
+                      isSelfProduct
+                          ? null
+                          :
+
+                          ///
+                          () {
+                              HomePageState.InteractionOfUser(Login.idd,
+                                  productData['product_id'], 1, 0, 0);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailPage(
+                                    categoryName: productData['name'],
+                                    imagePaths: imageData,
+                                    price: price,
+                                    productid: productData['product_id'],
+                                    Typeproduct: theState,
+                                    quantity: productData['quantity'],
+                                    name: productData['name'],
+                                    description: productData['description'],
+                                  ),
+                                ),
+                              );
+                            },
                   child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 8, right: 8, left: 8),
-                          child: AspectRatio(
-                            aspectRatio: 0.65,
+                    child:
+
+                        ///aya
+                        Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      /////
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 8, right: 8, left: 8),
+                            child: AspectRatio(
+                              aspectRatio: 0.65,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                /*BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
+                                ),*/
+                                child: Image.memory(
+                                  Uint8List.fromList(bytes),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          /* Expanded(
+                            flex: 2,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              /*BorderRadius.only(
+                              borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10),
-                              ),*/
+                              ),
                               child: Image.memory(
                                 Uint8List.fromList(bytes),
                                 fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                        ),
-
-                        /* Expanded(
-                          flex: 2,
-                          child: ClipRRect(
+                          ),*/
+                          /*  ClipRRect(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),
@@ -146,172 +178,187 @@ class SearchPage extends StatelessWidget {
                               Uint8List.fromList(bytes),
                               fit: BoxFit.cover,
                             ),
-                          ),
-                        ),*/
-                        /*  ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                          ),
-                          child: Image.memory(
-                            Uint8List.fromList(bytes),
-                            fit: BoxFit.cover,
-                          ),
-                        ),*/
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                productData['name'],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Color.fromARGB(255, 2, 46, 82),
-                                  fontWeight: FontWeight.w600,
+                          ),*/
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  productData['name'],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color.fromARGB(255, 2, 46, 82),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                              // priceprosearch(),
-                              Text(
-                                // 'Price: $updatedPrice',  // price 8
-                                '$sympolprice', // price 8
+                                // priceprosearch(),
+                                Text(
+                                  // 'Price: $updatedPrice',  // price 8
+                                  '$sympolprice', // price 8
 
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 66, 66, 66),
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Text(
-                                'State: $theState',
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 66, 66, 66),
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Text(
-                                '$filed: $theVal',
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 66, 66, 66),
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        child: Icon(
-                                          Icons.star,
-                                          size: 21,
-                                          color:
-                                              Color.fromARGB(255, 244, 203, 20),
-                                        ),
-                                        onTap: () async {
-                                          //   OpenChatWithSellar.functionForChar(itemName, context);
-                                        },
-                                      ),
-                                      Text(
-                                        productData['average_rating'] == '0.00'
-                                            ? ''
-                                            : productData['average_rating'],
-                                      ),
-                                    ],
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 66, 66, 66),
+                                    fontSize: 12,
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      GestureDetector(
-                                        child: Icon(
-                                          IconsaxBold.messages,
-                                          size: 18,
-                                          color:
-                                              Color.fromARGB(255, 2, 92, 123),
+                                ),
+                                Text(
+                                  'State: $theState',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 66, 66, 66),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Text(
+                                  '$filed: $theVal',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 66, 66, 66),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          child: Visibility(
+                                            visible: !(productData[
+                                                    'average_rating'] ==
+                                                '0.00'),
+                                            child: Icon(
+                                              Icons.star,
+                                              size: 21,
+                                              color: Color.fromARGB(
+                                                  255, 244, 203, 20),
+                                            ),
+                                          ),
+                                          onTap: () async {
+                                            //   OpenChatWithSellar.functionForChar(itemName, context);
+                                          },
                                         ),
-                                        onTap: () async {
-                                          OpenChatWithSellar.functionForChar(
-                                              productData['name'], context);
-                                        },
-                                      ),
-                                      SizedBox(width: 10),
-                                      GestureDetector(
-                                        child: Icon(
-                                          productData['quantity'] == 0
-                                              ? Icons.remove_shopping_cart
-                                              : (theState == 'Free' ||
-                                                      theState == 'free' ||
-                                                      theState == 'مجاني')
-                                                  ? Icons
-                                                      .arrow_circle_right_outlined
-                                                  : Icons
-                                                      .shopping_cart_checkout,
-                                          // Icons.shopping_cart_checkout,
-                                          size: 14,
-                                          color:
-                                              Color.fromARGB(255, 2, 92, 123),
+                                        Text(
+                                          productData['average_rating'] ==
+                                                  '0.00'
+                                              ? ''
+                                              : productData['average_rating'],
                                         ),
-                                        onTap: () async {
-                                          if (productData['quantity'] != 0) {
-                                            if (theState == 'Free' ||
-                                                theState == 'free' ||
-                                                theState == 'مجاني') {
-                                              print(
-                                                  '********* the state:$theState');
-                                              showModalBottomSheet(
-                                                context: context,
-                                                isScrollControlled: true,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return DeliveryPage(
-                                                    isFree: true,
-                                                    deliveryOption: productData[
-                                                        'Delivery_option'],
-                                                    productId: productData[
-                                                        'product_id'],
-                                                    onPaymentSuccess: () {},
-                                                  );
-                                                },
-                                              );
-                                              // DeliveryPage(isFree: true);
-                                            } else {
-                                              HomePageState.InteractionOfUser(
-                                                  Login.idd,
-                                                  productData['product_id'],
-                                                  0,
-                                                  1,
-                                                  0);
-                                              await RecentSingleProdState
-                                                  .shoppingCartStore(
-                                                      '1',
-                                                      '',
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        /// aya
+                                        Visibility(
+                                          visible: !isSelfProduct,
+                                          //////
+                                          child: GestureDetector(
+                                            child: Icon(
+                                              IconsaxBold.messages,
+                                              size: 18,
+                                              color: Color.fromARGB(
+                                                  255, 2, 92, 123),
+                                            ),
+                                            onTap: () async {
+                                              OpenChatWithSellar
+                                                  .functionForChar(
                                                       productData['name'],
-                                                      theState,
-                                                      productData[
-                                                          'description'],
                                                       context);
-                                            }
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                              content: Text(
-                                                "Product SOLD OUT\nCan not add Item to Shoppimg Card",
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              backgroundColor: Colors.redAccent,
-                                            ));
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+
+                                        /// aya
+                                        Visibility(
+                                          visible: !isSelfProduct,
+
+                                          ///
+                                          child: GestureDetector(
+                                            child: Icon(
+                                              productData['quantity'] == 0
+                                                  ? Icons.remove_shopping_cart
+                                                  : (theState == 'Free' ||
+                                                          theState == 'free' ||
+                                                          theState == 'مجاني')
+                                                      ? Icons
+                                                          .arrow_circle_right_outlined
+                                                      : Icons
+                                                          .shopping_cart_checkout,
+                                              // Icons.shopping_cart_checkout,
+                                              size: 14,
+                                              color: Color.fromARGB(
+                                                  255, 2, 92, 123),
+                                            ),
+                                            onTap: () async {
+                                              if (productData['quantity'] !=
+                                                  0) {
+                                                if (theState == 'Free' ||
+                                                    theState == 'free' ||
+                                                    theState == 'مجاني') {
+                                                  print(
+                                                      '********* the state:$theState');
+                                                  showModalBottomSheet(
+                                                    context: context,
+                                                    isScrollControlled: true,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return DeliveryPage(
+                                                        isFree: true,
+                                                        deliveryOption:
+                                                            productData[
+                                                                'Delivery_option'],
+                                                        productId: productData[
+                                                            'product_id'],
+                                                        onPaymentSuccess: () {},
+                                                      );
+                                                    },
+                                                  );
+                                                  // DeliveryPage(isFree: true);
+                                                } else {
+                                                  HomePageState
+                                                      .InteractionOfUser(
+                                                          Login.idd,
+                                                          productData[
+                                                              'product_id'],
+                                                          0,
+                                                          1,
+                                                          0);
+                                                  await RecentSingleProdState
+                                                      .shoppingCartStore(
+                                                          '1',
+                                                          '',
+                                                          productData['name'],
+                                                          theState,
+                                                          productData[
+                                                              'description'],
+                                                          context);
+                                                }
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                    "Product SOLD OUT\nCan not add Item to Shoppimg Card",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  backgroundColor:
+                                                      Colors.redAccent,
+                                                ));
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

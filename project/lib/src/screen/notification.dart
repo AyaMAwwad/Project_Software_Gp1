@@ -1,8 +1,12 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:project/src/app.dart';
 import 'package:project/src/chat/notification_service.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/notification_send_msg.dart';
+import 'package:project/widgets/app_bar.dart';
+import 'package:project/widgets/bottom_nav.dart';
 
 class FirebaseNotification {
   static final firebaseMsg = FirebaseMessaging.instance;
@@ -63,8 +67,19 @@ class FirebaseNotification {
   }
 
   static void onNotificationTap(NotificationResponse response) {
-    navigatorKey.currentState!
-        .pushNamed('notification'); //, arguments: response
+    print('title: $title');
+    if (title == '[Private Reminder]') {
+      CartState().resetCart();
+      navigatorKey.currentState!.pushNamed('cartShop');
+    } else if (title == 'New Collection') {
+      CartState().resetCart();
+      NotificationState.resetNotification();
+      navigatorKey.currentState!.pushNamed('notification');
+      // need to update to what page of new collection or open details of product
+    } else {
+      NotificationState.resetNotification();
+      navigatorKey.currentState!.pushNamed('notification');
+    }
   }
 
   static Future showNotification(

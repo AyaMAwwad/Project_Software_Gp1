@@ -157,14 +157,58 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
             CircleAvatar(
               backgroundColor: Color.fromARGB(255, 253, 246, 254),
               child: IconButton(
-                icon: Icon(
+                icon: Stack(
+                  children: [
+                    Icon(
+                      IconsaxBold.notification,
+                      //Icons.notifications,
+                      color: Color.fromARGB(255, 2, 92, 123),
+                      size: 26,
+                    ),
+                    ValueListenableBuilder<int>(
+                      valueListenable: NotificationState().cartCountNotifier,
+                      builder: (context, cartCount, child) {
+                        if (cartCount > 0) {
+                          return Positioned(
+                            right: 0,
+                            top: -1,
+                            child: Container(
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              constraints: BoxConstraints(
+                                minWidth: 13,
+                                minHeight: 11,
+                              ),
+                              child: Text(
+                                '$cartCount',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      },
+                    ),
+                  ],
+                ),
+
+                /*Icon(
                   // FontAwesomeIcons.bell,
                   IconsaxBold.notification,
                   //Icons.notifications,
                   color: Color.fromARGB(255, 2, 92, 123),
                   size: 26,
-                ),
+                ),*/
                 onPressed: () {
+                  NotificationState.resetNotification();
                   // triggerNotification();
                   Navigator.push(
                       context,
@@ -186,7 +230,7 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
                   //  color: kTextColor,
                 ),
                 onPressed: () {
-                  triggerNotification();
+                  //   triggerNotification();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -204,5 +248,27 @@ class CustemAppBar extends StatelessWidget implements PreferredSizeWidget {
     // ),
 
     //  );
+  }
+}
+
+class NotificationState {
+  // Singleton pattern
+  static final NotificationState _instance = NotificationState._internal();
+  factory NotificationState() => _instance;
+
+  NotificationState._internal();
+
+  static ValueNotifier<int> _NotificationCountNotifier = ValueNotifier<int>(0);
+
+  ValueNotifier<int> get cartCountNotifier => _NotificationCountNotifier;
+
+  int get cartCount => _NotificationCountNotifier.value;
+
+  static void incrementNotification() {
+    _NotificationCountNotifier.value++;
+  }
+
+  static void resetNotification() {
+    _NotificationCountNotifier.value = 0;
   }
 }

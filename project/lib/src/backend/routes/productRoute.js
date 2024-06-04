@@ -68,5 +68,6 @@ router.get('/retriveProductHomeRecomendedSystem', productController.retriveProdu
 router.get('/productThisMonth', productController.productThisMonth);
 
 router.get('/productlistt', productController.gettproducttoadmin); // gettproducttoadmin
-
+router.get('/checkQuantityForNotification', productController.checkQuantityForNotification);
+router.get('/ProductNewCollectionForNotification', productController.ProductNewCollectionForNotification);
 module.exports = router;

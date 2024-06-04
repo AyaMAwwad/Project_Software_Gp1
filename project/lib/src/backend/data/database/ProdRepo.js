@@ -99,7 +99,7 @@ addProduct(req, res) {
    
 
     db.query(
-      'SELECT user_id FROM user WHERE email = ? ',
+      'SELECT user_id,user_type FROM user WHERE email = ? ',
       [email],
       (error, results) => {
         if (error) {
@@ -107,6 +107,7 @@ addProduct(req, res) {
         }
         console.log('aaaaa');
        const userid=results[0].user_id;
+       let userType=results[0].user_type;
           db.query(
             'INSERT INTO Category (name, type) VALUES (?, ?)',
             [category, typeOfCategory],
@@ -150,7 +151,7 @@ addProduct(req, res) {
                 if (error3) {
                   return reject('Failed to insert New product ');
                 }
-                return resolve('inserted new product successfully.');
+               // return resolve('inserted new product successfully.');
               }
 
 
@@ -165,7 +166,7 @@ addProduct(req, res) {
                 if (error4) {
                   return reject('Failed to insert Used product ');
                 }
-                return resolve('inserted Used product successfully.');
+               // return resolve('inserted Used product successfully.');
               }
 
 
@@ -184,13 +185,33 @@ addProduct(req, res) {
                   return reject('Failed to insert Free product ');
                 }
   
-                return resolve('inserted Free product successfully.');
+              //  return resolve('inserted Free product successfully.');
               }
 
 
             );
             
           }
+          if(userType =='Buyer' || userType =='buyer' || userType =='مشتري'){
+            userType='Sellar';
+          db.query(
+          
+             
+            'UPDATE user SET user_type = ? WHERE user_id = ?',
+             [userType,userid],
+            (error5, results3) => {
+             
+               if (error5) {
+                 return reject('Failed to insert Free product ');
+               }
+ 
+             //  return resolve('inserted Free product successfully.');
+             }
+
+
+           );
+          }
+           return resolve('inserted  product successfully.');
    
 
               }
@@ -221,6 +242,26 @@ addProduct(req, res) {
                    if (error5) {
                      return reject('Failed to insert Sub Image product ');
                    }
+                   if(userType =='Buyer' || userType =='buyer' || userType =='مشتري'){
+                    userType='Sellar';
+                  db.query(
+                  
+                     
+                    'UPDATE user SET user_type = ? WHERE user_id = ?',
+                     [userType,userid],
+                    (error5, results3) => {
+                     
+                       if (error5) {
+                         return reject('Failed to insert Free product ');
+                       }
+         
+                     //  return resolve('inserted Free product successfully.');
+                     }
+        
+        
+                   );
+                  }
+                   
      
                    return resolve('inserted Sub Image successfully.');
                  }
@@ -1076,6 +1117,198 @@ gettproducttoadmin(req, res){
     );
   });
 }
+
+checkQuantityForNotification(userId) {
+
+  console.error('AYYYYYYYYYYYYYYYYYYYYYYYYA');
+  return new Promise((resolve, reject) => {
+    db.query('SELECT product_id FROM shopping_cart WHERE user_id = ?', [userId], (error, results) => {
+      if (error) {
+        console.error(error);
+        reject('Error retrieving shopping cart items');
+      } else if (results.length === 0) {
+        reject('No products found in shopping cart');
+      } else {
+        const productIds = results.map(row => row.product_id);
+
+        if (productIds.length === 0) {
+          reject('No products found in shopping cart');
+        } else {
+          
+          const query = 'SELECT * FROM product WHERE product_id IN (?) AND quantity IN (1, 2)';
+          db.query(query, [productIds], (error, results) => {
+            if (error) {
+              console.error(error);
+              reject('Error retrieving product details');
+            } else {
+              const allProductDetails = [];
+              results.forEach(product => {
+               let Query='';
+               if(product['product_type']== 'New' || product['product_type']== 'جديد'){
+                 Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
+               }
+               else if(product['product_type']=='Used'|| product['product_type']== 'مستعمل'){
+                 Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
+               }
+               else if(product['product_type']=='Free'|| product['product_type']== 'مجاني'){
+                 Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
+               }
+
+                  const productId =product.product_id;
+                  let prevId='';
+                  db.query(Query, [productId], (error2, res2) => {
+                   if (error2) {
+                       console.error(error2);
+                       reject('Failed to retrieve data from new_product table');
+                   } else {
+                       // Add the retrieved data to allProductDetails
+                       res2.forEach(entry => {
+                         const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
+                         if (!found || prevId!=productId) {
+                             allProductDetails.push(entry);
+                             prevId=productId;
+                         }
+                     });
+                      // allProductDetails.push(...res2);
+                      
+                       console.log(allProductDetails);
+                       console.log('aaaayyya ouuuuut ');
+                       // Check if all products have been processed
+                     if (allProductDetails.length == results.length) {
+                       console.log('aaaayyya');
+                         resolve({ results, allProductDetails });// resolve(allProductDetails);
+                       }
+                       else if(allProductDetails.length==0) {
+                         reject('Not have data to retrieve ');
+                       }
+                     
+                   }
+               });
+              });
+             // resolve({results});
+            }
+          });
+        }
+      }
+    });
+  });
+}
+
+//ProductNewCollectionForNotification
+ ProductNewCollectionForNotification(userId) {
+  console.log(userId);
+  return new Promise((resolve, reject) => {
+    db.query(
+      'SELECT product_id FROM user_interaction WHERE user_id = ? ORDER BY created_at DESC LIMIT 5',
+      [userId],
+      (err, results) => {
+        if (err) {
+          console.error(err);
+          return reject('Failed to fetch interactions');
+        }
+
+        const productIds = results.map(row => row.product_id);
+        console.log(productIds);
+
+        if (productIds.length == 0) {
+          return resolve('No interactions found');
+        }
+
+        const placeholders = productIds.map(() => '?').join(',');
+        db.query(
+          `SELECT p.product_id, p.category_id, c.type AS category_type 
+          FROM Product p 
+          JOIN Category c ON p.category_id = c.category_id 
+          WHERE p.product_id IN (${placeholders})`,
+          productIds,
+          (err2, productResults) => {
+            if (err2) {
+              console.error(err2);
+              return reject('Failed to fetch product metadata');
+            }
+
+            const categoryTypes = productResults.map(p => p.category_type);
+            const uniqueCategoryTypes = [...new Set(categoryTypes)]; // Get unique category types
+            const typePlaceholders = uniqueCategoryTypes.map(() => '?').join(',');
+
+            db.query(
+              `SELECT category_id FROM Category WHERE type IN (${typePlaceholders})`,
+              uniqueCategoryTypes,
+              (err3, categoryResults) => {
+                if (err3) {
+                  console.error(err3);
+                  return reject('Failed to fetch related categories');
+                }
+
+                const categoryIds = categoryResults.map(row => row.category_id);
+                const categoryPlaceholders = categoryIds.map(() => '?').join(',');
+                db.query(
+                  `SELECT * FROM Product WHERE category_id IN (${categoryPlaceholders}) AND created_at >= NOW() - INTERVAL 2 HOUR`,
+                  categoryIds,
+                  (err4, allProducts) => {
+                    if (err4 || allProducts==0) {
+                      console.error(err4);
+                      return reject('Failed to fetch related products');
+                    }
+
+                    console.log(allProducts);
+                    const allProductDetails = [];
+                   allProducts.forEach(product => {
+                    let Query='';
+                    if(product['product_type']== 'New' || product['product_type']== 'جديد'){
+                      Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
+                    }
+                    else if(product['product_type']=='Used'|| product['product_type']== 'مستعمل'){
+                      Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
+                    }
+                    else if(product['product_type']=='Free'|| product['product_type']== 'مجاني'){
+                      Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
+                    }
+
+                       const productId =product.product_id;
+                       let prevId='';
+                       db.query(Query, [productId], (error2, res2) => {
+                        if (error2) {
+                            console.error(error2);
+                            reject('Failed to retrieve data from new_product table');
+                        } else {
+                            // Add the retrieved data to allProductDetails
+                            res2.forEach(entry => {
+                              const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
+                              if (!found || prevId!=productId) {
+                                  allProductDetails.push(entry);
+                                  prevId=productId;
+                              }
+                          });
+                           // allProductDetails.push(...res2);
+                           
+                            console.log(allProductDetails);
+                            console.log('aaaayyya ouuuuut ');
+                            // Check if all products have been processed
+                          if (allProductDetails.length == allProducts.length) {
+                            console.log('aaaayyya');
+                              resolve({ allProducts, allProductDetails });// resolve(allProductDetails);
+                            }
+                            else if(allProductDetails.length==0) {
+                              reject('Not have data to retrieve ');
+                            }
+                          
+                        }
+                    });
+                   });
+                   
+                   // resolve({allProducts});
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
+    );
+  });
+}
+
  /*
  my code 
  

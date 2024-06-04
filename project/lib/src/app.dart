@@ -16,6 +16,7 @@ import 'package:project/src/screen/security.dart';
 import 'package:project/src/screen/settings.dart';
 
 import 'package:project/src/screen/signup_screen.dart';
+import 'package:project/widgets/cart_shop.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -88,6 +89,7 @@ class MyAppState extends State<MyApp> {
         "settings": (context) => SettingsPage(),
         "multiLanguage": (context) => MultiLanguage(),
         "security": (context) => PrivacySecurityPage(),
+        "cartShop": (context) => CartShop(),
         //"category": (context) => ScreenCategory(),
       },
       // Login(), // Signup(), //CoverStateScreen(), // Display SplashScreen initially
