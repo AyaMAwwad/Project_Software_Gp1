@@ -291,3 +291,35 @@ exports.updateSellarProduct = (req, res) => {
           res.status(400).json({ message: error }); // Registration encountered an error, return the error message
         });
     };
+
+    //checkQuantityForNotification
+    exports.checkQuantityForNotification = (req, res) => {
+      const { userId } = req.query;
+      
+      
+      prod.checkQuantityForNotification(userId)
+          .then((result) => {
+              console.log({result});
+      
+              res.status(200).json(result);
+          })
+          .catch((error) => {
+              console.error({error});
+              res.status(500).json({ message: 'Internal server error' });
+          });
+      };
+//ProductNewCollectionForNotification
+exports.ProductNewCollectionForNotification = (req, res) => {
+  const { userId } = req.query;
+  
+  prod.ProductNewCollectionForNotification(userId)
+      .then((result) => {
+          console.log({result});
+  
+          res.status(200).json(result);
+      })
+      .catch((error) => {
+          console.error({error});
+          res.status(500).json({ message: 'Internal server error' });
+      });
+  };

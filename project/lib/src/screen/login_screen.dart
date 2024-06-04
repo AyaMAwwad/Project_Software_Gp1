@@ -22,6 +22,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project/src/screen/forget_pass.dart';
 import 'package:project/src/screen/ipaddress.dart';
+import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/signup_screen.dart';
 import 'package:project/src/screen/verify_email.dart';
 import 'package:project/widgets/button.dart';
@@ -345,7 +346,7 @@ class LoginScreen extends State<Login> with ValidationMixin {
               //'images/icon/svg.png',
               // Adjust height as needed
               fit: BoxFit.fill, // Adjust BoxFit as needed
-              width: MediaQuery.of(context).size.width ,
+              width: MediaQuery.of(context).size.width,
               // pri
               height: 250,
             ),
@@ -483,7 +484,10 @@ class LoginScreen extends State<Login> with ValidationMixin {
         isUserLog = true;
         Navigator.of(context).pushReplacementNamed("homepagee");
         // Authentication successful
+        // await checkQuantityForNotification(Login.idd);
         print('Login successful');
+        scheduleNotifications();
+        // triggerNotification();
         // Navigate to the home page or perform any other actions
       } else if (response.statusCode == 401) {
         // Invalid email or password

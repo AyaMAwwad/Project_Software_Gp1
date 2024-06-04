@@ -2,7 +2,7 @@
 
 // ignore_for_file: prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, prefer_interpolation_to_compose_strings
 
-import 'package:flutter_font_icons/flutter_font_icons.dart';
+//import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -140,6 +140,7 @@ class HomePageState extends State<HomePage> {
             product.quantity,
             product.delivery,
             product.avgRate,
+            product.userId,
           );
         }
       },
@@ -197,6 +198,9 @@ class HomePageState extends State<HomePage> {
               product.quantity,
               product.delivery,
               product.avgRate,
+
+              /// aya
+              product.userId,
             ),
           );
         }
@@ -238,8 +242,10 @@ class HomePageState extends State<HomePage> {
   }
 
 */
+
   functionProductForThisMonth() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children:
           productsThisMonth.map((product) => productItem(product)).toList(),
     );
@@ -523,8 +529,14 @@ class HomePageState extends State<HomePage> {
   String imagetablet = 'images/icon/galaxy.webp';
 
   String pricetablet = 'Price: \$100.00';
-
   final List<Category> categories = [
+    /* Category(name: '50'.tr, imagePath: 'images/icon/fashion.jpg'),
+    Category(name: '51'.tr, imagePath: 'images/icon/books.jpg'),
+    Category(name: '52'.tr, imagePath: 'images/icon/game.jpg'),
+    Category(name: '53'.tr, imagePath: 'images/icon/vehicles.jpg'),
+    Category(name: '54'.tr, imagePath: 'images/icon/furniture.jpg'),
+    Category(name: '55'.tr, imagePath: 'images/icon/mobile.jpg'),
+    Category(name: '56'.tr, imagePath: 'images/icon/Houseware.jpg'),*/
     Category(
         name: '50'.tr,
         imagePath:
@@ -1014,25 +1026,40 @@ UserAccountsDrawerHeader(
                         ),
                         //  ),
                       ),
+                    // ibtisam web **************
                     // SizedBox(height: 16),
                     // this month
-                    Padding(
-                      padding: EdgeInsets.only(right: 220),
-                      child: textfunctionThisMonth(),
-                    ),
-
+                    if (MediaQuery.of(context).size.width > 1000)
+                      Padding(
+                        padding: EdgeInsets.only(right: 1090), //220
+                        child: textfunctionThisMonth(),
+                      ),
+                    if (MediaQuery.of(context).size.width < 700)
+                      Padding(
+                        padding: EdgeInsets.only(right: 220), //220
+                        child: textfunctionThisMonth(),
+                      ),
                     SizedBox(height: 16),
                     // productItem(products);
                     // ibtisamproduct(),
                     // SizedBox(height: 50),
-                    buildBottomForThisMonth(context), //openSans
+                    Center(
+                      child: buildBottomForThisMonth(context),
+                    ), //openSans
                     SizedBox(height: 16),
 
                     /////////////////
-                    Padding(
-                      padding: EdgeInsets.only(right: 190),
-                      child: textfunction2(),
-                    ),
+                    if (MediaQuery.of(context).size.width > 1000)
+                      Padding(
+                        padding: EdgeInsets.only(right: 530), //190
+                        child: textfunction2(),
+                      ),
+                    // mobile
+                    if (MediaQuery.of(context).size.width < 700)
+                      Padding(
+                        padding: EdgeInsets.only(right: 190), //190
+                        child: textfunction2(),
+                      ),
 
                     SizedBox(height: 16),
                     // productItem(products);
@@ -1040,11 +1067,16 @@ UserAccountsDrawerHeader(
                     // SizedBox(height: 50),
                     buildBottom(context), //openSans
                     SizedBox(height: 16),
-                    Padding(
-                      padding: EdgeInsets.only(right: 190),
-                      child: textfunction(),
-                    ),
-
+                    if (MediaQuery.of(context).size.width > 1000)
+                      Padding(
+                        padding: EdgeInsets.only(right: 540), // 190
+                        child: textfunction(),
+                      ),
+                    if (MediaQuery.of(context).size.width < 700)
+                      Padding(
+                        padding: EdgeInsets.only(right: 190), // 190
+                        child: textfunction(),
+                      ),
                     SizedBox(height: 16),
 
                     buildVerticalProduct(context),
@@ -1061,6 +1093,8 @@ UserAccountsDrawerHeader(
           ],
         ),
       ),
+
+      // ibtisam web ************
       bottomNavigationBar: NavBar(
         selectedIndex: selectedIndex,
         onTabSelected: _onTabSelected,
@@ -1361,14 +1395,63 @@ UserAccountsDrawerHeader(
       ),
     );
   }
-////buildBottomForThisMonth
 
+  // ibtisam web *******
+
+////buildBottomForThisMonth
+  Widget buildBottomForThisMonth(BuildContext context) {
+    double containerWidth = MediaQuery.of(context).size.width;
+    double adjustedWidth = containerWidth; //- 40;
+    if (containerWidth > 1000) {
+      adjustedWidth = containerWidth - 300;
+    }
+    //if(MediaQuery.of(context).size.width < 700 )
+    return Container(
+      width: adjustedWidth,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Row(
+            children: <Widget>[functionProductForThisMonth()],
+          ),
+        ),
+      ),
+    );
+    // else{
+
+    // }
+  }
+/*Widget buildBottomForThisMonth(BuildContext context) {
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: EdgeInsets.all(5.0),
+      //  child: IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 16,
+              ),
+              functionProductForThisMonth(),
+            ],
+          ),
+       // ),
+      ),
+    ),
+  );
+}*/
+/*
   Widget buildBottomForThisMonth(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
         padding: EdgeInsets.all(5.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               height: 16,
@@ -1379,9 +1462,10 @@ UserAccountsDrawerHeader(
       ),
     );
   }
-
+*/
 /////////////////////////
   ///
+// ibtisam web **********
 
   Widget buildBottom(BuildContext context) {
     return SingleChildScrollView(
@@ -1440,9 +1524,59 @@ UserAccountsDrawerHeader(
     );
   }
 
+  // ibtisam webb ************
   List<Widget> productALL(BuildContext context) {
     List<Widget> rows = [];
-    for (int i = 0; i < allProducts.length; i += 2) {
+    int itemsPerRow = MediaQuery.of(context).size.width > 1000 ? 4 : 2;
+
+    for (int i = 0; i < allProducts.length; i += itemsPerRow) {
+      List<Widget> rowChildren = [];
+
+      for (int j = 0; j < itemsPerRow; j++) {
+        if (i + j < allProducts.length) {
+          rowChildren.add(productItemForVirtical(allProducts[i + j]));
+        }
+      }
+
+      if (rowChildren.length < itemsPerRow) {
+        int emptySlots = itemsPerRow - rowChildren.length;
+        List<Widget> centeredRowChildren = [];
+
+        for (int k = 0; k < emptySlots / 2; k++) {
+          centeredRowChildren.add(Spacer());
+        }
+
+        centeredRowChildren.addAll(rowChildren);
+
+        for (int k = 0; k < emptySlots / 2; k++) {
+          centeredRowChildren.add(Spacer());
+        }
+
+        // If there's an odd number of empty slots, add one more Spacer at the end
+        //   if (emptySlots % 2 != 0) {
+        //    centeredRowChildren.add(Spacer());
+        //  }
+
+        rows.add(Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: centeredRowChildren,
+        ));
+      } else {
+        rows.add(Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: rowChildren,
+        ));
+      }
+    }
+
+    return rows;
+  }
+
+  /* List<Widget> productALL(BuildContext context) {
+    List<Widget> rows = [];
+     int itemsPerRow = MediaQuery.of(context).size.width > 1000 ? 3 : 2; 
+
+    for (int i = 0; i < allProducts.length; i += itemsPerRow) { ///2
       List<Widget> rowChildren = [];
       rowChildren.add(productItemForVirtical(allProducts[i]));
       if (i + 1 < allProducts.length) {
@@ -1451,12 +1585,15 @@ UserAccountsDrawerHeader(
         rowChildren.add(Expanded(child: Container())); // To balance the row
       }
       rows.add(Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center, // spaceEvenly
         children: rowChildren,
       ));
     }
     return rows;
   }
+*/
+
+// ibtisam webb ********************
 
 //productItemForVirtical
   Widget buildVerticalProduct(BuildContext context) {
@@ -1518,38 +1655,51 @@ UserAccountsDrawerHeader(
   ///
 ////buildItemForThisMonth
   Widget buildItemForForVirtical(
-    BuildContext context,
-    String itemName,
-    Map<String, dynamic> imagePath,
-    String price,
-    int productId,
-    String type,
-    String description,
-    int quantity,
-    String delivery,
-    String avgRate,
-  ) {
+      BuildContext context,
+      String itemName,
+      Map<String, dynamic> imagePath,
+      String price,
+      int productId,
+      String type,
+      String description,
+      int quantity,
+      String delivery,
+      String avgRate,
+
+      ///aya
+      int userId) {
     List<int> bytes = List<int>.from(imagePath['data']);
 
+    /// aya
+    final isSelfProduct = Login.idd == userId;
+
     return GestureDetector(
-      onTap: () {
-        InteractionOfUser(Login.idd, productId, 1, 0, 0);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailPage(
-              categoryName: itemName,
-              imagePaths: imagePath,
-              price: price,
-              productid: productId,
-              Typeproduct: type,
-              quantity: quantity,
-              name: itemName,
-              description: description,
-            ),
-          ),
-        );
-      },
+      onTap:
+
+          ///aya
+          isSelfProduct
+              ? null
+              :
+
+              ///
+              () {
+                  InteractionOfUser(Login.idd, productId, 1, 0, 0);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailPage(
+                        categoryName: itemName,
+                        imagePaths: imagePath,
+                        price: price,
+                        productid: productId,
+                        Typeproduct: type,
+                        quantity: quantity,
+                        name: itemName,
+                        description: description,
+                      ),
+                    ),
+                  );
+                },
       child: Card(
         elevation: 1,
         color: Color.fromARGB(255, 244, 242, 245).withOpacity(0.9),
@@ -1612,10 +1762,13 @@ UserAccountsDrawerHeader(
               Row(
                 children: [
                   GestureDetector(
-                    child: Icon(
-                      Icons.star,
-                      size: 21,
-                      color: Color.fromARGB(255, 244, 203, 20),
+                    child: Visibility(
+                      visible: !(avgRate == '0.00'),
+                      child: Icon(
+                        Icons.star,
+                        size: 21,
+                        color: Color.fromARGB(255, 244, 203, 20),
+                      ),
                     ),
                     onTap: () async {
                       //   OpenChatWithSellar.functionForChar(itemName, context);
@@ -1625,57 +1778,68 @@ UserAccountsDrawerHeader(
                     avgRate == '0.00' ? '' : '$avgRate',
                   ),
                   Spacer(),
-                  GestureDetector(
-                    child: Icon(
-                      IconsaxBold.messages,
-                      size: 21,
-                      color: Color.fromARGB(255, 2, 46, 82),
+
+                  /// aya
+                  Visibility(
+                    visible: !isSelfProduct,
+                    ////
+                    child: GestureDetector(
+                      child: Icon(
+                        IconsaxBold.messages,
+                        size: 21,
+                        color: Color.fromARGB(255, 2, 46, 82),
+                      ),
+                      onTap: () async {
+                        OpenChatWithSellar.functionForChar(itemName, context);
+                      },
                     ),
-                    onTap: () async {
-                      OpenChatWithSellar.functionForChar(itemName, context);
-                    },
                   ),
                   SizedBox(width: 10),
-                  GestureDetector(
-                    child: Icon(
-                      quantity == 0
-                          ? Icons.remove_shopping_cart
-                          : (type == 'Free' ||
-                                  type == 'free' ||
-                                  type == 'مجاني')
-                              ? Icons.arrow_circle_right_outlined
-                              : Icons.shopping_cart_checkout,
-                      size: 20,
-                      color: Color.fromARGB(255, 2, 46, 82),
-                    ),
-                    onTap: () async {
-                      if (quantity != 0) {
-                        if (type == 'Free' ||
-                            type == 'free' ||
-                            type == 'مجاني') {
-                          print('********* the state:$type');
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (BuildContext context) {
-                              return DeliveryPage(
-                                isFree: true,
-                                deliveryOption: delivery,
-                                productId: productId,
-                                onPaymentSuccess: () {},
-                              );
-                            },
-                          );
-                        } else {
-                          //print(_cartCount);
 
-                          HomePageState.InteractionOfUser(
-                              Login.idd, productId, 0, 1, 0);
-                          RecentSingleProdState.shoppingCartStore(
-                              '1', '', itemName, type, description, context);
+                  Visibility(
+                    visible: !isSelfProduct,
+                    ////
+                    child: GestureDetector(
+                      child: Icon(
+                        quantity == 0
+                            ? Icons.remove_shopping_cart
+                            : (type == 'Free' ||
+                                    type == 'free' ||
+                                    type == 'مجاني')
+                                ? Icons.arrow_circle_right_outlined
+                                : Icons.shopping_cart_checkout,
+                        size: 20,
+                        color: Color.fromARGB(255, 2, 46, 82),
+                      ),
+                      onTap: () async {
+                        if (quantity != 0) {
+                          if (type == 'Free' ||
+                              type == 'free' ||
+                              type == 'مجاني') {
+                            print('********* the state:$type');
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (BuildContext context) {
+                                return DeliveryPage(
+                                  isFree: true,
+                                  deliveryOption: delivery!,
+                                  productId: productId!,
+                                  onPaymentSuccess: () {},
+                                );
+                              },
+                            );
+                          } else {
+                            //print(_cartCount);
+
+                            HomePageState.InteractionOfUser(
+                                Login.idd, productId, 0, 1, 0);
+                            RecentSingleProdState.shoppingCartStore(
+                                '1', '', itemName, type, description, context);
+                          }
                         }
-                      }
-                    },
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -1696,28 +1860,42 @@ UserAccountsDrawerHeader(
       String description,
       int quantity,
       String delivery,
-      String avgRate) {
+      String avgRate,
+
+      /// aya
+      int userId) {
     List<int> bytes = List<int>.from(imagePath['data']);
 
+    /// aya
+    final isSelfProduct = Login.idd == userId;
+
+    /// aya
     return GestureDetector(
-      onTap: () {
-        // Interaction logic here
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailPage(
-              categoryName: itemName,
-              imagePaths: imagePath,
-              price: price,
-              productid: productId,
-              Typeproduct: type,
-              quantity: quantity,
-              name: itemName,
-              description: description,
-            ),
-          ),
-        );
-      },
+      onTap:
+
+          ///aya
+          isSelfProduct
+              ? null
+              :
+              ////
+              () {
+                  // Interaction logic here
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailPage(
+                        categoryName: itemName,
+                        imagePaths: imagePath,
+                        price: price,
+                        productid: productId,
+                        Typeproduct: type,
+                        quantity: quantity,
+                        name: itemName,
+                        description: description,
+                      ),
+                    ),
+                  );
+                },
       child: Container(
         width: 230,
         height: 392,
@@ -1781,10 +1959,13 @@ UserAccountsDrawerHeader(
                 Row(
                   children: [
                     GestureDetector(
-                      child: Icon(
-                        Icons.star,
-                        size: 21,
-                        color: Color.fromARGB(255, 244, 203, 20),
+                      child: Visibility(
+                        visible: !(avgRate == '0.00'),
+                        child: Icon(
+                          Icons.star,
+                          size: 21,
+                          color: Color.fromARGB(255, 244, 203, 20),
+                        ),
                       ),
                       onTap: () async {
                         // Rating action
@@ -1794,54 +1975,67 @@ UserAccountsDrawerHeader(
                       avgRate == '0.00' ? '' : '$avgRate',
                     ),
                     Spacer(),
-                    GestureDetector(
-                      child: Icon(
-                        IconsaxBold.messages,
-                        size: 21,
-                        color: Color.fromARGB(255, 2, 46, 82),
+
+                    /// aya
+                    Visibility(
+                      visible: !isSelfProduct,
+
+                      ///
+                      child: GestureDetector(
+                        child: Icon(
+                          IconsaxBold.messages,
+                          size: 21,
+                          color: Color.fromARGB(255, 2, 46, 82),
+                        ),
+                        onTap: () async {
+                          OpenChatWithSellar.functionForChar(itemName, context);
+                        },
                       ),
-                      onTap: () async {
-                        OpenChatWithSellar.functionForChar(itemName, context);
-                      },
                     ),
                     SizedBox(width: 10),
-                    GestureDetector(
-                      child: Icon(
-                        quantity == 0
-                            ? Icons.remove_shopping_cart
-                            : (type == 'Free' ||
-                                    type == 'free' ||
-                                    type == 'مجاني')
-                                ? Icons.arrow_circle_right_outlined
-                                : Icons.shopping_cart_checkout,
-                        size: 20,
-                        color: Color.fromARGB(255, 2, 46, 82),
-                      ),
-                      onTap: () async {
-                        if (quantity != 0) {
-                          if (type == 'Free' ||
-                              type == 'free' ||
-                              type == 'مجاني') {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (BuildContext context) {
-                                return DeliveryPage(
-                                  isFree: true,
-                                  deliveryOption: delivery,
-                                  productId: productId,
-                                  onPaymentSuccess: () {},
-                                );
-                              },
-                            );
-                          } else {
-                            HomePageState.InteractionOfUser(
-                                Login.idd, productId, 0, 1, 0);
-                            RecentSingleProdState.shoppingCartStore(
-                                '1', '', itemName, type, description, context);
+
+                    /// aya
+                    Visibility(
+                      visible: !isSelfProduct,
+                      /////
+                      child: GestureDetector(
+                        child: Icon(
+                          quantity == 0
+                              ? Icons.remove_shopping_cart
+                              : (type == 'Free' ||
+                                      type == 'free' ||
+                                      type == 'مجاني')
+                                  ? Icons.arrow_circle_right_outlined
+                                  : Icons.shopping_cart_checkout,
+                          size: 20,
+                          color: Color.fromARGB(255, 2, 46, 82),
+                        ),
+                        onTap: () async {
+                          if (quantity != 0) {
+                            if (type == 'Free' ||
+                                type == 'free' ||
+                                type == 'مجاني') {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return DeliveryPage(
+                                    isFree: true,
+                                    deliveryOption: delivery!,
+                                    productId: productId!,
+                                    onPaymentSuccess: () {},
+                                  );
+                                },
+                              );
+                            } else {
+                              HomePageState.InteractionOfUser(
+                                  Login.idd, productId, 0, 1, 0);
+                              RecentSingleProdState.shoppingCartStore('1', '',
+                                  itemName, type, description, context);
+                            }
                           }
-                        }
-                      },
+                        },
+                      ),
                     ),
                   ],
                 ),
