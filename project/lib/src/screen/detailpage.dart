@@ -266,91 +266,81 @@ class DetailPageState extends State<DetailPage> {
   }
 
   ///
+
   textjacket() {
     String rr = widget.catoryname;
     String Price = widget.price;
     int idproduct = widget.productid1;
     String Typeproduct = widget.Typeproduct1;
+    bool isWideScreen = MediaQuery.of(context).size.width > 1000;
+
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        // if(MediaQuery.of(context).size.width > 1000)
+        //  crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment:
+            isWideScreen ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0), //5
-                child: Text(
-                  '$rr',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 101, 27, 27),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+          Container(
+            width: 320, // Set the same width as buildDetailsRow
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // start
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    '$rr',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 101, 27, 27),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0), //5
-                child: Text(
-                  'Color same as picture',
-                  style: GoogleFonts.aBeeZee(fontSize: 18),
+                SizedBox(height: 5),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'Color same as picture',
+                    style: GoogleFonts.aBeeZee(fontSize: 18),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(
-                  'The $rr is light and sweet',
-                  style: GoogleFonts.aBeeZee(fontSize: 17),
+                SizedBox(height: 5),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'The $rr is light and sweet',
+                    style: GoogleFonts.aBeeZee(fontSize: 17),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(
-                  'The $Price ',
-                  style: GoogleFonts.aBeeZee(fontSize: 17),
+                SizedBox(height: 5),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'The $Price',
+                    style: GoogleFonts.aBeeZee(fontSize: 17),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
-          buildDetailsRow(" Condition", "$Typeproduct", FontAwesomeIcons.grip),
-          buildDetailsRow(
-              " Item ID", "$idproduct", FontAwesomeIcons.circleInfo),
-          SizedBox(height: 20),
-          buybutton(Typeproduct),
-          /*
-        // Center the button
-
-        Center(
-          child: ElevatedButton(
-            onPressed: () {
-              // Handle the button press (buy the item, for example)
-            },
-            child: Text(
-              'Buy Now',
-              style: TextStyle(fontSize: 18),
+                SizedBox(height: 10),
+              ],
             ),
           ),
-        ),
-        */
-          //
+          Center(
+              child: buildDetailsRow(
+                  "Condition", "$Typeproduct", FontAwesomeIcons.grip)),
+          Center(
+              child: buildDetailsRow(
+                  "Item ID", "$idproduct", FontAwesomeIcons.circleInfo)),
+          SizedBox(height: 20),
+          Center(child: buybutton(Typeproduct)),
         ],
       ),
     );
   }
+//
 
+//
   Widget buildDetailsRow(String label, String value, IconData icon) {
     return Container(
       width: 320,

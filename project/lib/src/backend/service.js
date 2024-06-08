@@ -50,6 +50,8 @@ app.use('/tradetryst/orderproduct',product);
 app.use('/tradetryst/deletepayorder',payment);
 
 
+// statistic
+app.use('/tradetryst/totalnumproductt',product);
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server is listening on port ${port}`);
 });

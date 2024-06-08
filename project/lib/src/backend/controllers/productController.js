@@ -383,3 +383,37 @@ exports.ProductNewCollectionForNotification = (req, res) => {
       };
 
       /// aya 
+      
+
+    // ibtisam******************** admin satistic
+    exports.totalnumberproductforstatistics= (req, res) => {
+      //const { userId } = req.query;
+      
+    
+      prod.totalnumberproductforstatistics(req, res);
+       /*   .then((res1) => {
+              console.log({res1});
+            
+              res.status(200).json(res1);
+          })
+          .catch((error) => {
+              console.error({error});
+              res.status(500).json({ message: 'total number not retrive of product ' });
+          });*/
+    };
+
+
+    exports.totalnumbersoldproduct = (req, res) => {
+      //const { userId } = req.query;
+      
+    
+      prod.totalnumbersoldproduct(req, res);};
+
+
+
+      exports.totalRevenue  = (req, res) => {
+        //const { userId } = req.query;
+        
+      
+        prod.totalRevenue(req, res);};
+  
