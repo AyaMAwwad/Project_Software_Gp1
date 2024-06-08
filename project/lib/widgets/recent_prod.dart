@@ -17,6 +17,7 @@ import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/src/screen/product_page.dart';
+import 'package:project/src/screen/wishlist_page.dart';
 import 'package:project/widgets/cart_shop.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -686,6 +687,7 @@ class RecentSingleProdState extends State<RecentSingleProd> {
     }
     // RecentProd.theProdId
     final isSelfProduct = Login.idd == widget.recent_prod_userId;
+    ValueNotifier<bool> isInWishlist = ValueNotifier<bool>(false);
     return GestureDetector(
         child: Align(
           alignment: Alignment.center,
@@ -726,13 +728,55 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          /* Text(
                             widget.recet_prod_name,
                             style: TextStyle(
                               fontSize: 16,
                               color: Color.fromARGB(255, 2, 46, 82),
                               fontWeight: FontWeight.w600,
                             ),
+                          ),*/
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                widget.recet_prod_name,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 2, 46, 82),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              ValueListenableBuilder(
+                                valueListenable: isInWishlist,
+                                builder: (context, value, child) {
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      if (value) {
+                                        await WishlistPageState
+                                            .deleteFromWishList(
+                                                widget.recent_prod_productId,
+                                                context);
+                                      } else {
+                                        await WishlistPageState.addToWishList(
+                                            widget.recent_prod_productId,
+                                            context);
+                                      }
+                                      isInWishlist.value = !isInWishlist.value;
+                                    },
+                                    child: Icon(
+                                      value
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: value
+                                          ? Colors.red
+                                          : Color.fromARGB(255, 2, 46, 82),
+                                      size: 20,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                           Text(
                             textP,

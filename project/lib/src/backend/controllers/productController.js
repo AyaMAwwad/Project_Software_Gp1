@@ -323,3 +323,63 @@ exports.ProductNewCollectionForNotification = (req, res) => {
           res.status(500).json({ message: 'Internal server error' });
       });
   };
+  /// aya 
+  //addToWishList
+  exports.addToWishList = (req, res) => {
+    prod
+      .addToWishList(req, res)
+      .then((message) => {
+        res.status(201).json({ message }); 
+      })
+      .catch((error) => {
+        res.status(400).json({ message: error }); 
+      });
+    }
+
+    //retriveFromWishList
+    exports.retriveFromWishList = (req, res) => {
+      const { userId } = req.query;
+      
+      prod.retriveFromWishList(userId)
+          .then((result) => {
+              console.log({result});
+      
+              res.status(200).json(result);
+          })
+          .catch((error) => {
+              console.error({error});
+              res.status(500).json({ message: 'Internal server error' });
+          });
+      };
+
+      exports.deleteFromWishList = (req, res) => {
+        const productId = req.query.productId; 
+        const userId = req.query.userId;
+       
+        prod.deleteFromWishList(productId,userId)
+            .then((result) => {
+                console.log('Item deleted successfully');
+                res.status(200).json({ message: 'Item deleted successfully' });
+            })
+            .catch((error) => {
+                console.error('Error deleting item:', error);
+                res.status(500).json({ message: 'Internal server error' });
+            });
+    };
+
+    exports.findSimilar = (req, res) => {
+      const { productId , productType } = req.query;
+      
+      prod.findSimilar(productId,productType)
+          .then((result) => {
+              console.log({result});
+      
+              res.status(200).json(result);
+          })
+          .catch((error) => {
+              console.error({error});
+              res.status(500).json({ message: 'Internal server error' });
+          });
+      };
+
+      /// aya 

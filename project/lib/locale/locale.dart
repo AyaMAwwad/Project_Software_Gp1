@@ -117,6 +117,11 @@ class mylocale implements Translations {
           "164": "تواصل مع",
           "165": "لمعرفة المزيد من المعلومات",
           "166": "هذا الشهر",
+          "167": "قائمة الرغبات",
+          "168": "أضيف مؤخرا",
+          "169": "مجاني",
+          "170": "تفاضيل المنتج",
+          "171": "تشابه للمنتج",
         },
         "en": {
           "1": "Multi Language",
@@ -233,6 +238,11 @@ class mylocale implements Translations {
           "164": "Contect with",
           "165": "to know other information.",
           "166": "This Month",
+          "167": "Wishlist",
+          "168": "Recently added",
+          "169": "Free",
+          "170": "Show Details",
+          "171": "Find Similar",
         },
         "fr": {
           "1": "Langue multiple",
