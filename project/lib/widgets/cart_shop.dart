@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/wishlist_page.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -18,7 +19,7 @@ class CartShop extends StatefulWidget {
 }
 
 class CartShopState extends State<CartShop> {
-  int selectedIndex = 2;
+  int selectedIndex = 3;
   static String lang = "119".tr;
   @override
   Widget build(BuildContext context) {
@@ -87,13 +88,19 @@ class CartShopState extends State<CartShop> {
                 );
                 break;
               case 2:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => WishlistPage()),
+                );
+                break;
+              case 3:
                 CartState().resetCart();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => CartShop()),
                 );
                 break;
-              case 3:
+              case 4:
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => UserProfile()),

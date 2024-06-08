@@ -70,4 +70,10 @@ router.get('/productThisMonth', productController.productThisMonth);
 router.get('/productlistt', productController.gettproducttoadmin); // gettproducttoadmin
 router.get('/checkQuantityForNotification', productController.checkQuantityForNotification);
 router.get('/ProductNewCollectionForNotification', productController.ProductNewCollectionForNotification);
+// aya 
+router.post('/addToWishList', productController.addToWishList);
+router.get('/retriveFromWishList', productController.retriveFromWishList);
+router.delete('/deleteFromWishList', productController.deleteFromWishList);
+router.get('/findSimilar', productController.findSimilar);
+//aya 
 module.exports = router;

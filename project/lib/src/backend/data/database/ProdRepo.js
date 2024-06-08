@@ -1309,6 +1309,268 @@ checkQuantityForNotification(userId) {
   });
 }
 
+/// aya 
+///addToWishList 
+addToWishList(req, res) {
+  const { userId, productId } = req.body;
+
+  return new Promise((resolve, reject) => {
+
+
+    console.log(userId);
+    console.log(productId);
+    
+    db.query(
+      'SELECT * from wishlist  WHERE user_id = ? AND product_id = ?',
+      [userId, productId],
+      (error3, results3) => {
+        if (error3) {
+          console.error(error3);
+          return reject('Failed to insert to wishlist');
+        }
+        else {
+          if(results3.length ==0){
+            
+    db.query(
+      'INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)',
+      [userId, productId],
+      (error3, results3) => {
+        if (error3) {
+          console.error(error3);
+          return reject('Failed to insert to wishlist');
+        }
+        else {
+          
+    return resolve('insert to wishlis successfully');
+        }
+      }
+    );
+          }
+          else {
+            return reject('product exsist in wishlist, can not add again');
+
+          }
+          
+    
+        }
+      }
+    );
+
+
+  });
+}
+
+
+// retriveFromWishList
+retriveFromWishList(userId) {
+  return new Promise((resolve, reject) => {
+    const ProductDataWishList = [];
+    db.query(
+      'SELECT * FROM wishlist WHERE user_id = ?', [userId],
+      (error, results) => {
+        if (error) {
+          return reject('Internal server error.');
+        } else {
+          console.log('product in wishlist results:', results);
+          results.forEach(product => {
+            const productId = product.product_id;
+            db.query(
+              'SELECT p.*, c.name as category_name, c.type as category_type FROM product p JOIN category c ON p.category_id = c.category_id WHERE p.product_id = ?',
+              [productId],
+              (error3, productData) => {
+                if (error3) {
+                  console.error(error3);
+                  return reject('Failed to retrieve product data');
+                } else {
+                  const ProductDetails = [];
+                  productData.forEach(entry => {
+                    const found = ProductDataWishList.find(item => JSON.stringify(item) == JSON.stringify(entry));
+                    if (!found) {
+                      ProductDataWishList.push(entry);
+                    }
+                  });
+                  console.log('ProductDataWishList:', ProductDataWishList);
+                  console.log(results.length);
+                  console.log(ProductDataWishList.length);
+                  if (ProductDataWishList.length === results.length) {
+                    console.log('aaaayyya');
+                    ProductDataWishList.forEach(product => {
+                      let Query = '';
+                      if (product['product_type'] === 'New' || product['product_type'] === 'جديد') {
+                        Query = 'SELECT warranty_period, price FROM new_product WHERE product_id = ?';
+                      } else if (product['product_type'] === 'Used' || product['product_type'] === 'مستعمل') {
+                        Query = 'SELECT product_condition, price FROM used_product WHERE product_id = ?';
+                      } else if (product['product_type'] === 'Free' || product['product_type'] === 'مجاني') {
+                        Query = 'SELECT product_condition, state_free FROM free_product WHERE product_id = ?';
+                      }
+
+                      const prodId = product.product_id;
+                      let prevId = '';
+                      db.query(Query, [prodId], (error2, res2) => {
+                        if (error2) {
+                          console.error(error2);
+                          reject('Failed to retrieve data from specific product table');
+                        } else {
+                          res2.forEach(entry => {
+                            const found = ProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
+                            if (!found || prevId !== prodId) {
+                              ProductDetails.push(entry);
+                              prevId = prodId;
+                            }
+                          });
+
+                          if (ProductDataWishList.length == ProductDetails.length) {
+                            console.log('aaaayyya');
+                            resolve({ ProductDataWishList, ProductDetails });
+                          } else if (ProductDetails.length == 0) {
+                            reject('No data to retrieve');
+                          }
+                        }
+                      });
+                    });
+                  }
+                }
+              }
+            );
+          });
+        }
+      }
+    );
+  });
+}
+
+
+//deleteFromWishList
+
+deleteFromWishList(productId,userId) {
+  console.log(productId);
+  console.log(userId);
+  return new Promise((resolve, reject) => {
+    db.query('DELETE FROM wishlist WHERE product_id = ? AND user_id = ?',[productId,userId], (error2, res2) => {
+      if (error2) {
+          console.error(error2);
+          reject('Failed to delete data from  wishlist');
+      } else {
+      
+           resolve("success deleted");
+     
+      }});
+
+  });
+  
+};
+
+findSimilar(productId,productType) {
+  
+  return new Promise((resolve, reject) => {
+    const productSimilar = [];
+    const ProductDetails = [];
+    db.query(
+        'SELECT * FROM category WHERE type = ?',
+        [productType],
+        (error, results) => {
+            if (error) {
+                reject('Failed to retrieve products');
+            } else {
+              let i=0;
+              
+    db.query(
+        'SELECT * FROM category WHERE type = ?',
+        [productType],
+        (error, results) => {
+            if (error) {
+                reject('Failed to retrieve products');
+            } else {
+              console.log('product  results:', results);
+              results.forEach(product => {
+                const categoryId = product.category_id;
+             
+                db.query(
+                  'SELECT p.*, c.name as category_name, c.type as category_type FROM product p JOIN category c ON p.category_id = c.category_id WHERE p.category_id = ?',
+                  [categoryId],
+                  (error3, productData) => {
+                    if (error3) {
+                      console.error(error3);
+                      return reject('Failed to retrieve product data');
+                    } else {
+                      console.log(productData);
+                      console.log(productData['product_id'] );
+       
+                      productData.forEach(entry => {
+                        if(entry.product_id!= productId){
+                        const found = productSimilar.find(item => JSON.stringify(item) == JSON.stringify(entry));
+                        if (!found) {
+                          productSimilar.push(entry);
+                        }}
+                      });
+                    
+                     
+                      if (productSimilar.length <= results.length && results.length== i) {
+                     
+                        let index=0;
+                        productSimilar.forEach(product => {
+              
+                        
+                          let Query = '';
+                          if (product['product_type'] == 'New' || product['product_type'] == 'جديد') {
+                            Query = 'SELECT warranty_period, price FROM new_product WHERE product_id = ?';
+                          } else if (product['product_type'] == 'Used' || product['product_type'] == 'مستعمل') {
+                            Query = 'SELECT product_condition, price FROM used_product WHERE product_id = ?';
+                          } else if (product['product_type'] == 'Free' || product['product_type'] == 'مجاني') {
+                            Query = 'SELECT product_condition, state_free FROM free_product WHERE product_id = ?';
+                          }
+                      
+                          const prodId = product.product_id;
+                          if(productId!=prodId){
+
+                          
+                          let prevId = '';
+                          db.query(Query, [prodId], (error2, res2) => {
+                            if (error2) {
+                              console.error(error2);
+                              reject('Failed to retrieve data from specific product table');
+                            } else {
+                            
+                              res2.forEach(entry => {
+                                const found = ProductDetails.find(item => JSON.stringify(item) == JSON.stringify(entry));
+                                if (!found ) {
+                                  ProductDetails.push(entry);
+                                 // prevId = prodId;
+                                }
+                              });
+   
+                              if (productSimilar.length == ProductDetails.length  ) {
+                           
+                                resolve({ productSimilar, ProductDetails });
+                              } else if (ProductDetails.length == 0) {
+                                reject('No data to retrieve');
+                              }
+                            }
+                          });
+                        }
+                      index++;
+                        });
+                      }
+                    }
+                  }
+                );
+                i++;
+              });
+              
+
+                //resolve(results);
+            }
+        }
+    );
+
+                //resolve(results);
+            }
+        }
+    );
+});
+}
+
+/// aya 
  /*
  my code 
  

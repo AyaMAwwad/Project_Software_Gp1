@@ -14,6 +14,7 @@ import 'package:project/src/screen/information.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/src/screen/security.dart';
+import 'package:project/src/screen/wishlist_page.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -31,7 +32,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class UserProfileState extends State<UserProfile> {
-  int selectedIndex = 3;
+  int selectedIndex = 4;
   static String uu = Login.Email;
   static String firstname = Login.first_name;
   static String lastname = Login.last_name;
@@ -307,13 +308,20 @@ class UserProfileState extends State<UserProfile> {
                 );
                 break;
               case 2:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => WishlistPage()),
+                );
+                break;
+              case 3:
                 CartState().resetCart();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => CartShop()),
                 );
                 break;
-              case 3:
+
+              case 4:
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => UserProfile()),

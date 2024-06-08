@@ -15,6 +15,7 @@ import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/src/screen/product_page.dart';
+import 'package:project/src/screen/wishlist_page.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -642,13 +643,19 @@ class _ScreenCategoryState extends State<ScreenCategory> {
                 );
                 break;
               case 2:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => WishlistPage()),
+                );
+                break;
+              case 3:
                 CartState().resetCart();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => CartShop()),
                 );
                 break;
-              case 3:
+              case 4:
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => UserProfile()),

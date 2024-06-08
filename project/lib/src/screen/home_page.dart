@@ -34,6 +34,7 @@ import 'package:project/src/screen/providercurrency.dart';
 import 'package:project/src/screen/saller_product_page.dart';
 import 'package:project/src/screen/security.dart';
 import 'package:project/src/screen/settings.dart';
+import 'package:project/src/screen/wishlist_page.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -56,6 +57,7 @@ class HomePage extends StatefulWidget {
 String Priceeneww = '';
 
 class HomePageState extends State<HomePage> {
+  int selectedIndex = 0;
   //int _selectedIndex = 0;
   // int _cartCount = 0;
 
@@ -487,7 +489,7 @@ class HomePageState extends State<HomePage> {
 
 //
   String pricedata = '';
-  int selectedIndex = 0;
+
   // jumbsute baby boy
   String namefashion = 'Jumpsuit boy';
 
@@ -1144,36 +1146,42 @@ UserAccountsDrawerHeader(
   void _onTabSelected(int index) {
     setState(() {
       selectedIndex = index;
-      switch (index) {
-        case 0:
-          isPressTosearchButton = false;
-          isPressTosearch = false;
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-          break;
-        case 1:
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => AddProduct()),
-          );
-          break;
-        case 2:
-          CartState().resetCart();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => CartShop()),
-          );
-          break;
-        case 3:
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => UserProfile()),
-          );
-          break;
-      }
     });
+    switch (index) {
+      case 0:
+        isPressTosearchButton = false;
+        isPressTosearch = false;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AddProduct()),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => WishlistPage()),
+        );
+        break;
+      case 3:
+        CartState().resetCart();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CartShop()),
+        );
+        break;
+      case 4:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UserProfile()),
+        );
+        break;
+    }
   }
 
   static void addItemToCart() {
@@ -1672,7 +1680,7 @@ UserAccountsDrawerHeader(
 
     /// aya
     final isSelfProduct = Login.idd == userId;
-
+    ValueNotifier<bool> isInWishlist = ValueNotifier<bool>(false);
     return GestureDetector(
       onTap:
 
@@ -1722,16 +1730,84 @@ UserAccountsDrawerHeader(
                   fit: BoxFit.cover,
                 ),
               ),
+              /*  Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: Image.memory(
+                      Uint8List.fromList(bytes),
+                      width: 170,
+                      height: 210,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: ValueListenableBuilder(
+                      valueListenable: isInWishlist,
+                      builder: (context, value, child) {
+                        return GestureDetector(
+                          onTap: () async {
+                            if (value) {
+                              await WishlistPageState.deleteFromWishList(
+                                  productId, context);
+                            } else {
+                              await WishlistPageState.addToWishList(
+                                  productId, context);
+                            }
+                            isInWishlist.value = !isInWishlist.value;
+                          },
+                          child: Icon(
+                            value ? Icons.favorite : Icons.favorite_border,
+                            color: value ? Colors.red : Colors.white,
+                            size: 20,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),*/
               SizedBox(height: 6),
-              Text(
-                itemName,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Color.fromARGB(255, 2, 46, 82),
-                  fontWeight: FontWeight.w600,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    itemName,
+                    style: TextStyle(
+                      fontSize: 17,
+                      color: Color.fromARGB(255, 2, 46, 82),
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  ValueListenableBuilder(
+                    valueListenable: isInWishlist,
+                    builder: (context, value, child) {
+                      return GestureDetector(
+                        onTap: () async {
+                          if (value) {
+                            await WishlistPageState.deleteFromWishList(
+                                productId, context);
+                          } else {
+                            await WishlistPageState.addToWishList(
+                                productId, context);
+                          }
+                          isInWishlist.value = !isInWishlist.value;
+                        },
+                        child: Icon(
+                          value ? Icons.favorite : Icons.favorite_border,
+                          color: value
+                              ? Colors.red
+                              : Color.fromARGB(255, 2, 46, 82),
+                          size: 20,
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
               Text(
                 price,
@@ -1850,6 +1926,254 @@ UserAccountsDrawerHeader(
     );
   }
 
+  Widget buildItem(
+      BuildContext context,
+      String itemName,
+      Map<String, dynamic> imagePath,
+      String price,
+      int productId,
+      String type,
+      String description,
+      int quantity,
+      String delivery,
+      String avgRate,
+      int userId) {
+    List<int> bytes = List<int>.from(imagePath['data']);
+    final isSelfProduct = Login.idd == userId;
+    ValueNotifier<bool> isInWishlist = ValueNotifier<bool>(false);
+
+    return GestureDetector(
+      onTap: isSelfProduct
+          ? null
+          : () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailPage(
+                    categoryName: itemName,
+                    imagePaths: imagePath,
+                    price: price,
+                    productid: productId,
+                    Typeproduct: type,
+                    quantity: quantity,
+                    name: itemName,
+                    description: description,
+                  ),
+                ),
+              );
+            },
+      child: Container(
+        width: 230,
+        height: 392,
+        child: Card(
+          elevation: 4,
+          color: Color.fromARGB(255, 244, 242, 245).withOpacity(0.9),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /* Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: Image.memory(
+                        Uint8List.fromList(bytes),
+                        width: 210,
+                        height: 230,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: ValueListenableBuilder(
+                        valueListenable: isInWishlist,
+                        builder: (context, value, child) {
+                          return GestureDetector(
+                            onTap: () async {
+                              if (value) {
+                                await WishlistPageState.deleteFromWishList(
+                                    productId, context);
+                              } else {
+                                await WishlistPageState.addToWishList(
+                                    productId, context);
+                              }
+                              isInWishlist.value = !isInWishlist.value;
+                            },
+                            child: Icon(
+                              value ? Icons.favorite : Icons.favorite_border,
+                              color: value ? Colors.red : Colors.white,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),*/
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: Image.memory(
+                    Uint8List.fromList(bytes),
+                    width: 210,
+                    height: 230,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(height: 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      itemName,
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Color.fromARGB(255, 2, 46, 82),
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: isInWishlist,
+                      builder: (context, value, child) {
+                        return GestureDetector(
+                          onTap: () async {
+                            if (value) {
+                              await WishlistPageState.deleteFromWishList(
+                                  productId, context);
+                            } else {
+                              await WishlistPageState.addToWishList(
+                                  productId, context);
+                            }
+                            isInWishlist.value = !isInWishlist.value;
+                          },
+                          child: Icon(
+                            value ? Icons.favorite : Icons.favorite_border,
+                            color: value
+                                ? Colors.red
+                                : Color.fromARGB(255, 2, 46, 82),
+                            size: 20,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                Text(
+                  price,
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  description,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 66, 66, 66),
+                    fontSize: 14,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                Text(
+                  'State: $type',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 66, 66, 66),
+                    fontSize: 14,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                Spacer(),
+                Row(
+                  children: [
+                    GestureDetector(
+                      child: Visibility(
+                        visible: !(avgRate == '0.00'),
+                        child: Icon(
+                          Icons.star,
+                          size: 21,
+                          color: Color.fromARGB(255, 244, 203, 20),
+                        ),
+                      ),
+                      onTap: () async {
+                        // Rating action
+                      },
+                    ),
+                    Text(
+                      avgRate == '0.00' ? '' : '$avgRate',
+                    ),
+                    Spacer(),
+                    Visibility(
+                      visible: !isSelfProduct,
+                      child: GestureDetector(
+                        child: Icon(
+                          IconsaxBold.messages,
+                          size: 21,
+                          color: Color.fromARGB(255, 2, 46, 82),
+                        ),
+                        onTap: () async {
+                          OpenChatWithSellar.functionForChar(itemName, context);
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Visibility(
+                      visible: !isSelfProduct,
+                      child: GestureDetector(
+                        child: Icon(
+                          quantity == 0
+                              ? Icons.remove_shopping_cart
+                              : (type == 'Free' ||
+                                      type == 'free' ||
+                                      type == 'مجاني')
+                                  ? Icons.arrow_circle_right_outlined
+                                  : Icons.shopping_cart_checkout,
+                          size: 20,
+                          color: Color.fromARGB(255, 2, 46, 82),
+                        ),
+                        onTap: () async {
+                          if (quantity != 0) {
+                            if (type == 'Free' ||
+                                type == 'free' ||
+                                type == 'مجاني') {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return DeliveryPage(
+                                    isFree: true,
+                                    deliveryOption: delivery!,
+                                    productId: productId!,
+                                    onPaymentSuccess: () {},
+                                  );
+                                },
+                              );
+                            } else {
+                              HomePageState.InteractionOfUser(
+                                  Login.idd, productId, 0, 1, 0);
+                              RecentSingleProdState.shoppingCartStore('1', '',
+                                  itemName, type, description, context);
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+/*
   Widget buildItem(
       BuildContext context,
       String itemName,
@@ -2045,7 +2369,7 @@ UserAccountsDrawerHeader(
         ),
       ),
     );
-  }
+  }*/
 
 /*
   Widget buildItem(
