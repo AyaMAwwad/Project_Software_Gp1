@@ -1571,6 +1571,128 @@ findSimilar(productId,productType) {
 }
 
 /// aya 
+
+
+// statitis code ****** ibtisam newwwww
+
+totalnumberproductforstatistics(req, res){
+  db.query('SELECT COUNT(*) AS totalProducts FROM Product', (error, results) => {
+    if (error) {
+      console.error(error);
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    } else {
+      if (!res.headersSent) {
+        res.status(200).json(results[0]); // Sending only the first result
+      }
+    }
+  });
+
+  /*
+  return new Promise((resolve, reject) => {
+    // Check if the user already exists (Checking the email)
+    db.query(
+      'SELECT COUNT(*) AS totalProducts FROM Product',  // change alsooooo 
+   
+      (error, results) => {
+        if (error) {
+          return reject('Internal server error.');
+        }
+
+        return resolve(results);
+
+      
+        
+     
+      },
+    );
+  });*/
+}
+totalnumbersoldproduct(req, res){
+  db.query('SELECT COUNT(*) AS totalProductsSold FROM pay', (error, results) => {
+    if (error) {
+      console.error(error);
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    } else {
+      if (!res.headersSent) {
+        res.status(200).json(results[0]); // Sending only the first result
+      }
+    }
+  });}
+
+
+
+
+  //
+  /*
+  totalRevenue(req, res){
+    db.query('SELECT SUM(amount) AS totalrevenue FROM pay', (error, results) => {
+      if (error) {
+        console.error(error);
+        if (!res.headersSent) {
+          res.status(500).json({ message: 'Internal server error' });
+        }
+      } else {
+        if (!res.headersSent) {
+          res.status(200).json(results[0]); // Sending only the first result
+        }
+      }
+    });}*/
+    totalRevenue(req, res) {
+      // First, get the total revenue
+      db.query('SELECT SUM(amount) AS totalrevenue FROM pay', (error, totalResults) => {
+        if (error) {
+          console.error(error);
+          if (!res.headersSent) {
+            res.status(500).json({ message: 'Internal server error' });
+          }
+        } else {
+          const totalRevenue = totalResults[0].totalrevenue;
+    
+          // Then, get the revenue for each product
+          db.query('SELECT idproduct, SUM(amount) AS productrevenue FROM pay GROUP BY idproduct', (error, productResults) => {
+            if (error) {
+              console.error(error);
+              if (!res.headersSent) {
+                res.status(500).json({ message: 'Internal server error' });
+              }
+            } else {
+              // Calculate the admin profit for each product (10% of revenue)
+              const resultsWithAdminProfit = productResults.map(product => {
+                const adminProfit = 0.1 * product.productrevenue; // 10% of revenue
+                const profitPercentage = (adminProfit / totalRevenue) * 100;
+                return {
+                  idproduct: product.idproduct,
+                  productrevenue: product.productrevenue,
+                  adminProfit: adminProfit,
+                  profitPercentage: profitPercentage.toFixed(2) // Convert to percentage and format to 2 decimal places
+                };
+              });
+    
+              // Combine total revenue and product results with admin profit
+              const combinedData = {
+                totalRevenue: totalResults[0].totalrevenue,
+                productsWithAdminProfit: resultsWithAdminProfit
+              };
+    
+              if (!res.headersSent) {
+                res.status(200).json(combinedData); // Send combined data
+              }
+            }
+          });
+        }
+      });
+    }
+
+
+
+
+//endddd ibtisamm
+
+
  /*
  my code 
  

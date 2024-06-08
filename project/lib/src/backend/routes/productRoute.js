@@ -76,4 +76,10 @@ router.get('/retriveFromWishList', productController.retriveFromWishList);
 router.delete('/deleteFromWishList', productController.deleteFromWishList);
 router.get('/findSimilar', productController.findSimilar);
 //aya 
+
+// statistics 
+router.get('/totalproduct', productController.totalnumberproductforstatistics);
+router.get('/totalproductsold', productController.totalnumbersoldproduct);
+
+router.get('/totalrevenue', productController.totalRevenue);
 module.exports = router;
