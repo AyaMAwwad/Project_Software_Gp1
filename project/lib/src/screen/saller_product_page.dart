@@ -1,15 +1,13 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:ficonsax/ficonsax.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/ipaddress.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/statistic_seller.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/widgets/edit_sellar_product.dart';
@@ -23,10 +21,10 @@ class SellarPageState extends State<SellarPage> {
   static List<Map<String, dynamic>> productSellar = [];
   static List<Map<String, dynamic>> productSellarDetails = [];
   bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
-
     fetchProduct();
   }
 
@@ -38,7 +36,7 @@ class SellarPageState extends State<SellarPage> {
   }
 
   Future<void> deleteProduct(int productId) async {
-    // Add your delete logic here
+    await deleteProductSellar(productId, "product_type");
     setState(() {
       productSellar
           .removeWhere((product) => product['product_id'] == productId);
@@ -67,26 +65,55 @@ class SellarPageState extends State<SellarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        child: Column(
-          children: [
-            IconButton(
-              icon: Icon(Icons.exit_to_app),
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
-              },
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color(0xFF0D6775),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(16.0),
+              bottomRight: Radius.circular(16.0),
             ),
-            IconButton(
-              icon: Icon(Icons.arrow_back),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: AppBar(
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios_new,
+                color: Color.fromARGB(255, 255, 255, 255),
+                size: 24,
+              ),
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed("homepagee");
+                Navigator.pop(context);
               },
             ),
-          ],
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            ),
+            title: Text(
+              "144".tr,
+              style: TextStyle(
+                fontSize: 22,
+                color: Colors.white,
+              ),
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.bar_chart, size: 28),
+                onPressed: () {
+                  Get.to(() => StatisticsSeller());
+                },
+              ),
+            ],
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
         ),
       ),
       body: SafeArea(
@@ -99,9 +126,6 @@ class SellarPageState extends State<SellarPage> {
               )
             : Column(
                 children: [
-                  CustemAppBar(
-                    text: "144".tr,
-                  ),
                   SizedBox(
                     height: 20,
                   ),
@@ -109,7 +133,7 @@ class SellarPageState extends State<SellarPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: productSellar.isEmpty
-                          ? Center(child: Text("No products to display"))
+                          ? Center(child: Text("172".tr))
                           : GridView.builder(
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
@@ -143,78 +167,94 @@ class SellarPageState extends State<SellarPage> {
                                           ),
                                         ),
                                         Positioned(
-                                          top: 2,
-                                          right: -8,
-                                          child: PopupMenuButton<String>(
-                                            onSelected: (value) async {
-                                              if (value == 'edit') {
-                                                editProduct(
-                                                    product['product_id']);
-                                              } else if (value == 'delete') {
-                                                await deleteProductSellar(
-                                                    product['product_id'],
-                                                    product['product_type']);
-                                              }
-                                            },
-                                            itemBuilder:
-                                                (BuildContext context) => [
-                                              PopupMenuItem(
-                                                value: 'edit',
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      IconsaxBold.edit_2,
-                                                      color: Color.fromRGBO(
-                                                          2, 92, 123, 1),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Text(
-                                                      'Edit',
-                                                      style:
-                                                          GoogleFonts.aBeeZee(
-                                                        textStyle: TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255, 2, 92, 123),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              PopupMenuItem(
-                                                value: 'delete',
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      IconsaxBold.box_remove,
-                                                      color: Color.fromRGBO(
-                                                          2, 92, 123, 1),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Text(
-                                                      'Delete',
-                                                      style:
-                                                          GoogleFonts.aBeeZee(
-                                                        textStyle: TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255, 2, 92, 123),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                            color: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            icon: Icon(
-                                              Icons.more_vert,
+                                          top: 0,
+                                          right: 0,
+                                          child: Container(
+                                            width: 40,
+                                            height: 40,
+                                            decoration: BoxDecoration(
                                               color:
-                                                  Color.fromRGBO(2, 92, 123, 1),
-                                              size: 30,
+                                                  Colors.black.withOpacity(0.7),
+                                              shape: BoxShape.rectangle,
+                                            ),
+                                            child: PopupMenuButton<String>(
+                                              onSelected: (value) async {
+                                                if (value == 'edit') {
+                                                  editProduct(
+                                                      product['product_id']);
+                                                } else if (value == 'delete') {
+                                                  await deleteProduct(
+                                                      product['product_id']);
+                                                }
+                                              },
+                                              itemBuilder:
+                                                  (BuildContext context) => [
+                                                PopupMenuItem(
+                                                  value: 'edit',
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        IconsaxBold.edit_2,
+                                                        color: Color.fromRGBO(
+                                                            2, 92, 123, 1),
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        '173'.tr,
+                                                        style:
+                                                            GoogleFonts.aBeeZee(
+                                                          textStyle: TextStyle(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    2,
+                                                                    92,
+                                                                    123),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                PopupMenuItem(
+                                                  value: 'delete',
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        IconsaxBold.box_remove,
+                                                        color: Color.fromRGBO(
+                                                            2, 92, 123, 1),
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        '128'.tr,
+                                                        style:
+                                                            GoogleFonts.aBeeZee(
+                                                          textStyle: TextStyle(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    2,
+                                                                    92,
+                                                                    123),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                              color: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              icon: Icon(
+                                                Icons.more_vert,
+                                                color: Color.fromRGBO(
+                                                    255, 255, 255, 1),
+                                                size: 25,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -232,7 +272,6 @@ class SellarPageState extends State<SellarPage> {
     );
   }
 
-// delete
   Future<Map<String, dynamic>?> deleteProductSellar(
       int productid, String state) async {
     http.Response? response;
@@ -241,18 +280,16 @@ class SellarPageState extends State<SellarPage> {
       response = await http.delete(Uri.parse(
           'http://$ip:3000/tradetryst/Product/deleteItemSellar?productid=$productid&state=$state'));
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('deleted  item');
+        print('deleted item');
       } else {
         print('Failed to fetch data. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print(' Response body:');
-      // throw Exception('Failed to fetch data: $e');
     }
     return null;
   }
 
-  // retrive product
   static Future<Map<String, dynamic>?> getProductOfSellar(int userId) async {
     http.Response? response;
     print('*********************8 in getProductOfSellar user id : $userId ');
@@ -264,7 +301,6 @@ class SellarPageState extends State<SellarPage> {
         if (responseData is Map<String, dynamic> &&
             responseData.containsKey('results') &&
             responseData.containsKey('allProductDetails')) {
-          // Extract allProductData and allProductDetails from the response
           productSellar =
               List<Map<String, dynamic>>.from(responseData['results']);
           productSellarDetails = List<Map<String, dynamic>>.from(
@@ -278,8 +314,7 @@ class SellarPageState extends State<SellarPage> {
         print('Failed to fetch data. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print(' Response body: '); //${response?.body}
-      // throw Exception('Failed to fetch data: $e');
+      print(' Response body: ');
     }
     return null;
   }

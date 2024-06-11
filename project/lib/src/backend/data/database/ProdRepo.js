@@ -723,11 +723,24 @@ retriveWordOfsearch(name) {
       });
     });}
 // 18/5 deleteItemSellar
-
+// ayosh 
 deleteItemSellar(productId,state) {
   return new Promise((resolve, reject) => {
-
-    
+    db.query('DELETE FROM wishlist WHERE product_id = ?',[productId], (error, results) => {
+      if (error) {
+        console.error(error);
+        reject('Failed to Delete ');
+      } else {
+    db.query('DELETE FROM user_interaction WHERE product_id = ?',[productId], (error, results) => {
+      if (error) {
+        console.error(error);
+        reject('Failed to Delete ');
+      } else {
+    db.query('DELETE FROM productrating WHERE product_id = ?',[productId], (error, results) => {
+      if (error) {
+        console.error(error);
+        reject('Failed to Delete ');
+      } else {
     db.query('DELETE FROM shopping_cart WHERE product_id = ?',[productId], (error, results) => {
       if (error) {
         console.error(error);
@@ -775,9 +788,16 @@ deleteItemSellar(productId,state) {
         //resolve("success deleted");
       }
     });
+  }
+});
+  }
+});
+}
+});
   });
   
 };
+// ayosh 
 
 updateSellarProduct(req, res) {
   let { productId,name,type,prodState,quantity,cond } = req.body;
@@ -1686,7 +1706,131 @@ totalnumbersoldproduct(req, res){
         }
       });
     }
+// ayosh
+//totalnumberproductofSeller
+totalnumberproductofSeller(userId,res){
+  db.query('SELECT COUNT(*) AS totalProducts FROM Product WHERE user_id = ? ',[userId], (error, results) => {
+    if (error) {
+      console.error(error);
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    } else {
+      if (!res.headersSent) {
+        res.status(200).json(results[0]); 
+      }
+    }
+  });
+}
 
+totalproductsoldofSeller(userId, res) {
+ 
+  db.query('SELECT product_id FROM Product WHERE user_id = ?', [userId], (error, results) => {
+    if (error) {
+      console.error(error);
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    } else {
+      if (results.length == 0) {
+        res.status(404).json({ message: 'Seller has no products' });
+      } else {
+   
+        const productIds = results.map(row => row.product_id);
+
+        if (productIds.length === 0) {
+          res.status(404).json({ message: 'No products found for this seller' });
+          return;
+        }
+
+       
+        db.query('SELECT COUNT(*) AS totalProductsSold FROM pay WHERE idproduct IN (?)', [productIds], (error, results) => {
+          if (error) {
+            console.error(error);
+            if (!res.headersSent) {
+              res.status(500).json({ message: 'Internal server error' });
+            }
+          } else {
+            if (!res.headersSent) {
+              res.status(200).json(results[0]); 
+            }
+          }
+        });
+      }
+    }
+  });
+}
+
+//totalrevenueofseller
+totalrevenueofseller(userId, res) {
+  db.query('SELECT product_id FROM Product WHERE user_id = ?', [userId], (error, results) => {
+    if (error) {
+      console.error(error);
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    } else {
+      if (results.length == 0) {
+        res.status(404).json({ message: 'Seller has no products' });
+      } else {
+        const productIds = results.map(row => row.product_id);
+
+        if (productIds.length === 0) {
+          res.status(404).json({ message: 'No products found for this seller' });
+          return;
+        }
+
+        db.query('SELECT SUM(amount) AS totalRevenue FROM pay WHERE idproduct IN (?)', [productIds], (error, totalResults) => {
+          if (error) {
+            console.error(error);
+            if (!res.headersSent) {
+              res.status(500).json({ message: 'Internal server error' });
+            }
+          } else {
+            const totalRevenue = totalResults[0].totalRevenue || 0;
+            const sellerRevenue = totalRevenue * 0.9;
+
+       
+            db.query('SELECT idproduct, SUM(amount) AS productRevenue FROM pay WHERE idproduct IN (?) GROUP BY idproduct', [productIds], (error, productResults) => {
+              if (error) {
+                console.error(error);
+                if (!res.headersSent) {
+                  res.status(500).json({ message: 'Internal server error' });
+                }
+              } else {
+              
+                const resultsWithSellerProfit = productResults.map(product => {
+                  const sellerProfit = 0.9 * product.productRevenue;
+                  const profitPercentage = (sellerProfit / totalRevenue) * 100;
+                  return {
+                    idproduct: product.idproduct,
+                    productRevenue: product.productRevenue,
+                    sellerProfit: sellerProfit,
+                    profitPercentage: profitPercentage.toFixed(2) 
+                  };
+                });
+
+                const combinedData = {
+                  totalRevenue: totalResults[0].totalRevenue,
+                  sellerRevenue: sellerRevenue,
+                  resultsWithSellerProfit: resultsWithSellerProfit
+                };
+
+                if (!res.headersSent) {
+                  res.status(200).json(combinedData); 
+                }
+              }
+            });
+          }
+        });
+      }
+    }
+  });
+}
+
+
+
+// ayosh 
 
 
 
