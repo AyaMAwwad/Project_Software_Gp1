@@ -416,4 +416,22 @@ exports.ProductNewCollectionForNotification = (req, res) => {
         
       
         prod.totalRevenue(req, res);};
-  
+  /////// ayosh
+
+  exports.totalnumberproductofSeller= (req, res) => {
+    const { userId } = req.query;
+    prod.totalnumberproductofSeller(userId,res);
+  };
+  //totalproductsoldofSeller
+
+  exports.totalproductsoldofSeller = (req, res) => {
+    const { userId } = req.query;
+    prod.totalproductsoldofSeller(userId, res);};
+
+    //totalrevenueofseller
+    exports.totalrevenueofseller  = (req, res) => {
+      const { userId } = req.query;
+      
+    
+      prod.totalrevenueofseller(userId, res);};
+  // ayosh

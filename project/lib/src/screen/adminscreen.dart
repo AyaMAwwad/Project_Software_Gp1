@@ -7,6 +7,19 @@ import 'package:project/src/screen/usermanagement.dart';
 class AdminDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    double containerWidth = MediaQuery.of(context).size.width;
+    double adjustedWidth = containerWidth - 50;
+    if (containerWidth > 1000) {
+      adjustedWidth = containerWidth - 300;
+    }
+
+    int crossAxisCount = 2;
+    double crosses  = 0.0;
+    if (containerWidth > 1000) {
+      crossAxisCount = 4;
+      crosses = 1.4;
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 36, 80, 95),
@@ -16,23 +29,13 @@ class AdminDashboard extends StatelessWidget {
           child: Row(
             children: [
               IconButton(
-                icon: Icon(Icons.arrow_back,
-                    color: Colors.white), // Change color to white
+                icon: Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () {
-                  Navigator.of(context).pushReplacementNamed(
-                      "homepagee"); // This will pop the current route (Drawer)
+                  Navigator.of(context).pushReplacementNamed("homepagee");
                 },
               ),
-
-              //
-              //  actions: [
-
-              // SizedBox(width: 16), // Add spacing between the title and actions
-              // ],
-              //
               SizedBox(width: 10),
               Text(
-                // '1'.tr,
                 'Admin Dashboard',
                 style: TextStyle(
                   color: Colors.white,
@@ -45,7 +48,7 @@ class AdminDashboard extends StatelessWidget {
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 95, 150, 168),
+            color: Color.fromARGB(255, 36, 80, 95),//Color.fromARGB(255, 95, 150, 168),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20),
@@ -70,7 +73,8 @@ class AdminDashboard extends StatelessWidget {
           ),
         ),
       ),
-      /*appBar: AppBar(
+
+     /*appBar: AppBar(
   title: Text(
     'Admin Dashboard',
     style: TextStyle(
@@ -92,36 +96,55 @@ class AdminDashboard extends StatelessWidget {
   ],
 ),*/
 
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: EdgeInsets.all(8.0),
-        children: <Widget>[
-          AdminDashboardCard(
-            title: 'User Management',
-            icon: Icons.person,
-            onTap: () {
-              //  Navigator.pushNamed(context, UserManagementPage());
-              // Get.to(() => AdminDashboard());
-              Get.to(() => UserManagementPage());
-            },
-          ),
-          AdminDashboardCard(
-            title: 'Role Management',
-            icon: Icons.security,
-            onTap: () {
-              //  Navigator.pushNamed(context, '/role_management');
-              Get.to(() => rolemanagement());
-            },
-          ),
-          AdminDashboardCard(
-            title: 'Activity Logs',
-            icon: Icons.list,
-            onTap: () {
-              Navigator.pushNamed(context, '/activity_logs');
-            },
-          ),
-          // Add more cards as needed
-        ],
+
+
+
+
+       body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            children: [
+              if(containerWidth >1000)
+              SizedBox(height: 50),  // Add space after AppBar
+              Expanded(
+                child: Center(
+                  child: Container(
+                    width: constraints.maxWidth > 1000 ? 1000 : constraints.maxWidth,
+                    child: GridView.count(
+                      crossAxisCount: constraints.maxWidth > 1000 ? 3 : 2,
+                      padding: EdgeInsets.all(8.0),
+                      childAspectRatio: constraints.maxWidth > 1000 ? 1.4 : 1,
+                      children: <Widget>[
+                        AdminDashboardCard(
+                          title: 'User Management',
+                          icon: Icons.person,
+                          onTap: () {
+                            Get.to(() => UserManagementPage());
+                          },
+                        ),
+                        AdminDashboardCard(
+                          title: 'Role Management',
+                          icon: Icons.security,
+                          onTap: () {
+                            Get.to(() => rolemanagement());
+                          },
+                        ),
+                        AdminDashboardCard(
+                          title: 'Activity Logs',
+                          icon: Icons.list,
+                          onTap: () {
+                            Navigator.pushNamed(context, '/activity_logs');
+                          },
+                        ),
+                        // Add more cards as needed
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -132,74 +155,65 @@ class AdminDashboardCard extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  AdminDashboardCard(
-      {required this.title, required this.icon, required this.onTap});
+  AdminDashboardCard({required this.title, required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black38,
-              blurRadius: 4,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool isWeb = constraints.maxWidth > 1000;
+        double cardWidth = isWeb ? 150.0 : double.infinity;
+        double cardHeight = isWeb ? 150.0 : double.infinity;
+
+        return Center(
+          child: InkWell(
+            onTap: onTap,
+            child: Container(
+              width: cardWidth,
+              height: cardHeight,
               margin: EdgeInsets.all(12.0),
-              child: Icon(
-                icon,
-                size: 45.0,
-                color: Color.fromARGB(255, 2, 92, 123),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black38,
+                    blurRadius: 4,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(12.0),
+                    child: Icon(
+                      icon,
+                      size: 45.0,
+                      color: Color.fromARGB(255, 2, 92, 123),
+                    ),
+                  ),
+                  Text(
+                    title,
+                    style: GoogleFonts.aBeeZee(
+                      textStyle: TextStyle(
+                        color: Color.fromARGB(255, 78, 130, 147),
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            //Center(child:
-            Text(
-              title,
-              style: GoogleFonts.aBeeZee(
-                textStyle: TextStyle(
-                  color: Color.fromARGB(255, 78, 130, 147),
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            //  ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
 
-/*
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Icon(icon, size: 40.0 , color: Color.fromARGB(255, 2, 92, 123),),
-              SizedBox(height: 10.0),
-              Text(title, style: GoogleFonts.aBeeZee(
-             textStyle:  TextStyle(fontSize: 16.0 , ),
-             
 
-              ),
-              
-              
-             ),
-            ],
-          ),
-        ),
-       */
 /*
  InkWell(
                     

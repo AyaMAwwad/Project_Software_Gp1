@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -89,8 +90,8 @@ class _EditProductPageState extends State<EditProductPage> {
     String theText = (widget.productData['product_type'] == 'New' ||
             widget.productData['product_type'] == 'new' ||
             widget.productData['product_type'] == 'جديد')
-        ? 'warranty period'
-        : 'product condition';
+        ? '106'.tr
+        : '113'.tr;
 
     return Scaffold(
       appBar: AppBar(
@@ -105,7 +106,7 @@ class _EditProductPageState extends State<EditProductPage> {
           },
         ),
         title: Text(
-          'Edit Product',
+          '174'.tr,
           style: GoogleFonts.aBeeZee(
             textStyle: TextStyle(
               color: const Color.fromARGB(255, 255, 255, 255),
@@ -126,7 +127,7 @@ class _EditProductPageState extends State<EditProductPage> {
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: 'Product Name',
+                  labelText: '175'.tr,
                   labelStyle: TextStyle(color: Color(0xFF0D6775), fontSize: 16),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -149,7 +150,7 @@ class _EditProductPageState extends State<EditProductPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the product name';
+                    return '23'.tr;
                   }
                   return null;
                 },
@@ -158,7 +159,7 @@ class _EditProductPageState extends State<EditProductPage> {
               TextFormField(
                 controller: _description,
                 decoration: InputDecoration(
-                  labelText: 'Product Description',
+                  labelText: '176'.tr,
                   labelStyle: TextStyle(color: Color(0xFF0D6775), fontSize: 16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -184,7 +185,7 @@ class _EditProductPageState extends State<EditProductPage> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the product description';
+                    return '27'.tr;
                   }
                   return null;
                 },
@@ -193,7 +194,7 @@ class _EditProductPageState extends State<EditProductPage> {
               TextFormField(
                 controller: _quantityController,
                 decoration: InputDecoration(
-                  labelText: 'Product Quantity',
+                  labelText: '177'.tr,
                   labelStyle: TextStyle(color: Color(0xFF0D6775), fontSize: 16),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -217,7 +218,7 @@ class _EditProductPageState extends State<EditProductPage> {
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the product quantity';
+                    return '178'.tr;
                   }
                   return null;
                 },
@@ -226,7 +227,7 @@ class _EditProductPageState extends State<EditProductPage> {
               TextFormField(
                 controller: _priceController,
                 decoration: InputDecoration(
-                  labelText: 'Product Price',
+                  labelText: '179'.tr,
                   labelStyle: TextStyle(color: Color(0xFF0D6775), fontSize: 16),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -252,7 +253,7 @@ class _EditProductPageState extends State<EditProductPage> {
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter the product price';
+                    return '180'.tr;
                   }
                   return null;
                 },
@@ -301,13 +302,13 @@ class _EditProductPageState extends State<EditProductPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomeButton2(
-                      text: 'Cancel',
+                      text: '127'.tr,
                       onPressed: () async {
                         Navigator.pop(context);
                       },
                     ),
                     CustomeButton2(
-                      text: 'Update',
+                      text: '181'.tr,
                       onPressed: () async {
                         //  if (_formKey.currentState!.validate()) {
                         await updateProduct(

@@ -7,20 +7,21 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/src/screen/ipaddress.dart';
+import 'package:project/src/screen/login_screen.dart';
 
-class StatisticsPage extends StatefulWidget {
+class StatisticsSeller extends StatefulWidget {
   @override
-  _StatisticsPageState createState() => _StatisticsPageState();
+  _StatisticsSellerState createState() => _StatisticsSellerState();
 }
 
-class _StatisticsPageState extends State<StatisticsPage> {
+class _StatisticsSellerState extends State<StatisticsSeller> {
   int totalProducts = 0;
   int totalProductsSold = 0;
   double percetagesold = 0.0;
   double totalpricesoldproduct = 0.0;
   //
   double sumProfitPercentage = 0.0;
-  bool showChart = false; // Add this line
+  bool showChart = false;
 
   double sumProfit = 0.0;
   @override
@@ -33,7 +34,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
   Future<void> fetchTotalProducts() async {
     final url = Uri.parse(
-        'http://$ip:3000/tradetryst/totalnumproductt/totalproduct'); // http://$ip:3000/tradetryst/orderproduct/productlistt
+        'http://$ip:3000/tradetryst/product/totalnumberproductofSeller?userId=${Login.idd}');
     final response = await http.get(
       url,
       headers: <String, String>{
@@ -54,7 +55,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
 
   Future<void> fetchTotalProductsSold() async {
     final url = Uri.parse(
-        'http://$ip:3000/tradetryst/totalnumproductt/totalproductsold');
+        'http://$ip:3000/tradetryst/product/totalproductsoldofSeller?userId=${Login.idd}');
     final response = await http.get(
       url,
       headers: <String, String>{
@@ -88,8 +89,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
   }
 
   Future<void> fetchTotalRevenue() async {
-    final url =
-        Uri.parse('http://$ip:3000/tradetryst/totalnumproductt/totalrevenue');
+    final url = Uri.parse(
+        'http://$ip:3000/tradetryst/product/totalrevenueofseller?userId=${Login.idd}');
     final response = await http.get(
       url,
       headers: <String, String>{
@@ -104,7 +105,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
         totalpricesoldproduct =
             double.tryParse(data['totalRevenue'].toString()) ?? 0.0;
         final productsWithAdminProfit =
-            data['productsWithAdminProfit']; // Get products with admin profit
+            data['resultsWithSellerProfit']; // Get products with admin profit
         // Process productsWithAdminProfit if needed
         print('Total Revenue: $totalpricesoldproduct'); // Debugging line
         print('Total Products: $productsWithAdminProfit'); // Debugging line
@@ -115,7 +116,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
         for (var product in productsWithAdminProfit) {
           sumProfitPercentage +=
               double.parse(product['profitPercentage'].toString());
-          sumProfit += double.parse(product['adminProfit'].toString());
+          sumProfit += double.parse(product['sellerProfit'].toString());
         }
         print('Sum of Profit Percentages: $sumProfitPercentage');
         print('Sum of Profit: $sumProfit');
@@ -132,7 +133,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
         preferredSize: Size.fromHeight(60.0),
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 36, 80, 95), // Background color
+            color: Color(0xFF0D6775),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20.0),
               bottomRight: Radius.circular(20.0),
@@ -146,6 +147,16 @@ class _StatisticsPageState extends State<StatisticsPage> {
             ],
           ),
           child: AppBar(
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios_new,
+                color: Color.fromARGB(255, 255, 255, 255),
+                size: 24,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
             iconTheme: IconThemeData(
               color: Colors.white, // Change your color here
             ),
@@ -160,7 +171,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
             // add
             actions: <Widget>[],
 
-            // add icon notification
             backgroundColor: Colors
                 .transparent, // Make AppBar transparent to show Container's decoration
             elevation: 0, // Remove AppBar shadow
@@ -198,11 +208,11 @@ class _StatisticsPageState extends State<StatisticsPage> {
                 Icons.attach_money,
                 Colors.purple),
             buildStatisticCard(
-                '194'.tr,
+                '187'.tr,
                 '${sumProfitPercentage.toStringAsFixed(2)}%',
                 Icons.percent,
                 Colors.red),
-            buildStatisticCard('195'.tr, '\$${sumProfit.toStringAsFixed(2)}',
+            buildStatisticCard('188'.tr, '\$${sumProfit.toStringAsFixed(2)}',
                 Icons.account_balance_wallet, Colors.teal),
             SizedBox(
               height: 20,
@@ -215,7 +225,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 36, 80, 95),
+                  backgroundColor: Color(0xFF0D6775),
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   textStyle: TextStyle(fontSize: 18, color: Colors.white),
                   shape: RoundedRectangleBorder(
@@ -276,7 +286,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   ),
                   buildLegendItem(Color.fromARGB(255, 43, 120, 143),
                       '185'.tr), // Color.fromARGB(255, 43, 120, 143),
-                  buildLegendItem(Color.fromARGB(255, 8, 113, 103), '196'.tr),
+                  buildLegendItem(Color.fromARGB(255, 8, 113, 103), '192'.tr),
                   buildLegendItem(
                       const Color.fromARGB(255, 199, 198, 198), '193'.tr),
                 ],
@@ -354,182 +364,3 @@ Widget buildLegendItem(Color color, String text) {
     ],
   );
 }
-
-/*
-// ibtisam
-  //
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Statistics'),
-        backgroundColor: Color.fromARGB(255, 36, 80, 95),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          
-            Text(
-              
-              'Total Products:',
-              style: TextStyle(fontSize: 18),
-            ),
-            Text(
-              '$totalProducts', // Replace with actual value
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'product Sold:',
-              style: TextStyle(fontSize: 18),
-            ),
-            Text(
-              '$totalProductsSold', // Replace with actual value
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Percentage Sold:',
-              style: TextStyle(fontSize: 18),
-            ),
-            Text(
-              '${percetagesold.toStringAsFixed(2)}%', // Replace with actual value
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-             SizedBox(height: 16),
-             Text(
-              'Total Revenue:',
-              style: TextStyle(fontSize: 18),
-            ),
-            Text(
-              '$totalpricesoldproduct', // Replace with actual value
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            // Add more statistics widgets as needed
-             SizedBox(height: 16),
-            Text(
-          'Total Admin Profit Percentage:' ,  /// 'Sum of Profit Percentages:',
-              style: TextStyle(fontSize: 18),
-            ),
-            Text(
-              '${sumProfitPercentage.toStringAsFixed(2)}%', // Replace with actual value
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Text(
-           'Total Admin Profit:', //  'Sum of Profit:',
-              style: TextStyle(fontSize: 18),
-            ),
-             Text(
-              '$sumProfit', // Replace with actual value
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ), SizedBox(
-              height: 200,
-              child: PieChart(
-                PieChartData(
-                  sections: [
-                    PieChartSectionData(
-                      color: Colors.blue,
-                      value: percetagesold,
-                      title: '${percetagesold.toStringAsFixed(2)}%',
-                      radius: 50,
-                      titleStyle: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                     PieChartSectionData(
-                      color: const Color.fromARGB(255, 18, 20, 22),
-                      value: sumProfitPercentage,
-                      title: '${sumProfitPercentage.toStringAsFixed(2)}%',
-                      radius: 50,
-                      titleStyle: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    PieChartSectionData(
-                      color: Colors.grey,
-                      value: 100 - percetagesold,
-                      title: '',
-                      radius: 50,
-                    ),
-                  ],
-                  sectionsSpace: 2,
-                  centerSpaceRadius: 40,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
-// ibtisam
-
-/*import 'dart:convert';
-import 'package:http/http.dart' as http;
-
-import 'package:flutter/material.dart';
-class StatisticsPage extends StatelessWidget {
-  //Future<Map<String, dynamic>> statisticsFuture;
-
- // StatisticsPage() {
- //  statisticsFuture = fetchStatistics() as Future<Map<String, dynamic>>;
- // }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Statistics'),
-        backgroundColor: Color.fromARGB(255, 36, 80, 95),
-      ),
-     // body:
-      /* FutureBuilder<Map<String, dynamic>>(
-        future: statisticsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-*/
-
-            final stats = snapshot.data!;
-            final totalProducts = stats['totalProductsSold'];
-            final productsSold = stats['productsSold'];
-
-            // Calculate percentage of products sold
-            final percentageSold = (productsSold / totalProducts) * 100;
-
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text('Total Products Sold: $productsSold',
-                      style: TextStyle(fontSize: 18)),
-                  Text('Percentage Sold: ${percentageSold.toStringAsFixed(2)}%',
-                      style: TextStyle(fontSize: 18)),
-                  Text('Total Revenue: \$${stats['totalRevenue']}',
-                      style: TextStyle(fontSize: 18)),
-                  // Add more statistics as needed
-                ],
-              ),
-            );
-         // }
-        //},
-      );
-    //);
-  }
-
-  Future<http.Response> fetchStatistics() {
-  return http.get(Uri.parse('https://api.example.com/statistics'));
-}
-}*/

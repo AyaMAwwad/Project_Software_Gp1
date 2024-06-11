@@ -82,4 +82,12 @@ router.get('/totalproduct', productController.totalnumberproductforstatistics);
 router.get('/totalproductsold', productController.totalnumbersoldproduct);
 
 router.get('/totalrevenue', productController.totalRevenue);
+
+// ayosh
+router.get('/totalnumberproductofSeller', productController.totalnumberproductofSeller);
+router.get('/totalproductsoldofSeller', productController.totalproductsoldofSeller);
+
+router.get('/totalrevenueofseller', productController.totalrevenueofseller);
+
+// ayosh
 module.exports = router;
