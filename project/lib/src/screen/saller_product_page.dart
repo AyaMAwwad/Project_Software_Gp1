@@ -35,8 +35,8 @@ class SellarPageState extends State<SellarPage> {
     });
   }
 
-  Future<void> deleteProduct(int productId) async {
-    await deleteProductSellar(productId, "product_type");
+  Future<void> deleteProduct(int productId, String state) async {
+    await deleteProductSellar(productId, state);
     setState(() {
       productSellar
           .removeWhere((product) => product['product_id'] == productId);
@@ -184,7 +184,8 @@ class SellarPageState extends State<SellarPage> {
                                                       product['product_id']);
                                                 } else if (value == 'delete') {
                                                   await deleteProduct(
-                                                      product['product_id']);
+                                                      product['product_id'],
+                                                      product['product_type']);
                                                 }
                                               },
                                               itemBuilder:
@@ -274,6 +275,7 @@ class SellarPageState extends State<SellarPage> {
 
   Future<Map<String, dynamic>?> deleteProductSellar(
       int productid, String state) async {
+    print(state);
     http.Response? response;
 
     try {

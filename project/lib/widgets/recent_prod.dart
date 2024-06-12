@@ -137,7 +137,7 @@ class RecentProd extends StatelessWidget {
                   // crossAxisSpacing: 0.0,
                   childAspectRatio: containerWidth > 1000
                       ? 0.66
-                      : 0.7, //////////ibtisam // 0.35,web
+                      : 0.61, //////////ibtisam // 0.35,web
                   mainAxisSpacing: 1.0,
                 ),
                 shrinkWrap: true,
@@ -657,22 +657,20 @@ class RecentSingleProd extends StatefulWidget {
 class RecentSingleProdState extends State<RecentSingleProd> {
   @override
   Widget build(BuildContext context) {
-    print('the  widget.recent_prod_quantity : ${widget.recent_prod_quantity}');
+    print('the widget.recent_prod_quantity : ${widget.recent_prod_quantity}');
     print(
-        'the  widget.recet_prod_currency : ${widget.recet_prod_currency}'); // price 8
+        'the widget.recet_prod_currency : ${widget.recet_prod_currency}'); // price 8
     final Map<String, dynamic> imageData = widget.recet_prod_image;
     List<int> bytes = List<int>.from(imageData['data']);
     String textP = '';
     double? width = 0.0;
 
-    ///iiii
     double containerWidth = MediaQuery.of(context).size.width;
     double adjustedWidth = containerWidth - 50;
     if (containerWidth > 1000) {
       adjustedWidth = containerWidth - 300;
     }
 
-    //iii
     if (RecentProd.thestate == 'Free' || RecentProd.thestate == 'مجاني') {
       textP = 'Free';
       width = 100;
@@ -681,326 +679,222 @@ class RecentSingleProdState extends State<RecentSingleProd> {
       String ii = SearchPage.priceprosearch(
           widget.recet_prod_price, currency); // price 8
       String sympoll = SearchPage.getsymbol(ii); // price 8
-      //  textP = 'Price:\$${widget.recet_prod_price}'; // price 8
       textP = '$sympoll'; // price 8
       width = 40;
     }
-    // RecentProd.theProdId
+
     final isSelfProduct = Login.idd == widget.recent_prod_userId;
     ValueNotifier<bool> isInWishlist = ValueNotifier<bool>(false);
+
     return GestureDetector(
-        child: Align(
-          alignment: Alignment.center,
-          child: Container(
-            width: 180, // Set the width of the container
-            padding: EdgeInsets.zero, // Remove any padding
-            margin: EdgeInsets.symmetric(
-                horizontal: 5), // Reduce horizontal margins
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.all(5),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color.fromARGB(255, 239, 237, 245),
+      onTap: isSelfProduct
+          ? null
+          : () {
+              HomePageState.InteractionOfUser(
+                  Login.idd, widget.recent_prod_productId, 1, 0, 0);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailPage(
+                    categoryName: widget.recet_prod_name,
+                    imagePaths: imageData,
+                    price: textP,
+                    productid: RecentProd.theProdId!,
+                    Typeproduct: RecentProd.thestate!,
+                    quantity: widget.recent_prod_quantity,
+                    name: widget.recet_prod_name,
+                    description: widget.recet_prod_description,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 180,
-                        height: 180,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
+                ),
+              );
+            },
+      child: Align(
+        alignment: Alignment.center,
+        child: Card(
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: Image.memory(
+                    Uint8List.fromList(bytes),
+                    width: 180,
+                    height: 180,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(height: 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.recet_prod_name,
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Color.fromARGB(255, 2, 46, 82),
+                          fontWeight: FontWeight.w600,
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
-                          child: Image.memory(
-                            Uint8List.fromList(bytes),
-                            fit: BoxFit.cover,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: isInWishlist,
+                      builder: (context, value, child) {
+                        return GestureDetector(
+                          onTap: () async {
+                            if (value) {
+                              await WishlistPageState.deleteFromWishList(
+                                  widget.recent_prod_productId, context);
+                            } else {
+                              await WishlistPageState.addToWishList(
+                                  widget.recent_prod_productId, context);
+                            }
+                            isInWishlist.value = !isInWishlist.value;
+                          },
+                          child: Icon(
+                            value ? Icons.favorite : Icons.favorite_border,
+                            color: value
+                                ? Colors.red
+                                : Color.fromARGB(255, 2, 46, 82),
+                            size: 20,
                           ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                Text(
+                  textP,
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 14,
+                  ),
+                ),
+                SizedBox(
+                  height: 34, // Approximate height for 2 lines of text
+                  child: Text(
+                    widget.recet_prod_description,
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 66, 66, 66),
+                      fontSize: 12,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      child: Visibility(
+                        visible: !(widget.recent_prod_avgRate == '0.00'),
+                        child: Icon(
+                          Icons.star,
+                          size: 21,
+                          color: Color.fromARGB(255, 244, 203, 20),
                         ),
                       ),
-                      SizedBox(height: 5),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /* Text(
-                            widget.recet_prod_name,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 2, 46, 82),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),*/
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                widget.recet_prod_name,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Color.fromARGB(255, 2, 46, 82),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              ValueListenableBuilder(
-                                valueListenable: isInWishlist,
-                                builder: (context, value, child) {
-                                  return GestureDetector(
-                                    onTap: () async {
-                                      if (value) {
-                                        await WishlistPageState
-                                            .deleteFromWishList(
-                                                widget.recent_prod_productId,
-                                                context);
-                                      } else {
-                                        await WishlistPageState.addToWishList(
-                                            widget.recent_prod_productId,
-                                            context);
-                                      }
-                                      isInWishlist.value = !isInWishlist.value;
-                                    },
-                                    child: Icon(
-                                      value
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: value
-                                          ? Colors.red
-                                          : Color.fromARGB(255, 2, 46, 82),
-                                      size: 20,
-                                    ),
+                      onTap: () async {
+                        // OpenChatWithSellar.functionForChar(itemName, context);
+                      },
+                    ),
+                    Text(
+                      widget.recent_prod_avgRate == '0.00'
+                          ? ''
+                          : widget.recent_prod_avgRate,
+                    ),
+                    Spacer(),
+                    Visibility(
+                      visible: !isSelfProduct,
+                      child: GestureDetector(
+                        child: Icon(
+                          IconsaxBold.messages,
+                          size: 21,
+                          color: Color.fromARGB(255, 2, 46, 82),
+                        ),
+                        onTap: () async {
+                          OpenChatWithSellar.functionForChar(
+                              widget.recet_prod_name, context);
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Visibility(
+                      visible: !isSelfProduct,
+                      child: GestureDetector(
+                        child: Icon(
+                          widget.recent_prod_quantity == 0
+                              ? Icons.remove_shopping_cart
+                              : (RecentProd.thestate == 'Free' ||
+                                      RecentProd.thestate == 'free' ||
+                                      RecentProd.thestate == 'مجاني')
+                                  ? Icons.arrow_circle_right_outlined
+                                  : Icons.shopping_cart_checkout,
+                          size: 17,
+                          color: Color.fromARGB(255, 2, 46, 82),
+                        ),
+                        onTap: () async {
+                          DateTime now = DateTime.now();
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd – kk:mm').format(now);
+                          if (widget.recent_prod_quantity != 0) {
+                            if (RecentProd.thestate == 'Free' ||
+                                RecentProd.thestate == 'free' ||
+                                RecentProd.thestate == 'مجاني') {
+                              print(
+                                  '******* the RecentProd.thestate:${RecentProd.thestate}');
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return DeliveryPage(
+                                    isFree: true,
+                                    deliveryOption:
+                                        widget.recent_prod_deliveryoption!,
+                                    productId: widget.recent_prod_productId!,
+                                    onPaymentSuccess: () {},
                                   );
                                 },
-                              ),
-                            ],
-                          ),
-                          Text(
-                            textP,
-                            style: TextStyle(fontSize: 14, color: Colors.green),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    child: Visibility(
-                                      visible: !(widget.recent_prod_avgRate ==
-                                          '0.00'),
-                                      child: Icon(
-                                        Icons.star,
-                                        size: 21,
-                                        color:
-                                            Color.fromARGB(255, 244, 203, 20),
-                                      ),
-                                    ),
-                                    onTap: () async {
-                                      //   OpenChatWithSellar.functionForChar(itemName, context);
-                                    },
-                                  ),
-                                  Text(
-                                    widget.recent_prod_avgRate == '0.00'
-                                        ? ''
-                                        : widget.recent_prod_avgRate,
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Visibility(
-                                    visible: !isSelfProduct,
-                                    child: GestureDetector(
-                                      child: Icon(
-                                        IconsaxBold.messages,
-                                        size: 21,
-                                        color: Color.fromARGB(255, 2, 92, 123),
-                                      ),
-                                      onTap: () async {
-                                        OpenChatWithSellar.functionForChar(
-                                            widget.recet_prod_name, context);
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Visibility(
-                                    visible: !isSelfProduct,
-                                    child: GestureDetector(
-                                      child: Icon(
-                                        widget.recent_prod_quantity == 0
-                                            ? Icons.remove_shopping_cart
-                                            : (RecentProd.thestate == 'Free' ||
-                                                    RecentProd.thestate ==
-                                                        'free' ||
-                                                    RecentProd.thestate ==
-                                                        'مجاني')
-                                                ? Icons
-                                                    .arrow_circle_right_outlined
-                                                : Icons.shopping_cart_checkout,
-                                        //  Icons.shopping_cart_checkout,
-                                        //FontAwesomeIcons.cartShopping,
-                                        size: 17,
-                                        color: Color.fromARGB(255, 2, 92, 123),
-                                      ),
-                                      onTap: () async {
-                                        DateTime now = DateTime.now();
-                                        String formattedDate = DateFormat(
-                                                'yyyy-MM-dd – kk:mm')
-                                            .format(
-                                                now); // Format the date as per your requirement
-                                        if (widget.recent_prod_quantity != 0) {
-                                          if (RecentProd.thestate == 'Free' ||
-                                              RecentProd.thestate == 'free' ||
-                                              RecentProd.thestate == 'مجاني') {
-                                            print(
-                                                '******* the RecentProd.thestate:${RecentProd.thestate}');
-                                            showModalBottomSheet(
-                                              context: context,
-                                              isScrollControlled: true,
-                                              builder: (BuildContext context) {
-                                                return DeliveryPage(
-                                                  isFree: true,
-                                                  deliveryOption: widget
-                                                      .recent_prod_deliveryoption!,
-                                                  productId: widget
-                                                      .recent_prod_productId!,
-                                                  onPaymentSuccess: () {},
-                                                );
-                                              },
-                                            );
-                                          } else {
-                                            HomePageState.InteractionOfUser(
-                                                Login.idd,
-                                                widget.recent_prod_productId,
-                                                0,
-                                                1,
-                                                0);
-                                            await shoppingCartStore(
-                                                '1',
-                                                formattedDate,
-                                                widget.recet_prod_name,
-                                                RecentProd.thestate!,
-                                                widget.recet_prod_description,
-                                                context);
-                                          }
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: Text(
-                                              "Product SOLD OUT\nCan not add Item to Shoppimg Card",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            backgroundColor: Colors.redAccent,
-                                          ));
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          // code previous ****
-                          /*Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          child: Icon(
-                            IconsaxBold.messages,
-                            size: 21,
-                            color: Color.fromARGB(255, 2, 92, 123),
-                          ),
-                          onTap: () async {
-                            OpenChatWithSellar.functionForChar(widget.recet_prod_name, context);
-                          },
-                        ),
-                        SizedBox(width: 5),
-                        GestureDetector(
-                          child: Icon(
-                            widget.recent_prod_quantity == 0
-                                ? Icons.remove_shopping_cart
-                                : (RecentProd.thestate == 'Free' ||
-                                    RecentProd.thestate == 'free' ||
-                                    RecentProd.thestate == 'مجاني')
-                                    ? Icons.arrow_circle_right_outlined
-                                    : Icons.shopping_cart_checkout,
-                            size: 17,
-                            color: Color.fromARGB(255, 2, 92, 123),
-                          ),
-                          onTap: () async {
-                            DateTime now = DateTime.now();
-                            String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
-                            if (widget.recent_prod_quantity != 0) {
-                              if (RecentProd.thestate == 'Free' ||
-                                  RecentProd.thestate == 'free' ||
-                                  RecentProd.thestate == 'مجاني') {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  builder: (BuildContext context) {
-                                    return DeliveryPage(
-                                      isFree: true,
-                                      deliveryOption: RecentProd.deliveryOption!,
-                                      productId: RecentProd.theProdId!,
-                                      onPaymentSuccess: () {},
-                                    );
-                                  },
-                                );
-                              } else {
-                                // Add product to shopping cart
-                              }
+                              );
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    "Product SOLD OUT\nCannot add item to Shopping Cart",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  backgroundColor: Colors.redAccent,
-                                ),
+                              HomePageState.InteractionOfUser(Login.idd,
+                                  widget.recent_prod_productId, 0, 1, 0);
+                              await shoppingCartStore(
+                                '1',
+                                formattedDate,
+                                widget.recet_prod_name,
+                                RecentProd.thestate!,
+                                widget.recet_prod_description,
+                                context,
                               );
                             }
-                          },
-                        ),
-                      ],
-                    ), */ // code ***** previous
-                        ],
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                "Product SOLD OUT\nCan not add Item to Shopping Cart",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.redAccent,
+                            ));
+                          }
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ),
-        onTap: isSelfProduct
-            ? null
-            : () {
-                HomePageState.InteractionOfUser(
-                    Login.idd, widget.recent_prod_productId, 1, 0, 0);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailPage(
-                      categoryName: widget.recet_prod_name,
-                      imagePaths: imageData,
-                      price: textP,
-                      productid: RecentProd.theProdId!,
-                      Typeproduct: RecentProd.thestate!,
-                      quantity: widget.recent_prod_quantity,
-                      name: widget.recet_prod_name,
-                      description: widget.recet_prod_description,
-                    ),
-                  ),
-                );
-              });
+      ),
+    );
   }
 
 /*  */
