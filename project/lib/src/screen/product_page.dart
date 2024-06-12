@@ -149,7 +149,7 @@ class ProductPageState extends State<ProductPage> {
                   //  child:Carousel(),
                 ),
                 Container(
-                  margin: EdgeInsets.only(right: 15, left: 15),
+                  margin: EdgeInsets.only(right: 30, left: 0),
                   width: MediaQuery.of(context)
                       .size
                       .width, // Set the desired size of the circle

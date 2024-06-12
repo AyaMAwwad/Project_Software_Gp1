@@ -285,7 +285,7 @@ addProduct(req, res) {
     );
  //});
 }
-
+// aega
 //new gettypeofproduct
 gettypeofproduct(category,type,state) {
   console.log(category);
@@ -313,19 +313,19 @@ gettypeofproduct(category,type,state) {
             } else {
               // Add the product data for the current category ID to the array
               allProductData.push(...res1);
-              console.log(allProductData);
+              
            
              
              if (allProductData.length <= theRes.length) {
              let Query='';
               if(state== 'New' || state== 'جديد'){
-                Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
+                Query='SELECT * FROM new_product WHERE product_id = ?'
               }
               else if(state=='Used'|| state== 'مستعمل'){
-                Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
+                Query='SELECT * FROM used_product WHERE product_id = ?'
               }
               else if(state=='Free'|| state== 'مجاني'){
-                Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'
+                Query='SELECT * FROM free_product WHERE product_id = ?'
               }
              
              // Iterate over each product in allProductData
@@ -341,15 +341,21 @@ gettypeofproduct(category,type,state) {
                       // Add the retrieved data to allProductDetails
                       res2.forEach(entry => {
                         const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
+                        if (!found) {
+                            allProductDetails.push(entry);
+                        }
+                    });
+                   /*   res2.forEach(entry => {
+                        const found = allProductDetails.find(item => JSON.stringify(item) === JSON.stringify(entry));
                         if (!found || prevId!=productId) {
                             allProductDetails.push(entry);
                             prevId=productId;
                         }
-                    });
+                    });*/
                      // allProductDetails.push(...res2);
                      
                       console.log(allProductDetails);
-                      console.log('aaaayyya ouuuuut ');
+                      
                       // Check if all products have been processed
                     if (allProductDetails.length == allProductData.length) {
                       console.log('aaaayyya');
@@ -376,7 +382,7 @@ gettypeofproduct(category,type,state) {
    
   });
 }
-
+// aega
 ////// nnneeeeew addToShopCart
 addToShopCart(req, res) {
   
@@ -725,6 +731,8 @@ retriveWordOfsearch(name) {
 // 18/5 deleteItemSellar
 // ayosh 
 deleteItemSellar(productId,state) {
+  console.log(productId);
+  console.log(state);
   return new Promise((resolve, reject) => {
     db.query('DELETE FROM wishlist WHERE product_id = ?',[productId], (error, results) => {
       if (error) {
