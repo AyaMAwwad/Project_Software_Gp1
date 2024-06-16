@@ -49,15 +49,193 @@ class WishlistPageState extends State<WishlistPage> {
     });
   }
 
-  List<Map<String, dynamic>> getFilteredProducts() {
+  List<List<Map<String, dynamic>>> getFilteredProducts() {
+    List<Map<String, dynamic>> filteredProducts = [];
+    List<Map<String, dynamic>> filteredDetails = [];
+
+    for (int i = 0; i < ProductDataWishList.length; i++) {
+      var product = ProductDataWishList[i];
+      var details = ProductDetails[i];
+
+      if (selectedCategory == '168'.tr ||
+          product['category_name'] == selectedCategory) {
+        filteredProducts.add(product);
+        filteredDetails.add(details);
+      }
+    }
+
+    return [filteredProducts, filteredDetails];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<List<Map<String, dynamic>>> filteredData = getFilteredProducts();
+    List<Map<String, dynamic>> filteredProducts = filteredData[0];
+    List<Map<String, dynamic>> filteredDetails = filteredData[1];
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            CustemAppBar(
+              text: '167'.tr,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 130,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...[
+                            '168'.tr,
+                            '129'.tr,
+                            '130'.tr,
+                            '131'.tr,
+                            '132'.tr,
+                            '133'.tr,
+                            '134'.tr,
+                            '135'.tr,
+                          ].map((category) => ListTile(
+                                title: Text(
+                                  category,
+                                  style: GoogleFonts.aBeeZee(
+                                    textStyle: TextStyle(
+                                      color: selectedCategory == category
+                                          ? Color.fromARGB(255, 2, 92, 123)
+                                          : Color.fromARGB(255, 128, 128, 128),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                                tileColor: selectedCategory == category
+                                    ? Colors.black.withOpacity(0.1)
+                                    : Colors.transparent,
+                                onTap: () {
+                                  onCategorySelected(category);
+                                },
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Main content
+                  Expanded(
+                    child: GridView.builder(
+                      padding: EdgeInsets.only(
+                        left: 10,
+                        right: 10,
+                      ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 1,
+                        childAspectRatio: 0.65,
+                      ),
+                      itemCount: filteredProducts.length,
+                      itemBuilder: (context, index) {
+                        var product = filteredProducts[index];
+                        var details = filteredDetails[index];
+                        return ProductCard(
+                          product: product,
+                          details: details,
+                          onDelete: () async {
+                            await WishlistPageState.deleteFromWishList(
+                                product['product_id'], context);
+                            setState(() {
+                              filteredProducts.removeAt(index);
+                              filteredDetails.removeAt(index);
+                            });
+                          },
+                          onFindSimilar: () async {
+                            await findSimilar(product['product_id'],
+                                product['category_type']);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FindSimilarPage(
+                                  similarProducts: productSimilar,
+                                  similarProductDetails: productSimilarDetails,
+                                  price: details['price'],
+                                  name: product['category_type'],
+                                  image: product['image'],
+                                  currency: product['currency'],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: NavBar(
+        selectedIndex: selectedIndex,
+        onTabSelected: (index) {
+          setState(() {
+            selectedIndex = index;
+            switch (index) {
+              case 0:
+                HomePageState.isPressTosearch = false;
+                HomePageState.isPressTosearchButton = false;
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                break;
+              case 1:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddProduct()),
+                );
+                break;
+              case 2:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => WishlistPage()),
+                );
+                break;
+              case 3:
+                CartState().resetCart();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => CartShop()),
+                );
+                break;
+              case 4:
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfile()),
+                );
+                break;
+            }
+          });
+        },
+      ),
+    );
+  }
+
+  /* List<Map<String, dynamic>> getFilteredProducts() {
     if (selectedCategory == '168'.tr) {
       return ProductDataWishList;
     } else {
       return ProductDataWishList.where(
           (product) => product['category_name'] == selectedCategory).toList();
     }
-  }
+  }*/
 
+/*
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -213,7 +391,7 @@ class WishlistPageState extends State<WishlistPage> {
       ),
     );
   }
-
+*/
   static Future<void> addToWishList(
     int peoductId,
     BuildContext context,
@@ -377,6 +555,8 @@ class _ProductCardState extends State<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.product);
+    print(widget.details);
     //   print('in _ProductCardState :  ${ widget.product['category_name']}');
     String curr = widget.product['currency'];
     String currprice = (widget.product['product_type'] == 'new' ||

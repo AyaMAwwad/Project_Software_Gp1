@@ -51,25 +51,38 @@ router.delete('/deleteCartItem', productController.deleteFromShopCart);
 router.put('/updateItemOnShopCart', productController.updateItemOnShopCart);
 
 router.get('/retriveWordOfsearch', productController.retriveWordOfsearch);
-
+//newwwww 1-MAY
+//router.get('/retriveProductOfsearch', productController.retriveProductOfsearch);
 router.get('/retriveProductOfsearch', productController.retriveProductOfsearch);
 // new 12/5 
 router.get('/sallerProduct', productController.sallerProduct);
+
+
+// new ibtisam 
+
+router.get('/productlistt', productController.gettproducttoadmin); // gettproducttoadmin
+
+// ayaaa
 // 18/5 deleteItemSellar
 router.delete('/deleteItemSellar', productController.deleteItemSellar);
 // 19/5 updateSellarProduct
 router.put('/updateSellarProduct', productController.updateSellarProduct);
-// 20/5
-router.post('/addRatingProduct', productController.addRatingProduct);
 
-// 22/5
-router.get('/retriveProductHomeRecomendedSystem', productController.retriveProductHomeRecomendedSystem);
-// new 28/5
 router.get('/productThisMonth', productController.productThisMonth);
-
-router.get('/productlistt', productController.gettproducttoadmin); // gettproducttoadmin
+router.get('/retriveProductHomeRecomendedSystem', productController.retriveProductHomeRecomendedSystem);
+router.post('/addRatingProduct', productController.addRatingProduct);
+// aya
 router.get('/checkQuantityForNotification', productController.checkQuantityForNotification);
 router.get('/ProductNewCollectionForNotification', productController.ProductNewCollectionForNotification);
+
+
+
+// statistics 
+router.get('/totalproduct', productController.totalnumberproductforstatistics);
+router.get('/totalproductsold', productController.totalnumbersoldproduct);
+
+router.get('/totalrevenue', productController.totalRevenue);
+
 // aya 
 router.post('/addToWishList', productController.addToWishList);
 router.get('/retriveFromWishList', productController.retriveFromWishList);
@@ -77,11 +90,6 @@ router.delete('/deleteFromWishList', productController.deleteFromWishList);
 router.get('/findSimilar', productController.findSimilar);
 //aya 
 
-// statistics 
-router.get('/totalproduct', productController.totalnumberproductforstatistics);
-router.get('/totalproductsold', productController.totalnumbersoldproduct);
-
-router.get('/totalrevenue', productController.totalRevenue);
 
 // ayosh
 router.get('/totalnumberproductofSeller', productController.totalnumberproductofSeller);
@@ -90,4 +98,6 @@ router.get('/totalproductsoldofSeller', productController.totalproductsoldofSell
 router.get('/totalrevenueofseller', productController.totalrevenueofseller);
 
 // ayosh
+
+
 module.exports = router;

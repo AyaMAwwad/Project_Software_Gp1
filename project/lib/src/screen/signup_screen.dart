@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'package:project/src/screen/ipaddress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +16,7 @@ import 'package:project/widgets/have_account.dart';
 import 'package:project/widgets/pass_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Signup extends StatefulWidget {
   static String EmailSignup = '';
@@ -27,7 +26,6 @@ class Signup extends StatefulWidget {
 
 class SignupScreen extends State<Signup> with ValidationMixin {
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  //////////
   String? selectedGender;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -36,12 +34,10 @@ class SignupScreen extends State<Signup> with ValidationMixin {
   TextEditingController address = TextEditingController();
   TextEditingController phoneA = TextEditingController();
   TextEditingController gender = TextEditingController();
-  //String email = '';
   String phone = '';
   DateTime? selectedDate;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  // Function to show date picker
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -61,9 +57,6 @@ class SignupScreen extends State<Signup> with ValidationMixin {
 
   textfield1() {
     return SingleChildScrollView(
-      // child: Padding(
-      // key: formKey,
-      // padding: EdgeInsets.all(20.0),
       child: Form(
         key: formKey,
         child: Column(
@@ -76,19 +69,11 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your Name';
                 }
-                return null; /*else if (validatemail(value)) {
                 return null;
-              } else {
-                return 'Please enter your valid email';
-              }*/
               },
               icon: Icons.person,
             ),
-
-            SizedBox(
-              height: 25.0,
-            ),
-
+            SizedBox(height: 25.0),
             custemField(
               hintText: 'Last Name',
               controller: lastName,
@@ -100,11 +85,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               },
               icon: Icons.person,
             ),
-            SizedBox(
-              height: 25.0,
-            ),
-            // emailField(),
-
+            SizedBox(height: 25.0),
             custemField(
               hintText: 'Email',
               controller: email,
@@ -119,31 +100,21 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               },
               icon: Icons.email,
             ),
-            SizedBox(
-              height: 25.0,
-            ),
+            SizedBox(height: 25.0),
             phoneField(3),
-            //Style(child: 3),
-            SizedBox(
-              height: 25.0,
-            ),
-
+            SizedBox(height: 25.0),
             custemField(
-              hintText: 'Adreess',
+              hintText: 'Address',
               controller: address,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter your Adreess';
+                  return 'Please enter your Address';
                 }
                 return null;
               },
               icon: Icons.location_on,
             ),
-            SizedBox(
-              height: 25.0,
-            ),
-////////////////////////
-            //
+            SizedBox(height: 25.0),
             DateField(
               controller: gender,
               onTap: () {
@@ -151,14 +122,9 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               },
               selectedDate: selectedDate,
             ),
-
-            SizedBox(
-              height: 25.0,
-            ),
+            SizedBox(height: 25.0),
             textField2(),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -204,49 +170,25 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               text: 'Sign Up',
               onPressed: () async {
                 if (formKey.currentState != null) {
-                  //formKey.currentState!.reset();
-
                   if (formKey.currentState!.validate() &&
                       selectedGender != null) {
                     formKey.currentState!.save();
                     Signup.EmailSignup = email.text;
                     await signupback(
-                        firstName.text,
-                        lastName.text,
-                        email.text,
-                        password.text,
-                        address.text,
-                        selectedDate != null
-                            ? DateFormat('yyyy-MM-dd').format(selectedDate!)
-                            : '',
-                        phoneA.text);
-
-                    //print('Time to post $email and $password to API');
-                    //  signInWithEmailAndPassword();
-/*
-                    try {
-                      final credential = await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                        email: email.text,
-                        password: password.text,
-                      );
-
-                      //FirebaseAuth.instance.currentUser!.sendEmailVerification();
-                      // Navigator.of(context).pushReplacementNamed("login");
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'weak-password') {
-                        print('The password provided is too weak.');
-                      } else if (e.code == 'email-already-in-use') {
-                        print('The account already exists for that email.');
-                      }
-                    } catch (e) {
-                      print(e);
-                    }*/
+                      firstName.text,
+                      lastName.text,
+                      email.text,
+                      password.text,
+                      address.text,
+                      selectedDate != null
+                          ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+                          : '',
+                      phoneA.text,
+                    );
                   }
                 }
               },
               borderRadius: BorderRadius.all(Radius.circular(40)),
-              // loginButton(),
             ),
             HaveAccount(
               name1: "Do Have An Account? ",
@@ -259,11 +201,9 @@ class SignupScreen extends State<Signup> with ValidationMixin {
           ],
         ),
       ),
-      //  ),
     );
   }
 
-/////////////////////////////////////
   Widget phoneField(int child) {
     return custemField(
       hintText: 'Phone Number',
@@ -283,8 +223,6 @@ class SignupScreen extends State<Signup> with ValidationMixin {
   }
 
   Widget textField2() {
-    // bool valpass = true;
-
     return PassField(
       onPressed: () {
         setState(() {
@@ -294,17 +232,169 @@ class SignupScreen extends State<Signup> with ValidationMixin {
       controller: password,
       obscureText: !valpass,
       icon: valpass ? Icons.visibility : Icons.visibility_off,
-      hintText: 'Password', //Icons.visibility,
+      hintText: 'Password',
+    );
+  }
+
+  Widget buildWebSignup() {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'images/icon/back.jpg', // Replace with your background image path
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Navigation bar
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              color: Colors.transparent,
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Trade Tryst',
+                    style: GoogleFonts.aBeeZee(
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Home',
+                          style: GoogleFonts.aBeeZee(
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'About',
+                          style: GoogleFonts.aBeeZee(
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Contact',
+                          style: GoogleFonts.aBeeZee(
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Sign Up',
+                          style: GoogleFonts.aBeeZee(
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        style: TextButton.styleFrom(
+                          side: BorderSide(color: Colors.white),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Signup form
+          Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    width: 400,
+                    padding: EdgeInsets.only(top: 10, right: 60, left: 60),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Sign Up',
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF063A4E),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        textfield1(),
+                        // Add other fields here as needed
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    return kIsWeb ? buildWebSignup() : buildMobileSignup();
+  }
+
+  Widget buildMobileSignup() {
     return Scaffold(
       body: Stack(
         children: [
           Positioned(
-            top: MediaQuery.of(context).size.height * -0.045, //-20,
+            top: MediaQuery.of(context).size.height * -0.045,
             left: MediaQuery.of(context).size.width * -0.05,
             right: MediaQuery.of(context).size.width * -0.05,
             child: Stack(
@@ -350,8 +440,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
       String address,
       String birthday,
       String phone_number) async {
-    final url = Uri.parse(
-        'http://$ip:3000/tradetryst/user/signup'); // Update with your server IP
+    final url = Uri.parse('http://$ip:3000/tradetryst/user/signup');
     try {
       final response = await http.post(
         url,
@@ -382,8 +471,6 @@ class SignupScreen extends State<Signup> with ValidationMixin {
             'first_name': first_name,
             'last_name': last_name,
           });
-          //FirebaseAuth.instance.currentUser!.sendEmailVerification();
-          // Navigator.of(context).pushReplacementNamed("login");
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
             print('The password provided is too weak.');
@@ -395,20 +482,16 @@ class SignupScreen extends State<Signup> with ValidationMixin {
         }
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => VerifyEmail()));
-        // Authentication successful
         print('Signup successful');
-        // Navigate to the home page or perform any other actions
       } else if (response.statusCode == 401) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Email already in use."),
         ));
-        // Invalid email or password
         print('Email already in use.');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Failed to authenticate.'),
         ));
-        // Other error occurred
         print('Failed to authenticate. Status code: ${response.statusCode}');
       }
     } catch (e) {
