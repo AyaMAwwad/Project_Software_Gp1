@@ -1237,8 +1237,9 @@ gettproducttoadmin(req, res){
   return new Promise((resolve, reject) => {
     // Check if the user already exists (Checking the email)
     db.query(
-      'SELECT * FROM pay JOIN user ON pay.user_id = user.user_id LEFT JOIN product ON pay.idproduct = product.product_id',  // change alsooooo 
-   
+    //  'SELECT * FROM pay JOIN user ON pay.user_id = user.user_id LEFT JOIN product ON pay.idproduct = product.product_id',  // change alsooooo 
+    //
+    'SELECT pay.*, user.*, product.*, category.name AS category_name FROM pay JOIN user ON pay.user_id = user.user_id LEFT JOIN product ON pay.idproduct = product.product_id LEFT JOIN category ON product.category_id = category.category_id',
       (error, results) => {
         if (error) {
           return reject('Internal server error.');

@@ -10,58 +10,58 @@ const db = mysql.createConnection({
 
 class PaymentRepository {
 
-    addPayment(req, res) {
+  addPayment(req, res) {
   
-        //numberofimage
-          const { userId,amount,payMethod , productIds} = req.body;
-          return new Promise((resolve, reject) => {
+    //numberofimage
+      const { userId,amount,payMethod , productIds , deliveryOption} = req.body;
+      return new Promise((resolve, reject) => {
 
-            let allProductInShopCartOfUser = [];
- 
-      db.query("SELECT * from shopping_cart WHERE user_id = ?", [userId],  (error, results) => {
-        if (error) {
-          console.error(error);
-          reject('Failed  ');
-        } else {
-            if( results.length==0){
-                reject('User not have product in shopping cart  ');
-            }
-            else{
-                const theDate = new Date();
-                allProductInShopCartOfUser=results;
-                //
-                if (!productIds || productIds.length === 0) {
-                  reject('Invalid product IDs');
-                  return;
-              }
-              const validProductIds = productIds.filter(id => id !== 0 && id !== undefined);
+        let allProductInShopCartOfUser = [];
 
-              if (validProductIds.length === 0) {
-                  reject('No valid product IDs');
-                  return;
-              }
-                //(cartProduct, index)
-                console.log(allProductInShopCartOfUser);
-                validProductIds.map((cartProduct, index) => {
-                    const cartId =cartProduct.cart_id;
-                    const productId = productIds[index];
-                    db.query(
-                        'INSERT INTO pay (user_id, payment_date, amount,payment_method, idproduct) VALUES (?, ?, ?, ?,?)',
-                        [userId, theDate, amount, payMethod,productId ],
-                        (error2, results2) => {
-                            if (error2) {
-                                return reject('Failed payment faillll');
-                            }
-                            return resolve('payment successfully yesss');
-                        }
-                    );
-                });
-            }
-
+  db.query("SELECT * from shopping_cart WHERE user_id = ?", [userId],  (error, results) => {
+    if (error) {
+      console.error(error);
+      reject('Failed  ');
+    } else {
+        if( results.length==0){
+            reject('User not have product in shopping cart  ');
         }
-    });
-          });
-        };
+        else{
+            const theDate = new Date();
+            allProductInShopCartOfUser=results;
+            //
+            if (!productIds || productIds.length === 0) {
+              reject('Invalid product IDs');
+              return;
+          }
+          const validProductIds = productIds.filter(id => id !== 0 && id !== undefined);
+
+          if (validProductIds.length === 0) {
+              reject('No valid product IDs');
+              return;
+          }
+            //(cartProduct, index)
+            console.log(allProductInShopCartOfUser);
+            validProductIds.map((cartProduct, index) => {
+                const cartId =cartProduct.cart_id;
+                const productId = productIds[index];
+                db.query(
+                    'INSERT INTO pay (user_id, payment_date, amount,payment_method, idproduct , delivery_option) VALUES (?, ?, ?, ?,?,?)',
+                    [userId, theDate, amount, payMethod,productId , deliveryOption ],
+                    (error2, results2) => {
+                        if (error2) {
+                            return reject('Failed payment faillll');
+                        }
+                        return resolve('payment successfully yesss');
+                    }
+                );
+            });
+        }
+
+    }
+});
+      });
+    };
 //deleteFromCartProductThatPaied
 deleteFromCartProductThatPaied(productIds) {
   let i=0;
