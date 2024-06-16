@@ -54,11 +54,11 @@ class Payment {
         ),
         backgroundColor: Colors.green,
       ));*/
-
+      String? gg = CartItemState.deliveryOption;
       await updateQuantityOfProduct(CartItemState.selectedListOfUserToPay);
       showRatingDialog();
       await StoreToPay(
-          Login.idd, amount, 'visa', CartItemState.selectedListOfUserToPay);
+          Login.idd, amount, 'visa', CartItemState.selectedListOfUserToPay, gg);
       await deleteProductPaidFromShopCart(
           CartItemState.selectedListOfUserToPay);
       isPay = true;
@@ -76,7 +76,20 @@ class Payment {
       }
       await sendAdminNotification(amount, CartItemState.selectedListOfUserToPay,
           Login.Email); // ibtisam ****
+      //
 
+      print("huuuuu :::::::::::::::: \n \n \n $gg \n \n  ");
+      print(gg);
+      print("gggggg :::::::::::::::: \n \n \n $gg \n \n  ");
+      if (CartItemState.deliveryOption == "Our Service" ||
+          gg == "Our Service") {
+        await sendNotificationToServiceEmployee(
+            amount, CartItemState.selectedListOfUserToPay, Login.Email);
+
+        print("yes service employee \n ");
+      }
+
+      //
       // CartItemState.functionPayed();
     } catch (e) {
       Flushbar(
@@ -151,12 +164,13 @@ class Payment {
 
 // store to pay table
 
-  static Future<void> StoreToPay(
-      int userId, double amount, String payMethod, List<int> productIds) async {
+  static Future<void> StoreToPay(int userId, double amount, String payMethod,
+      List<int> productIds, String? deliveryOption) async {
     //
     print(amount);
     print(payMethod);
     print(productIds);
+    print(deliveryOption);
 
     final response = await http.post(
       Uri.parse('http://$ip:3000/tradetryst/payment/add'),
@@ -169,6 +183,7 @@ class Payment {
         'payMethod': payMethod,
         'productIds':
             productIds.where((id) => id != 0).toList(), // productIds, //
+        'deliveryOption': deliveryOption,
       }),
     );
 
@@ -205,7 +220,7 @@ class Payment {
     try {
       await FirebaseFirestore.instance
           .collection('notifications')
-          .doc('ayamoeenawwad@gmail.com')
+          .doc('kharroushehahlam@gmail.com')
           .collection('userNotifications')
           .add({
         'title': 'Payment Received',
@@ -415,4 +430,29 @@ class Payment {
   }
 
   // enddd
+
+  // new service
+
+  static Future<void> sendNotificationToServiceEmployee(
+      double amount, List<int> productIds, String userEmail) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('notifications')
+          .doc(
+              'ibtisamkharoush@gmail.com') // replace with the actual email or ID
+          .collection('userNotifications')
+          .add({
+        'title': 'New Order Received',
+        'body':
+            'You have received a new order from $userEmail. Please process the order promptly.',
+
+        //  'body':
+        // 'A payment of \$${amount.toStringAsFixed(2)} has been received from $userEmail for order. Please process the order.',
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      print('Service employee notification sent successfully');
+    } catch (e) {
+      print('Failed to send service employee notification: $e');
+    }
+  }
 }
