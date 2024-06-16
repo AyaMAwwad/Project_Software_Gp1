@@ -1,6 +1,6 @@
 
 const mysql = require('mysql2');
-const { PythonShell } = require('python-shell');
+//const { PythonShell } = require('python-shell');
 const path = require('path');
 const fs = require('fs');
 const { Console } = require('console');
@@ -85,7 +85,113 @@ class ProductRepository {
   // ibtisam  used
 
 
-addProduct(req, res) {
+  addProduct = (req, res) => {
+    const { email, name, category, state, description, price, quantity, numberofimage, detailsOfState, typeOfCategory, productFreeCond, currency, delivery } = req.body;
+  
+    console.log(email, name, category, state, description, price, quantity, numberofimage, detailsOfState, typeOfCategory, productFreeCond, currency);
+  
+    return new Promise((resolve, reject) => {
+      db.query('SELECT user_id, user_type FROM user WHERE email = ?', [email], (error, results) => {
+        if (error) {
+          return reject('You are not a user');
+        }
+  
+        const userId = results[0].user_id;
+        let userType = results[0].user_type;
+  
+        db.query('INSERT INTO Category (name, type) VALUES (?, ?)', [category, typeOfCategory], (error1, results1) => {
+          if (error1) {
+            return reject('Failed to insert category');
+          }
+  
+          const categoryId = results1.insertId;
+          let productId;
+  
+          const insertProduct = () => {
+            const firstimagePath = req.files[0].path;
+            fs.readFile(firstimagePath, (err, datafirstimage) => {
+              if (err) {
+                return reject('Error reading file');
+              }
+
+            
+          else {
+            db.query(
+              'INSERT INTO product (name, description, quantity, category_id, user_id, image, product_type, currency, Delivery_option) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [name, description, quantity, categoryId, userId,datafirstimage, state, currency, delivery],
+              (error2, results2) => {
+                if (error2) {
+                  return reject('Failed to insert product');
+                }
+  
+                productId = results2.insertId;
+                insertProductDetails();
+                insertAdditionalImages();
+              }
+            );
+          }
+        });
+            
+          };
+  
+          const insertProductDetails = () => {
+            if (state == 'New' || state == 'جديد') {
+              db.query('INSERT INTO new_product (product_id, warranty_period, price) VALUES (?, ?, ?)', [productId, detailsOfState, price], (error3) => {
+                if (error3) {
+                  return reject('Failed to insert new product');
+                }
+              });
+            } else if (state == 'Used' || state == 'مستعمل') {
+              db.query('INSERT INTO used_product (product_id, product_condition, price) VALUES (?, ?, ?)', [productId, detailsOfState, price], (error4) => {
+                if (error4) {
+                  return reject('Failed to insert used product');
+                }
+              });
+            } else if (state == 'Free' || state == 'مجاني') {
+              db.query('INSERT INTO free_product (product_id, state_free, product_condition) VALUES (?, ?, ?)', [productId, detailsOfState, productFreeCond], (error5) => {
+                if (error5) {
+                  return reject('Failed to insert free product');
+                }
+              });
+            }
+          };
+  
+          const insertAdditionalImages = () => {
+            for (let i = 1; i < numberofimage; i++) {
+              const imagePath = req.files[i].path;
+              fs.readFile(imagePath, (err, data) => {
+                if (err) {
+                  return reject('Error reading file');
+                }
+  
+                db.query('INSERT INTO productimage (product_id, image_data) VALUES (?, ?)', [productId, data], (error6) => {
+                  if (error6) {
+                    return reject('Failed to insert product image');
+                  }
+                });
+              });
+            }
+          };
+  
+          const updateUserType = () => {
+            if (userType.toLowerCase() === 'buyer' || userType === 'مشتري') {
+              userType = 'Seller';
+              db.query('UPDATE user SET user_type = ? WHERE user_id = ?', [userType, userId], (error7) => {
+                if (error7) {
+                  return reject('Failed to update user type');
+                }
+              });
+            }
+          };
+  
+          insertProduct();
+          updateUserType();
+          resolve('Inserted product successfully');
+        });
+      });
+    });
+  };
+  /*addProduct(req, res) {
   
 //numberofimage
   const { email,name, category, state, description, price, quantity,image, numberofimage,detailsOfState,typeOfCategory,productFreeCond,imagedata,currency,delivery } = req.body;
@@ -222,6 +328,7 @@ addProduct(req, res) {
               console.log('aaaaaaaaaaaaaaaa');
               console.log(prodID);
               console.log(data);
+              console.log(categoryid);
               db.query(
                 'SELECT product_id FROM product WHERE category_id = ? ',
                 [categoryid],
@@ -229,6 +336,7 @@ addProduct(req, res) {
                   if (error6) {
                     return reject('you are not user');
                   }
+                  console.log(results);
                   const IDOfProd=results[0].product_id;
                   console.log(IDOfProd);
                   //console.log(data);
@@ -284,7 +392,7 @@ addProduct(req, res) {
       },
     );
  //});
-}
+}*/
 // aega
 //new gettypeofproduct
 gettypeofproduct(category,type,state) {
@@ -558,10 +666,10 @@ deleteFromShopCart(productId) {
 
 /////////////////// nneeeeeeeeeeew  retriveWordOfsearch
 retriveWordOfsearch(name) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {//p.description AS product_description,
 //p.image AS image,
     const query = `
-    SELECT p.name AS product_name, p.description AS product_description, c.name AS category_name, c.type AS category_type
+    SELECT p.name AS product_name, c.name AS category_name, c.type AS category_type
     FROM Product p
     JOIN Category c ON p.category_id = c.category_id
     WHERE p.name LIKE CONCAT('%', ?, '%') OR c.name LIKE CONCAT('%', ?, '%')  OR c.type LIKE CONCAT('%', ?, '%')
@@ -1425,11 +1533,11 @@ retriveFromWishList(userId) {
                     ProductDataWishList.forEach(product => {
                       let Query = '';
                       if (product['product_type'] === 'New' || product['product_type'] === 'جديد') {
-                        Query = 'SELECT warranty_period, price FROM new_product WHERE product_id = ?';
+                        Query = 'SELECT * FROM new_product WHERE product_id = ?';
                       } else if (product['product_type'] === 'Used' || product['product_type'] === 'مستعمل') {
-                        Query = 'SELECT product_condition, price FROM used_product WHERE product_id = ?';
+                        Query = 'SELECT * FROM used_product WHERE product_id = ?';
                       } else if (product['product_type'] === 'Free' || product['product_type'] === 'مجاني') {
-                        Query = 'SELECT product_condition, state_free FROM free_product WHERE product_id = ?';
+                        Query = 'SELECT * FROM free_product WHERE product_id = ?';
                       }
 
                       const prodId = product.product_id;
@@ -1449,6 +1557,7 @@ retriveFromWishList(userId) {
 
                           if (ProductDataWishList.length == ProductDetails.length) {
                             console.log('aaaayyya');
+                            console.log(ProductDataWishList,ProductDetails);
                             resolve({ ProductDataWishList, ProductDetails });
                           } else if (ProductDetails.length == 0) {
                             reject('No data to retrieve');
@@ -1489,7 +1598,8 @@ deleteFromWishList(productId,userId) {
 };
 
 findSimilar(productId,productType) {
-  
+  console.log(productType);
+  console.log(productId);
   return new Promise((resolve, reject) => {
     const productSimilar = [];
     const ProductDetails = [];
@@ -1518,11 +1628,11 @@ findSimilar(productId,productType) {
                   [categoryId],
                   (error3, productData) => {
                     if (error3) {
-                      console.error(error3);
+                     
                       return reject('Failed to retrieve product data');
                     } else {
-                      console.log(productData);
-                      console.log(productData['product_id'] );
+                     
+                      console.log('product  id:', productData['product_id'] );
        
                       productData.forEach(entry => {
                         if(entry.product_id!= productId){
@@ -1541,11 +1651,11 @@ findSimilar(productId,productType) {
                         
                           let Query = '';
                           if (product['product_type'] == 'New' || product['product_type'] == 'جديد') {
-                            Query = 'SELECT warranty_period, price FROM new_product WHERE product_id = ?';
+                            Query = 'SELECT *FROM new_product WHERE product_id = ?';
                           } else if (product['product_type'] == 'Used' || product['product_type'] == 'مستعمل') {
-                            Query = 'SELECT product_condition, price FROM used_product WHERE product_id = ?';
+                            Query = 'SELECT * FROM used_product WHERE product_id = ?';
                           } else if (product['product_type'] == 'Free' || product['product_type'] == 'مجاني') {
-                            Query = 'SELECT product_condition, state_free FROM free_product WHERE product_id = ?';
+                            Query = 'SELECT * FROM free_product WHERE product_id = ?';
                           }
                       
                           const prodId = product.product_id;

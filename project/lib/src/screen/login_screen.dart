@@ -1,24 +1,11 @@
-//import 'dart:html';
-
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, prefer_final_fields, use_key_in_widget_constructors, use_build_context_synchronously, avoid_print, non_constant_identifier_names
-
-//import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
-//import 'dart:html';
-
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, prefer_final_fields, use_key_in_widget_constructors, use_build_context_synchronously, avoid_print, non_constant_identifier_names
-
-//import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/mixins/valid_mixin.dart';
-import 'dart:core';
 import 'package:project/src/screen/home_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project/src/screen/forget_pass.dart';
 import 'package:project/src/screen/ipaddress.dart';
@@ -31,8 +18,8 @@ import 'package:project/widgets/design.dart';
 import 'package:project/widgets/form_field.dart';
 import 'package:project/widgets/have_account.dart';
 import 'package:project/widgets/pass_field.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
-//import 'package:awesome_dialog/awesome_dialog.dart';
 class Login extends StatefulWidget {
   static String Email = '';
   static String FirstName = '';
@@ -44,15 +31,12 @@ class Login extends StatefulWidget {
   static int idd = 0;
   static String birthdaylogin = '';
   static String usertypee = ''; // admin
-  // @override
-  //LoginScreen Login.createState({super.key}) => LoginScreen();
 
   @override
   LoginScreen createState() => LoginScreen();
 }
 
 class LoginScreen extends State<Login> with ValidationMixin {
-  // get kHintTextStyle => null;
   static bool isUserLog = false;
   bool valpass = false;
   TextEditingController emailController = TextEditingController();
@@ -66,24 +50,11 @@ class LoginScreen extends State<Login> with ValidationMixin {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 50.0, //80.0
-          ),
-          Image.asset(
-            'images/icon/FinalLogo.png',
-            width: 900.0,
-            height: 210.0,
-          ),
-
-          SizedBox(
-            height: 10.0,
-          ),
+          SizedBox(height: kIsWeb ? 50 : 20.0),
           Container(
-            width: 300, // Set the width
-            // children:[],
-            // height: 50, // Set the height
+            width: 300,
             child: custemField(
-              hintText: 'UserName',
+              hintText: 'Email',
               controller: emailController,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -91,44 +62,21 @@ class LoginScreen extends State<Login> with ValidationMixin {
                 } else if (validatemail(value)) {
                   return null;
                 } else {
-                  return 'Please enter your valid email';
+                  return 'Please enter a valid email';
                 }
               },
-              // width:MediaQuery.of(context).size.width ,
               icon: Icons.email,
             ),
           ),
-          // custemField(
-          //   hintText: 'UserName',
-          //   controller: emailController,
-          //   validator: (value) {
-          //     if (value == null || value.isEmpty) {
-          //       return 'Please enter your email';
-          //     } else if (validatemail(value)) {
-          //       return null;
-          //     } else {
-          //       return 'Please enter your valid email';
-          //     }
-          //   },
-          //   // width:MediaQuery.of(context).size.width ,
-          //   icon: Icons.email,
-          // ),
-
-          SizedBox(
-            height: 25.0,
-          ),
+          SizedBox(height: 25.0),
           Container(
             width: 300,
             child: textField2(),
           ),
-          SizedBox(
-            height: 15,
-          ),
-
+          SizedBox(height: 15),
           Container(
             width: 300,
             child: Row(
-              //  width: 300,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 GestureDetector(
@@ -139,92 +87,35 @@ class LoginScreen extends State<Login> with ValidationMixin {
                             builder: (context) => ForgetPassword()));
                   },
                   child: Container(
-                    // width: 300, // Set the width/
-                    // left:20,
-                    // mainAxisAlignment: MainAxisAlignment.center,
-
-                    // alignment: Alignment.bottomRight,
                     child: Text(
                       'Forget Your password?',
-                      // textAlign: TextAlign.left,
-                      // textDirection: TextDirection.rtl,
-                      // width: 200,
                       style: GoogleFonts.aBeeZee(
                         textStyle: TextStyle(
                           color: Color.fromARGB(255, 2, 92, 123),
                           fontSize: 14,
-                          // textA
-                          // textBaseline: TextBaseline.,
-
-                          // decoration: TextDecoration.underline,
                           decorationThickness: 1,
-                          // fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
                 ),
-////
               ],
             ),
           ),
-
-////////
-          SizedBox(
-            height: 25,
-          ),
-//  Container(
-//           width: 300, // Set the width
-//           // height: 50, // Set the height
-//           child:
+          SizedBox(height: 25),
           CustomeButton(
             text: 'Login',
             onPressed: () async {
-              // Add the action the button should perform
               onFormSubmitted();
               String ii = emailController.text;
               Login.Email = emailController.text;
               String jj = passwordController.text;
-              print("hi $ii\n");
-              print("hi $jj\n");
               await getTheName(Login.Email);
               await loginnn(ii, jj);
-
-              //ayaaaaa
-
-              /* if (credential.user!.emailVerified) {
-                  Navigator.of(context).pushReplacementNamed("login");
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Email Not Verified"),
-                        content: Text("Please verify your email to proceed."),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text("OK"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }*/
-
-//
-
-              //
             },
             borderRadius: BorderRadius.circular(30.0),
           ),
-          // passwordfield(),
-          //loginButton(),
-          SizedBox(
-            height: 25.0,
-          ),
+          SizedBox(height: 25.0),
           HaveAccount(
             name1: "Don't Have An Account? ",
             press: () {
@@ -233,53 +124,35 @@ class LoginScreen extends State<Login> with ValidationMixin {
             },
             name2: 'Sign up',
           ),
-          // SizedBox(height: 25.0,),
-          SizedBox(height: 25.0), // Add this line for spacing
-
+          SizedBox(height: 25.0),
           OrText(),
-//SizedBox(height: 15.0),
-          //
-
-          SizedBox(height: 15.0), // Add this line for spacing
+          SizedBox(height: 15.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // Facebook Icon
               Icon(
                 FontAwesomeIcons.facebook,
                 color: Color.fromARGB(255, 9, 93, 123),
                 size: 30,
               ),
-              // Twitter Icon
-              //  SizedBox(width: 10.0), //
               Icon(
                 FontAwesomeIcons.twitter,
-                //FontAwesomeIcons.twitter,
                 color: Color.fromARGB(255, 9, 93, 123),
                 size: 30,
               ),
               Icon(
                 FontAwesomeIcons.google,
-                //FontAwesomeIcons.twitter,
                 color: Color.fromARGB(255, 9, 93, 123),
                 size: 30,
               ),
-              // Google Icon
-              // SizedBox(width: 2.0), //
             ],
           ),
-
-          ///
         ],
       ),
     );
   }
 
-// textfield2
-
   Widget textField2() {
-    // bool valpass = true;
-
     return PassField(
       onPressed: () {
         setState(() {
@@ -293,20 +166,17 @@ class LoginScreen extends State<Login> with ValidationMixin {
     );
   }
 
-// function to make text "OR "
   OrText() {
     return Stack(
       alignment: Alignment.center,
       children: [
         Divider(
-          color: Colors.grey[300], // Use a light color for the divider
-          thickness: 1.0, // Adjust the thickness of the divider
+          color: Colors.grey[300],
+          thickness: 1.0,
         ),
         Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: 10.0), // Adjust padding as needed
-          color: Colors
-              .white, // Set the background color to match the background behind the line
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          color: Colors.white,
           child: Text(
             'OR',
             style: TextStyle(
@@ -319,7 +189,6 @@ class LoginScreen extends State<Login> with ValidationMixin {
     );
   }
 
-// password controller
   bool iscoorectpass() {
     if (passwordController.text.length >= 6) {
       return true;
@@ -331,77 +200,195 @@ class LoginScreen extends State<Login> with ValidationMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            // top:0,  // ibti web
-            // left:0, ayy
-            //  right: 0,  // ibti web
-            top: MediaQuery.of(context).size.height * -0.026, // -0.02
-            // left: 0,
-            left: MediaQuery.of(context).size.width * -0.4,
-            right: MediaQuery.of(context).size.width * -0.02, //-20,
-            child: Image.asset(
-              'images/icon/FINALDES.png', //'images/icon/DS1.png', //designB.png, // Path to your image asset
-              //'images/icon/svg.png',
-              // Adjust height as needed
-              fit: BoxFit.fill, // Adjust BoxFit as needed
-              width: MediaQuery.of(context).size.width,
-              // pri
-              height: 250,
-            ),
-          ),
-          // This widget holds the content of your app
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(55.0),
-              child: textfield1(),
-              /*FirebaseAuth.instance.currentUser == null
-                  ? textfield1()
-                  : FirebaseAuth.instance.currentUser!.emailVerified
-                      ? textfield1()
-                      : Container(),*/
-
-              //VerifyEmail(),
-              /*ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF0D6775),
-                            minimumSize: Size(90, 40),
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(40)),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (FirebaseAuth.instance.currentUser != null) {
-                              FirebaseAuth.instance.currentUser!
-                                  .sendEmailVerification();
-                            } else {
-                              // Handle the case where there's no authenticated user
-                              print('No authenticated user found.');
-                            }
-                          },
-                          child: Text(
-                            'Verify Your Email',
-                            style: GoogleFonts.aBeeZee(
-                              textStyle: TextStyle(
-                                color: const Color.fromARGB(255, 255, 255, 255),
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),*/
-            ),
-          ),
-          // This widget holds the image and is positioned at the top of the stack
-        ],
-      ),
+      body: kIsWeb ? webLoginScreen() : mobileLoginScreen(),
     );
   }
 
-  ///
-  ///
+  Widget mobileLoginScreen() {
+    return Stack(
+      children: [
+        Positioned(
+          // top:0,  // ibti web
+          // left:0, ayy
+          //  right: 0,  // ibti web
+          top: MediaQuery.of(context).size.height * -0.026, // -0.02
+          // left: 0,
+          left: MediaQuery.of(context).size.width * -0.4,
+          right: MediaQuery.of(context).size.width * -0.02, //-20,
+          child: Image.asset(
+            'images/icon/FINALDES.png', //'images/icon/DS1.png', //designB.png,
+            //'images/icon/svg.png',
+            // Adjust height as needed
+            fit: BoxFit.fill,
+            width: MediaQuery.of(context).size.width,
+            // pri
+            height: 250,
+          ),
+        ),
+        SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 90.0),
+              Image.asset(
+                'images/icon/FinalLogo.png',
+                width: 900.0,
+                height: 200.0,
+              ),
+              // SizedBox(height: 10.0),
+              textfield1(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget webLoginScreen() {
+    return Stack(
+      children: [
+        // Background image
+        Positioned.fill(
+          child: Image.asset(
+            'images/icon/back.jpg',
+            fit: BoxFit.cover,
+          ),
+        ),
+        // Navigation bar
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            color: Colors.transparent,
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Trade Tryst',
+                  style: GoogleFonts.aBeeZee(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Home',
+                        style: GoogleFonts.aBeeZee(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'About',
+                        style: GoogleFonts.aBeeZee(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Contact',
+                        style: GoogleFonts.aBeeZee(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Login',
+                        style: GoogleFonts.aBeeZee(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        side: BorderSide(color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        // Login form
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              width: 400,
+              padding: EdgeInsets.all(20.0),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 167, 167, 167)
+                        .withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Text(
+                    'LOG IN',
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF063A4E),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  textfield1(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   onFormSubmitted() {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -419,7 +406,6 @@ class LoginScreen extends State<Login> with ValidationMixin {
     //return isemailvalid;
   }
 
-//// new
   Future<void> loginnn(String email, String password) async {
     final url = Uri.parse('http://$ip:3000/tradetryst/user/login');
     try {
@@ -553,36 +539,4 @@ class LoginScreen extends State<Login> with ValidationMixin {
       return null;
     }
   }
-/*
-loginnn(email , password) async {
-  var url ="http://127.0.0.1:3000";
-  final response = await http.post(
-    Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'email': email ,'password': password,
-    }),
-  );
-
-  if (response.statusCode == 201) {
-    // If the server did return a 201 CREATED response,
-    // then parse the JSON.
-    print(response.statusCode);
-    print(response.body);
-   // return Album.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-  } else {
-    // If the server did not return a 201 CREATED response,
-    // then throw an exception.
-    throw Exception('Failed to create album.');
-  }
 }
-
-// in terminal command  pc 
-curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"ibtisam@gmail.com\", \"password\":\"password123\"}" http://localhost:3000/login
-//terminal vs
-cd  C:\projects\ProjectSoft\ProjectSoft\ProjectSoft\project\lib\src\serivenode
-node service.js
-*/
-} // login screen end

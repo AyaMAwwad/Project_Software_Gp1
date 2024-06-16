@@ -134,7 +134,7 @@ Future<void> sendNotification(
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    NotificationState.incrementNotification();
+    //NotificationState.incrementNotification();
     print('Notification sent successfully to FCM token: $fcmToken');
   } else {
     print('Failed to send notification to FCM token: $fcmToken');

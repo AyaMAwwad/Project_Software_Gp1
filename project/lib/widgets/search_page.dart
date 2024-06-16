@@ -497,13 +497,13 @@ class SearchPage extends StatelessWidget {
           String productName = item['product_name'];
           String categoryName = item['category_name']; //category_type
           String categoryType = item['category_type'];
-          String categoryDescription = item['product_description'];
+          // String categoryDescription = item['product_description'];
 
           // Convert strings to lowercase
           String productName1 = productName.toLowerCase();
           String categoryName1 = categoryName.toLowerCase();
           String categoryType1 = categoryType.toLowerCase();
-          String categoryDescription1 = categoryDescription.toLowerCase();
+          //  String categoryDescription1 = categoryDescription.toLowerCase();
           print(productName1);
           print(categoryName1);
           print(categoryType1);
@@ -522,9 +522,9 @@ class SearchPage extends StatelessWidget {
               ) {
             listItem.add(categoryType1);
           }
-          if (!listItem.contains(categoryDescription1)) {
+          /* if (!listItem.contains(categoryDescription1)) {
             listItem.add(categoryDescription1);
-          }
+          }*/
         });
 
         print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');

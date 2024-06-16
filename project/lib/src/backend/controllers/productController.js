@@ -107,8 +107,8 @@ exports.getusedprice = (req, res) => {
 
     //getToShopCart
     exports.getToShopCart = (req, res) => {
-      
-    const userId=req.query.userId;
+      //prod.getToShopCart()
+      const userId=req.query.userId;
       prod.getToShopCart(userId)
       .then((res1) => {
         console.log({res1});
@@ -188,16 +188,18 @@ exports.updateItemOnShopCart = (req, res) => {
     });
   };
   
-  ///sallerProduct 12/5
+
+  // aya
+
   exports.sallerProduct = (req, res) => {
     console.log('*** in controller userId');
     const { userId } = req.query;
-    
-  
+
+
     prod.sallerProduct(userId)
         .then((res1) => {
             //console.log({res1});
-          
+
             res.status(200).json(res1);
         })
         .catch((error) => {
@@ -205,36 +207,61 @@ exports.updateItemOnShopCart = (req, res) => {
             res.status(500).json({ message: 'Not have thing to retrieve' });
         });
   };
-  /// 18/5 deleteItemSellar
-  exports.deleteItemSellar = (req, res) => {
-    const productId = req.query.productid; 
-    const state = req.query.state;
-    if (!productId) {
-        return res.status(400).json({ message: 'Product ID is required' });
-    }
-    prod.deleteItemSellar(productId,state)
-        .then((result) => {
-            console.log('Item deleted successfully');
-            res.status(200).json({ message: 'Item deleted successfully' });
-        })
-        .catch((error) => {
-            console.error('Error deleting item:', error);
-            res.status(500).json({ message: 'Internal server error' });
-        });
+// ayaaaaa
+
+/// 18/5 deleteItemSellar
+exports.deleteItemSellar = (req, res) => {
+  const productId = req.query.productid; 
+  const state = req.query.state;
+  if (!productId) {
+      return res.status(400).json({ message: 'Product ID is required' });
+  }
+  prod.deleteItemSellar(productId,state)
+      .then((result) => {
+          console.log('Item deleted successfully');
+          res.status(200).json({ message: 'Item deleted successfully' });
+      })
+      .catch((error) => {
+          console.error('Error deleting item:', error);
+          res.status(500).json({ message: 'Internal server error' });
+      });
 };
 
 //updateSellarProduct
 exports.updateSellarProduct = (req, res) => {
+prod
+  .updateSellarProduct(req, res)
+  .then((message) => {
+    console.log(message);
+    res.status(201).json({ message }); 
+  })
+  .catch((error) => {
+    res.status(400).json({ message: error }); 
+  });
+};
+
+
+
+
+// ayaaa
+  // admin new shopping 
+
+  
+exports.gettproducttoadmin = (req, res) => {
   prod
-    .updateSellarProduct(req, res)
+    .gettproducttoadmin(req, res)
     .then((message) => {
-      console.log(message);
-      res.status(201).json({ message }); 
+      res.status(201).json({ message }); // Registration was successful, return the success message
     })
     .catch((error) => {
-      res.status(400).json({ message: error }); 
+      res.status(400).json({ message: error }); // Registration encountered an error, return the error message
     });
-  };
+};
+
+
+// ayaaaaa newwww
+
+
 
   //addRatingProduct
   exports.addRatingProduct = (req, res) => {
@@ -250,12 +277,12 @@ exports.updateSellarProduct = (req, res) => {
     //retriveProductHomeRecomendedSystem
     exports.retriveProductHomeRecomendedSystem = (req, res) => {
       const { userId } = req.query;
-      
-    
+
+
       prod.retriveProductHomeRecomendedSystem(userId)
           .then((res1) => {
               console.log({res1});
-            
+
               res.status(200).json(res1);
           })
           .catch((error) => {
@@ -264,7 +291,6 @@ exports.updateSellarProduct = (req, res) => {
           });
     };
 
-    //productThisMonth
     exports.productThisMonth = (req, res) => {
       //const { userId } = req.query;
       
@@ -280,27 +306,17 @@ exports.updateSellarProduct = (req, res) => {
               res.status(500).json({ message: 'Not have thing to retrieve' });
           });
     };
-
-    exports.gettproducttoadmin = (req, res) => {
-      prod
-        .gettproducttoadmin(req, res)
-        .then((message) => {
-          res.status(201).json({ message }); // Registration was successful, return the success message
-        })
-        .catch((error) => {
-          res.status(400).json({ message: error }); // Registration encountered an error, return the error message
-        });
-    };
+// aya 
 
     //checkQuantityForNotification
     exports.checkQuantityForNotification = (req, res) => {
       const { userId } = req.query;
-      
-      
+
+
       prod.checkQuantityForNotification(userId)
           .then((result) => {
               console.log({result});
-      
+
               res.status(200).json(result);
           })
           .catch((error) => {
@@ -311,11 +327,11 @@ exports.updateSellarProduct = (req, res) => {
 //ProductNewCollectionForNotification
 exports.ProductNewCollectionForNotification = (req, res) => {
   const { userId } = req.query;
-  
+
   prod.ProductNewCollectionForNotification(userId)
       .then((result) => {
           console.log({result});
-  
+
           res.status(200).json(result);
       })
       .catch((error) => {
@@ -323,67 +339,9 @@ exports.ProductNewCollectionForNotification = (req, res) => {
           res.status(500).json({ message: 'Internal server error' });
       });
   };
-  /// aya 
-  //addToWishList
-  exports.addToWishList = (req, res) => {
-    prod
-      .addToWishList(req, res)
-      .then((message) => {
-        res.status(201).json({ message }); 
-      })
-      .catch((error) => {
-        res.status(400).json({ message: error }); 
-      });
-    }
 
-    //retriveFromWishList
-    exports.retriveFromWishList = (req, res) => {
-      const { userId } = req.query;
-      
-      prod.retriveFromWishList(userId)
-          .then((result) => {
-              console.log({result});
-      
-              res.status(200).json(result);
-          })
-          .catch((error) => {
-              console.error({error});
-              res.status(500).json({ message: 'Internal server error' });
-          });
-      };
 
-      exports.deleteFromWishList = (req, res) => {
-        const productId = req.query.productId; 
-        const userId = req.query.userId;
-       
-        prod.deleteFromWishList(productId,userId)
-            .then((result) => {
-                console.log('Item deleted successfully');
-                res.status(200).json({ message: 'Item deleted successfully' });
-            })
-            .catch((error) => {
-                console.error('Error deleting item:', error);
-                res.status(500).json({ message: 'Internal server error' });
-            });
-    };
 
-    exports.findSimilar = (req, res) => {
-      const { productId , productType } = req.query;
-      
-      prod.findSimilar(productId,productType)
-          .then((result) => {
-              console.log({result});
-      
-              res.status(200).json(result);
-          })
-          .catch((error) => {
-              console.error({error});
-              res.status(500).json({ message: 'Internal server error' });
-          });
-      };
-
-      /// aya 
-      
 
     // ibtisam******************** admin satistic
     exports.totalnumberproductforstatistics= (req, res) => {
@@ -416,22 +374,91 @@ exports.ProductNewCollectionForNotification = (req, res) => {
         
       
         prod.totalRevenue(req, res);};
-  /////// ayosh
 
-  exports.totalnumberproductofSeller= (req, res) => {
-    const { userId } = req.query;
-    prod.totalnumberproductofSeller(userId,res);
-  };
-  //totalproductsoldofSeller
 
-  exports.totalproductsoldofSeller = (req, res) => {
-    const { userId } = req.query;
-    prod.totalproductsoldofSeller(userId, res);};
 
-    //totalrevenueofseller
-    exports.totalrevenueofseller  = (req, res) => {
+        /// aya 
+  //addToWishList
+  exports.addToWishList = (req, res) => {
+    prod
+      .addToWishList(req, res)
+      .then((message) => {
+        res.status(201).json({ message }); 
+      })
+      .catch((error) => {
+        res.status(400).json({ message: error }); 
+      });
+    }
+
+    //retriveFromWishList
+    exports.retriveFromWishList = (req, res) => {
       const { userId } = req.query;
-      
-    
-      prod.totalrevenueofseller(userId, res);};
-  // ayosh
+
+      prod.retriveFromWishList(userId)
+          .then((result) => {
+              console.log({result});
+
+              res.status(200).json(result);
+          })
+          .catch((error) => {
+              console.error({error});
+              res.status(500).json({ message: 'Internal server error' });
+          });
+      };
+
+      exports.deleteFromWishList = (req, res) => {
+        const productId = req.query.productId; 
+        const userId = req.query.userId;
+
+        prod.deleteFromWishList(productId,userId)
+            .then((result) => {
+                console.log('Item deleted successfully');
+                res.status(200).json({ message: 'Item deleted successfully' });
+            })
+            .catch((error) => {
+                console.error('Error deleting item:', error);
+                res.status(500).json({ message: 'Internal server error' });
+            });
+    };
+
+    exports.findSimilar = (req, res) => {
+      const { productId , productType } = req.query;
+
+      prod.findSimilar(productId,productType)
+          .then((result) => {
+              console.log({result});
+
+              res.status(200).json(result);
+          })
+          .catch((error) => {
+              console.error({error});
+              res.status(500).json({ message: 'Internal server error' });
+          });
+      };
+
+      /// aya 
+
+ /////// ayosh
+
+ exports.totalnumberproductofSeller= (req, res) => {
+  const { userId } = req.query;
+  prod.totalnumberproductofSeller(userId,res);
+};
+//totalproductsoldofSeller
+
+exports.totalproductsoldofSeller = (req, res) => {
+  const { userId } = req.query;
+  prod.totalproductsoldofSeller(userId, res);};
+
+  //totalrevenueofseller
+  exports.totalrevenueofseller  = (req, res) => {
+    const { userId } = req.query;
+
+
+    prod.totalrevenueofseller(userId, res);};
+// ayosh
+
+
+
+
+  

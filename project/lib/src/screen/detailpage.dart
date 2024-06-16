@@ -131,7 +131,8 @@ class DetailPageState extends State<DetailPage> {
             IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed("homepagee");
+                Navigator.pop(context);
+                //Navigator.of(context).pushReplacementNamed("homepagee");
               },
             ),
           ],
@@ -310,7 +311,7 @@ class DetailPageState extends State<DetailPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
-                    'The $rr is light and sweet',
+                    widget.description,
                     style: GoogleFonts.aBeeZee(fontSize: 17),
                   ),
                 ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:project/src/screen/notification.dart';
+import 'package:project/widgets/app_bar.dart';
 import '../src/app.dart';
 import 'package:project/src/screen/providercurrency.dart';
 import 'package:provider/provider.dart';
@@ -91,6 +92,7 @@ void main() async {
       FirebaseNotification.showNotification(
           msg.notification!.title!, msg.notification!.body!, payloadData);
     }
+    NotificationState.incrementNotification();
   });
   final RemoteMessage? message =
       await FirebaseMessaging.instance.getInitialMessage();

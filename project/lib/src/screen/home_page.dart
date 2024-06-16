@@ -1677,6 +1677,9 @@ UserAccountsDrawerHeader(
       ///aya
       int userId) {
     List<int> bytes = List<int>.from(imagePath['data']);
+    if (type == "free" || type == "Free" || type == "مجاني") {
+      price = 'Free';
+    }
 
     /// aya
     final isSelfProduct = Login.idd == userId;
@@ -1938,6 +1941,9 @@ UserAccountsDrawerHeader(
       String delivery,
       String avgRate,
       int userId) {
+    if (type == "free" || type == "Free" || type == "مجاني") {
+      price = 'Free';
+    }
     List<int> bytes = List<int>.from(imagePath['data']);
     final isSelfProduct = Login.idd == userId;
     ValueNotifier<bool> isInWishlist = ValueNotifier<bool>(false);

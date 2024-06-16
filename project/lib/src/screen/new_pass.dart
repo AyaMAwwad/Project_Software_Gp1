@@ -2,14 +2,16 @@
 
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:project/src/screen/forget_pass.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/widgets/button_2.dart';
 import 'package:project/widgets/design.dart';
 import 'package:project/widgets/pass_field.dart';
 import 'package:project/src/screen/ipaddress.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class NewPass extends StatefulWidget {
   @override
@@ -37,9 +39,6 @@ class NewPassword extends State<NewPass> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   textfield1() {
     return SingleChildScrollView(
-      //child: Padding(
-      // key: formKey,
-      // padding: EdgeInsets.all(20.0),
       child: Form(
         key: formKey,
         child: Column(
@@ -95,18 +94,21 @@ class NewPassword extends State<NewPass> {
           ],
         ),
       ),
-      // ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    return kIsWeb ? buildWebNewPass() : buildMobileNewPass();
+  }
+
+  Widget buildMobileNewPass() {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
-              height: 430.0, // Adjust the height as needed
+              height: 410.0,
               child: CustemDesign(
                 text: 'Update Password ',
                 text2: 'Enter your new password',
@@ -125,9 +127,100 @@ class NewPassword extends State<NewPass> {
     );
   }
 
+  Widget buildWebNewPass() {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Gradient background
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 226, 153, 110),
+                  Color.fromARGB(255, 90, 110, 199),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SingleChildScrollView(
+                child: Container(
+                  width: 500,
+                  height: 600,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 7,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 250,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                          ),
+                          image: DecorationImage(
+                            image: AssetImage('images/icon/back.jpg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20),
+                            Text(
+                              'Update Password',
+                              style: GoogleFonts.poppins(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF063A4E),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Text(
+                              'Enter your new password',
+                              style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                color: Color(0xFF063A4E),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 20),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(right: 30.0, left: 30),
+                              child: textfield1(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> updatePassword(String email, String newPassword) async {
-    //  print(email);
-    // print(newPassword);
     final response = await http.put(
       Uri.parse('http://$ip:3000/tradetryst/user/UpdatePass'),
       headers: <String, String>{
@@ -140,37 +233,10 @@ class NewPassword extends State<NewPass> {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      // print('******************************************');
-      //  print(email);
-      //  print(newPassword);
       changePassword(email, 'aya123', newPassword);
-
       print('Password updated successfully');
     } else {
       print('Failed to update password');
     }
   }
-
-/*
-// Update the password in Firebase Authentication
-  void updateFirebasePassword(String email, String newPassword) async {
-    try {
-      // Sign in the user with their email and current password
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: newPassword, // Provide the user's current password here
-      );
-
-      // Get the user object from the userCredential
-      User user = userCredential.user!;
-
-      // Update the password in Firebase Authentication
-      await user.updatePassword(newPassword);
-
-      print('Password updated successfully in Firebase Authentication.');
-    } catch (e) {
-      print('Failed to update password in Firebase Authentication: $e');
-    }
-  }*/
 }
