@@ -1,6 +1,9 @@
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
-
+// yoyo
+const path = require('path');
+const fs = require('fs');
+// yoyo
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -194,7 +197,8 @@ sellarChat(productName) {
       } 
       else{
       const userid=results[0].user_id;
-    db.query('SELECT first_name, last_name,email  FROM user WHERE user_id = ?', [userid], (error, results) => {
+      // yoyo  --->  add user_id
+    db.query('SELECT first_name, last_name,email,user_id  FROM user WHERE user_id = ?', [userid], (error, results) => {
       if (error) {
         console.error(error);
         reject('User not found');
@@ -825,10 +829,64 @@ deliverydetialsOfBuyer(userId) {
   });
 }
 
+// yoyo
+
+//addProfileImage
 
 
+addProfileImage = (req, res) => {
+  const { email, userId } = req.body;
 
-// end aya 
+  console.log(email, userId);
+
+  return new Promise((resolve, reject) => {
+    
+
+      const firstimagePath = req.files[0].path;
+      fs.readFile(firstimagePath, (err, datafirstimage) => {
+        if (err) {
+          return reject('Error reading file');
+        }
+
+      
+    else {
+      db.query(
+        'UPDATE user SET profile_image = ? WHERE user_id = ?',
+        [datafirstimage,userId],
+        (error2, results2) => {
+          if (error2) {
+            return reject('Failed to update product');
+          }
+          else{
+
+          }
+
+         
+        }
+      );
+    }
+  });
+    
+  });
+};
+
+//getProfileImage
+
+getProfileImage(userId) {
+  return new Promise((resolve, reject) => {
+
+
+    db.query('SELECT * FROM user WHERE user_id = ?', [userId], (error, results) => {
+      if (error || results.length==0) {
+        console.error(error);
+        reject(' not found');
+      } 
+      else{
+        resolve({results});}
+  });
+  });
+}
+// yoyo
 
 
 

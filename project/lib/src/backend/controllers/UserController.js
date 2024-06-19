@@ -234,6 +234,41 @@ userRepository.deliverydetialsOfBuyer(userId)
 };
 
 
+// yoyo
+
+
+exports.addProfileImage = (req, res) => {
+  userRepository
+    .addProfileImage(req, res)
+    .then((message) => {
+      res.status(201).json({ message }); 
+    })
+    .catch((error) => {
+      res.status(400).json({ message: error }); 
+    });
+  }
+  
+  //getProfileImage
+
+  
+exports.getProfileImage = (req, res) => {
+  const { userId } = req.query;
+  
+  
+  userRepository.getProfileImage(userId)
+      .then((result) => {
+          console.log({result});
+  
+          res.status(200).json(result);
+      })
+      .catch((error) => {
+          console.error({error});
+          res.status(500).json({ message: 'Internal server error' });
+      });
+  };
+// yoyo
+
+
 
 //exports.oldpassword 
 

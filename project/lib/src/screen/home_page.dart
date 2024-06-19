@@ -57,6 +57,7 @@ class HomePage extends StatefulWidget {
 String Priceeneww = '';
 
 class HomePageState extends State<HomePage> {
+  static List<Map<String, dynamic>> userDetails = [];
   int selectedIndex = 0;
   //int _selectedIndex = 0;
   // int _cartCount = 0;
@@ -80,6 +81,7 @@ class HomePageState extends State<HomePage> {
     super.initState();
     FirebaseNotification.getDiveceToken();
     fetchProducts();
+    getImageOfUser(Login.idd);
 
     //
     if (PrivacySecurity.Delete == 'delete') {
@@ -2736,6 +2738,33 @@ UserAccountsDrawerHeader(
         ),
       ),
     );
+  }
+
+  static Future<Map<String, dynamic>?> getImageOfUser(int userId) async {
+    http.Response? response;
+    print('&&&&&&&&&&&&&&&&&&&&7 in  getImageOfUser $userId');
+
+    try {
+      response = await http.get(Uri.parse(
+          'http://$ip:3000/tradetryst/user/getProfileImage?userId=$userId'));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        dynamic responseData = jsonDecode(response.body);
+
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('results')) {
+          userDetails =
+              List<Map<String, dynamic>>.from(responseData['results']);
+        } else {
+          print('Failed to fetch cart.');
+        }
+      } else {
+        print('Failed to fetch cart. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print(' Response body: '); //${response?.body}
+      // throw Exception('Failed to fetch data: $e');
+    }
+    return null;
   }
 
   ///////////// new  view, addToCart, purchased

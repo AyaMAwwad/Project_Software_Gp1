@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/ipaddress.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,6 +39,9 @@ class EditProfileScreen extends State<editprofile> {
             pickedImage.path); // Assign the selected image to the File variable
       });
     }
+
+    UserProfileState.uploadProfile(UserProfileState.imagesayyya!);
+    HomePageState.getImageOfUser(Login.idd);
   }
 
   //
@@ -88,6 +93,7 @@ class EditProfileScreen extends State<editprofile> {
   @override
   void initState() {
     super.initState();
+    HomePageState.getImageOfUser(Login.idd);
     // Initialize the state with the values passed from the constructor
     Login.first_name = firstName.text;
     Login.last_name = lastName.text;
@@ -357,25 +363,59 @@ class EditProfileScreen extends State<editprofile> {
   }
 
   Widget image() {
+    final theproduct = HomePageState.userDetails[0];
+    final imageData = theproduct['profile_image'];
+    Uint8List? bytes;
+    if (imageData != null) {
+      bytes = Uint8List.fromList(List<int>.from(imageData['data']));
+    }
+
     return SizedBox(
       width: 160,
       height: 160,
       child: Stack(
         alignment: Alignment.bottomRight,
         children: [
-          UserProfileState.imagesayyya == null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: const Image(
-                      image: AssetImage('images/icon/userprofile.png')),
-                )
-              : ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.file(
-                    UserProfileState.imagesayyya!,
-                    fit: BoxFit.cover,
+          (bytes != null && bytes.isNotEmpty && !UserProfileState.isPress)
+              ? CircleAvatar(
+                  radius: 200,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: SizedBox(
+                      width: 160,
+                      height: 160,
+                      child: Image.memory(
+                        bytes,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                ),
+                )
+              : (UserProfileState.imagesayyya == null)
+                  ? CircleAvatar(
+                      radius: 200,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.asset(
+                          'images/icon/profile.jpg',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  : CircleAvatar(
+                      radius: 200,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: SizedBox(
+                          width: 160,
+                          height: 160,
+                          child: Image.file(
+                            UserProfileState.imagesayyya!,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ), // UserProfileState.imagesayyya!,
           IconButton(
             icon: Icon(
               Icons.edit,
@@ -383,6 +423,7 @@ class EditProfileScreen extends State<editprofile> {
               color: Color.fromARGB(218, 3, 57, 52),
             ),
             onPressed: () {
+              UserProfileState.isPress = true;
               _imagePicker(); // Call _imagePicker function to select an image
             },
           ),

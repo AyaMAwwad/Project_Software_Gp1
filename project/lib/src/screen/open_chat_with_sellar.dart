@@ -10,11 +10,13 @@ import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/ipaddress.dart';
 
 class OpenChatWithSellar {
+  //OpenChatWithSellar.idOfSeller
   //  static String NameSend1 = '';
 //  static String NameSend2 = '';
   static String NameRec1 = '';
   static String NameRec2 = '';
   static String EmailProv = '';
+  static int idOfSeller = 0;
   static void getChatOfSellar(String productName) async {
     http.Response? response;
 
@@ -31,7 +33,7 @@ class OpenChatWithSellar {
           NameRec1 = user['first_name'];
           NameRec2 = user['last_name'];
           EmailProv = user['email'];
-          dynamic userId = user['user_id'].toString();
+          idOfSeller = user['user_id'];
           //
 
           //
@@ -56,9 +58,9 @@ class OpenChatWithSellar {
   static void functionForChar(String item, BuildContext context) async {
     OpenChatWithSellar.getChatOfSellar(item);
     ChatScreenState c = ChatScreenState();
-    await c.getName(Login.Email);
+    await ChatScreenState.getName(Login.Email);
     var snapshot = await FirebaseFirestore.instance
-        .collection('users')
+        .collection('Theusers')
         .where('email', isEqualTo: OpenChatWithSellar.EmailProv)
         .get();
     var data;

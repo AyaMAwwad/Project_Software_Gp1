@@ -2,8 +2,10 @@
 
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
 import 'dart:io';
-
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:project/src/screen/aboutus.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/information.dart';
+import 'package:project/src/screen/ipaddress.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/src/screen/security.dart';
@@ -37,6 +40,7 @@ class UserProfileState extends State<UserProfile> {
   static String firstname = Login.first_name;
   static String lastname = Login.last_name;
   static File? imagesayyya;
+  // static late Map<String, dynamic> imageUserLog;
   void _imagePicker() async {
     var imagePicker = ImagePicker();
     XFile? pickedImage =
@@ -47,8 +51,83 @@ class UserProfileState extends State<UserProfile> {
         imagesayyya = File(
             pickedImage.path); // Assign the selected image to the File variable
       });
+      uploadProfile(imagesayyya!);
+
+      HomePageState.getImageOfUser(Login.idd);
     }
   }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  static bool isPress = false;
+  static Future<void> uploadProfile(
+    File imageA,
+  ) async {
+    var request = http.MultipartRequest(
+      'PUT',
+      Uri.parse('http://$ip:3000/tradetryst/user/addProfileImage'),
+    );
+
+    request.fields['email'] = Login.Email;
+    request.fields['userId'] = Login.idd.toString();
+
+    // for (int i = 0; i < imageA.length; i++) {
+    var stream =
+        http.ByteStream(imageA.openRead().cast()); // Convert image to bytes
+    var length = await imageA.length(); // Get image file length
+    var multipartFile = http.MultipartFile(
+      'image', // Consider using 'image' here, depends on your server-side implementation
+      stream,
+      length,
+      filename: imageA.path.split('/').last,
+    );
+    request.files.add(multipartFile);
+    //  }
+
+    try {
+      var response = await request.send();
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Upload successful');
+        // Handle success
+      } else {
+        print('Upload failed with status: ${response.statusCode}');
+        // Handle error
+      }
+    } catch (e) {
+      print('Error: $e');
+      // Handle error
+    }
+  }
+/*
+  Future<Map<String, dynamic>?> getImageOfUser(int userId) async {
+    http.Response? response;
+    print('********* $userId');
+
+    try {
+      response = await http.get(Uri.parse(
+          'http://$ip:3000/tradetryst/user/getProfileImage?userId=$userId'));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        dynamic responseData = jsonDecode(response.body);
+
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('results')) {
+          HomePageState.userDetails =
+              List<Map<String, dynamic>>.from(responseData['results:']);
+        } else {
+          print('Failed to fetch cart.');
+        }
+      } else {
+        print('Failed to fetch cart. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print(' Response body: '); //${response?.body}
+      // throw Exception('Failed to fetch data: $e');
+    }
+    return null;
+  }*/
 
   updateFirstName() {
     setState(() {
@@ -58,18 +137,6 @@ class UserProfileState extends State<UserProfile> {
       //EditProfileScreen.callfun()
       firstname = Login.first_name;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Initialize the state with the values passed from the constructor
-    // Login.first_name = firstName.text ;
-    // Login.last_name = lastName.text;
-    // callfun(firstName.text);
-    //firstname ;
-    //updateFirstName();
-    // lastName.text = Login.last_name;
   }
 
   //void updateProfileInfo(Map<String, String> updatedInfo) {
@@ -470,25 +537,60 @@ class UserProfileState extends State<UserProfile> {
 //// function image
   ///
   Widget image() {
+    final theproduct = HomePageState.userDetails[0];
+    final imageData = theproduct['profile_image'];
+    // imageUserLog = theproduct['profile_image'];
+    Uint8List? bytes;
+    if (imageData != null) {
+      bytes = Uint8List.fromList(List<int>.from(imageData['data']));
+    }
+
     return SizedBox(
       width: 160,
       height: 160,
       child: Stack(
         alignment: Alignment.bottomRight,
         children: [
-          imagesayyya == null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: const Image(
-                      image: AssetImage('images/icon/userprofile.png')),
-                )
-              : ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.file(
-                    imagesayyya!,
-                    // fit: BoxFit.cover,
+          (bytes != null && bytes.isNotEmpty && !isPress)
+              ? CircleAvatar(
+                  radius: 200,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: SizedBox(
+                      width: 160,
+                      height: 160,
+                      child: Image.memory(
+                        bytes,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                ),
+                )
+              : (imagesayyya == null)
+                  ? CircleAvatar(
+                      radius: 200,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.asset(
+                          'images/icon/profile.jpg',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  : CircleAvatar(
+                      radius: 200,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: SizedBox(
+                          width: 160,
+                          height: 160,
+                          child: Image.file(
+                            imagesayyya!,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ),
           IconButton(
             icon: Icon(
               Icons.edit,
@@ -496,6 +598,7 @@ class UserProfileState extends State<UserProfile> {
               color: Color.fromARGB(218, 3, 57, 52),
             ),
             onPressed: () {
+              isPress = true;
               _imagePicker(); // Call _imagePicker function to select an image
             },
           ),
