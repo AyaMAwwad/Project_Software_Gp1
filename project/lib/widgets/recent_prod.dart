@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:project/src/chat/chat_service.dart';
+import 'package:project/src/screen/chat_page.dart';
 import 'package:project/src/screen/detailpage.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/ipaddress.dart';
@@ -655,6 +657,7 @@ class RecentSingleProd extends StatefulWidget {
 }
 
 class RecentSingleProdState extends State<RecentSingleProd> {
+  final ChatService chatService = ChatService();
   @override
   Widget build(BuildContext context) {
     print('the widget.recent_prod_quantity : ${widget.recent_prod_quantity}');
@@ -820,6 +823,12 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                           color: Color.fromARGB(255, 2, 46, 82),
                         ),
                         onTap: () async {
+                          print('in recennnnnt');
+                          print(ChatpageState.sendF);
+                          print(ChatpageState.sendN);
+                          print(OpenChatWithSellar.EmailProv);
+
+                          //  chatService.saveUserTookToIt();
                           OpenChatWithSellar.functionForChar(
                               widget.recet_prod_name, context);
                         },

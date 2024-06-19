@@ -8,7 +8,9 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/chat/chat_service.dart';
 import 'package:project/src/screen/chat_bubble.dart';
+import 'package:project/src/screen/chat_screen.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/src/screen/signup_screen.dart';
 import 'package:project/widgets/textfield_add_prod.dart';
 
@@ -37,13 +39,49 @@ class ChatPage extends StatefulWidget {
 class ChatpageState extends State<ChatPage> {
   static String sendN = '';
   static String sendF = '';
+  static String id = '';
+  static String idsend = '';
+  static String emailsend = '';
 
   String? lastSenderName;
   final TextEditingController msgController = TextEditingController();
   final ChatService chatService = ChatService();
   final FirebaseAuth auth = FirebaseAuth.instance;
   void sendMessage() async {
+    print('--------- id $id');
+
+    print(
+        '--------- OpenChatWithSellar.EmailProv ${OpenChatWithSellar.EmailProv}');
+    print('---------  widget.firstNameReceiver ${widget.firstNameReceiver}');
+    print('--------- widget.lastNameReceiver ${widget.lastNameReceiver}');
+    print(
+        '--------- OpenChatWithSellar.idOfSeller ${OpenChatWithSellar.idOfSeller}');
+
+    print('----------------------------------------------------');
+    print('--------- idsend $idsend');
+    print('--------- emailsend ${emailsend}');
+    print(
+        '---------  ChatScreenState.FirstNameSender ${ChatScreenState.FirstNameSender}');
+    print(
+        '---------  ChatScreenState.LastNameSender ${ChatScreenState.LastNameSender}');
+    print('---------  Login.idd ${Login.idd}');
+
     if (msgController.text.isNotEmpty) {
+      chatService.saveUserTookToIt(
+          Login.idd,
+          id,
+          OpenChatWithSellar.EmailProv,
+          widget.firstNameReceiver,
+          widget.lastNameReceiver,
+          OpenChatWithSellar.idOfSeller);
+      chatService.saveUserTookToIt(
+        OpenChatWithSellar.idOfSeller,
+        idsend,
+        emailsend,
+        ChatScreenState.FirstNameSender,
+        ChatScreenState.LastNameSender,
+        Login.idd,
+      );
       await chatService.sendMessage(widget.userId, msgController.text);
       msgController.clear();
     }
@@ -51,6 +89,7 @@ class ChatpageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    ChatScreenState.getName(Login.Email);
     sendN = widget.firstNameReceiver;
     sendF = widget.lastNameReceiver;
     return Scaffold(
@@ -196,6 +235,45 @@ class ChatpageState extends State<ChatPage> {
 
   Widget buildMessageItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+    // String id;
+    String email;
+    String first;
+    String last;
+
+    if (data['senderId'] == auth.currentUser!.uid) {
+      id = data['recevierId'];
+
+      idsend = data['senderId'];
+      emailsend = data['senderEmail'];
+      /*chatService.saveUserTookToIt(
+          id,
+          OpenChatWithSellar.EmailProv,
+          widget.firstNameReceiver,
+          widget.lastNameReceiver,
+          OpenChatWithSellar.idOfSeller);
+      chatService.saveUserTookToIt(
+          data['senderId'],
+          data['senderEmail'],
+          ChatScreenState.FirstNameSender,
+          ChatScreenState.LastNameSender,
+          Login.idd);*/
+      //  email = data['email'];
+      //first = data['first_name'];
+      //last = data['last_name'];
+      print('************ id: $id');
+      print('************ email: ${OpenChatWithSellar.EmailProv}');
+      print('************ first: ${widget.firstNameReceiver}');
+      print('************ last: ${widget.lastNameReceiver}');
+      //chatService.saveUserTookToIt();
+    } /*else if (data['recevierId'] == auth.currentUser!.uid) {
+      id = data['senderId'];
+      print('^^^^^^^^^^^^^^^^^^^^ first sender : ${widget.firstNameSender}');
+      print('^^^^^^^^^^^^^^^^^^^^ last sender : ${widget.lastNameSender}');
+      print('^^^^^^^^^^^^^^^^^^^^ last senderEmail : ${data['senderEmail']}');
+      chatService.saveUserTookToIt(id, data['senderEmail'],
+          widget.firstNameSender, widget.lastNameSender);
+      print('aaaaaaaaaaaaaaaaaaaaaaaayyyyyyyys');
+    }*/
 /*
     String senderName = (data['senderEmail'] == Login.Email)
         ? widget.firstNameSender + ' ' + widget.lastNameSender

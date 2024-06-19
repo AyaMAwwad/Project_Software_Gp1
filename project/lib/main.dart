@@ -20,6 +20,7 @@ Future firebaseBacjgroundNotification(RemoteMessage msg) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   //payment
   await dotenv.load(fileName: ".env");
   //Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;

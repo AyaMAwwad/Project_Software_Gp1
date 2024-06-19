@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, use_key_in_widget_constructors, unnecessary_import, prefer_interpolation_to_compose_strings, prefer_const_literals_to_create_immutables, unnecessary_brace_in_string_interps
 
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,10 +12,12 @@ import 'package:intl/intl.dart';
 import 'package:project/src/chat/chat_service.dart';
 import 'package:project/src/screen/chat_bubble.dart';
 import 'package:project/src/screen/chat_page.dart';
+import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/ipaddress.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/widgets/user_profile.dart';
 
 class ChatScreen extends StatefulWidget {
   @override
@@ -21,23 +25,46 @@ class ChatScreen extends StatefulWidget {
 }
 
 class ChatScreenState extends State<ChatScreen> {
+  static Uint8List? bytes;
+  static bool isHaveImage = false;
   static String FirstNameSender = '';
   static String LastNameSender = '';
   static String FirstNameReceiver = '';
   static String LastNameReceiver = '';
-  List<Map<String, dynamic>> allUserName = [];
-  Map<String, dynamic> userInfo = {
-    'first_name': 'You',
-  };
+  static List<Map<String, dynamic>> allUserName = [];
+  List<Map<String, dynamic>> imageChat = [];
+  bool isLoading = true;
+
 ////////////
   final ChatService chatService = ChatService();
   @override
   void initState() {
-    super.initState();
-    j = 0;
     //  allUserName.clear();
 
-    allUserName.add(userInfo);
+    final imageData = HomePageState.userDetails[0]['profile_image'];
+    Uint8List? bytes;
+    bool isIm = false;
+    if (imageData != null) {
+      isIm = true;
+      bytes = Uint8List.fromList(List<int>.from(imageData['data']));
+    }
+    bool nameExists =
+        allUserName.any((userInfo) => userInfo['first_name'] == 'You');
+    // final theproduct = ProfileImageForChat;
+    //final imageData = theproduct['profile_image'];
+
+// If the name doesn't already exist, add it to the list
+    if (!nameExists) {
+      Map<String, dynamic> userInfo = {
+        'first_name': 'You',
+        'image': isIm ? bytes : ' ',
+      };
+      allUserName.add(userInfo);
+    }
+    isIm = false;
+    super.initState();
+    j = 0;
+
     buildUserList();
   }
 
@@ -60,6 +87,7 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     j = 0;
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 2, 92, 123),
       body: SafeArea(
@@ -130,22 +158,45 @@ class ChatScreenState extends State<ChatScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: List.generate(
-                        ListProfile.length,
+                        allUserName.length,
                         (index) => Padding(
                           padding: EdgeInsets.only(
-                            right: index < ListProfile.length - 1 ? 12.0 : 0,
+                            right: index < allUserName.length ? 12.0 : 0,
                           ),
                           child: Column(
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.asset(
-                                  ListProfile[index],
-                                  width: 70,
-                                  height: 70,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                              (allUserName[index]['image'] != ' ' &&
+                                      !UserProfileState.isPress)
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: Image.memory(
+                                        allUserName[index]['image'],
+                                        fit: BoxFit.cover,
+                                        width: 70,
+                                        height: 70,
+                                      ),
+                                    )
+                                  : (UserProfileState.imagesayyya == null)
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Image.asset(
+                                            'images/icon/profile.jpg',
+                                            width: 70,
+                                            height: 70,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Image.file(
+                                            width: 70,
+                                            height: 70,
+                                            UserProfileState.imagesayyya!,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
                               SizedBox(
                                   height:
                                       10), // Adjust this value for spacing between image and name
@@ -297,7 +348,11 @@ class ChatScreenState extends State<ChatScreen> {
   Widget buildUserList() {
     return StreamBuilder<QuerySnapshot>(
       //FirebaseFirestore.instance.collection('users').snapshots(),
-      stream: FirebaseFirestore.instance.collection('Theusers').snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('saveUserTookToIt')
+          .doc(Login.idd.toString())
+          .collection('msg')
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('error');
@@ -335,6 +390,12 @@ class ChatScreenState extends State<ChatScreen> {
     // setState(() {});
   }
 
+  void imageOFUSers(int id, String first) async {
+    // userDetailsList.clear();
+    await getProfileImageForChat(id, first);
+    // setState(() {});
+  }
+
   Widget buildUserListItem(DocumentSnapshot document) {
     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
     print(data['uid']);
@@ -344,31 +405,29 @@ class ChatScreenState extends State<ChatScreen> {
     if (auth.currentUser!.email != data['email']) {
       LastNameReceiver = data['last_name'];
       FirstNameReceiver = data['first_name'];
-      print(FirstNameReceiver);
-      bool nameExists = allUserName
-          .any((userInfo) => userInfo['first_name'] == FirstNameReceiver);
-
-// If the name doesn't already exist, add it to the list
-      if (!nameExists) {
-        Map<String, dynamic> userInfo = {
-          'first_name': FirstNameReceiver,
-        };
-
-        // Add the map to the list
-        // allUserName.add(userInfo);
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          setState(() {
-            allUserName.add(userInfo);
-            print(allUserName);
-          });
-        });
-      }
+      print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!${data['first_name']}');
+      print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!${data['id_of_user']}');
+      imageOFUSers(data['id_of_user'], FirstNameReceiver);
+      //  getProfileImageForChat(data['id_of_user']);
+      //ProfileImageForChat
 
       // j++;
-      if (j < ListProfile.length - 1) {
+      if (j < allUserName.length - 1) {
         j++;
       } else {
         j = 0; // Reset j to 0 if it exceeds the length of ListProfile
+      }
+      Uint8List? imageOfUser;
+      for (var userInfo in allUserName) {
+        if (userInfo['first_name'] == data['first_name']) {
+          var image = userInfo['image'];
+          if (image is Uint8List) {
+            imageOfUser = image;
+          } else {
+            imageOfUser = null; // or handle it differently if needed
+          }
+          break;
+        }
       }
 
       return Padding(
@@ -395,18 +454,35 @@ class ChatScreenState extends State<ChatScreen> {
             padding: const EdgeInsets.only(left: 15.0, top: 6, right: 15),
             child: Row(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Container(
-                    color: const Color.fromARGB(255, 80, 79, 79),
-                    child: Image.asset(
-                      ListProfile[j],
-                      width: 50,
-                      height: 50, // 200
-                      //  fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                (imageOfUser != null && !UserProfileState.isPress)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.memory(
+                          imageOfUser, // allUserName[j]['image'],
+                          fit: BoxFit.cover,
+                          width: 50,
+                          height: 50,
+                        ),
+                      )
+                    : (UserProfileState.imagesayyya == null)
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.asset(
+                              'images/icon/profile.jpg',
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.file(
+                              width: 50,
+                              height: 50,
+                              UserProfileState.imagesayyya!,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                 SizedBox(width: 16),
                 //  Expanded(
                 //    child:
@@ -533,7 +609,68 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
 ///////////////////
-  Future<Map<String, dynamic>?> getName(String email) async {
+  static Future<Map<String, dynamic>?> getProfileImageForChat(
+      int userId, String first) async {
+    http.Response? response;
+    print('@@@@@@@@@@@@@@@@@@ in  getProfileImageForChat $userId');
+
+    try {
+      response = await http.get(Uri.parse(
+          'http://$ip:3000/tradetryst/user/getProfileImageForChat?userId=$userId'));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        dynamic responseData = jsonDecode(response.body);
+
+        if (responseData is Map<String, dynamic> &&
+            responseData.containsKey('results')) {
+          List<Map<String, dynamic>> result =
+              List<Map<String, dynamic>>.from(responseData['results']);
+          print(result);
+          // ProfileImageForChat = result[0]['profile_image'];
+          final theproduct = result[0];
+          final imageData = theproduct['profile_image'];
+          if (imageData != null) {
+            isHaveImage = true;
+            bytes = Uint8List.fromList(List<int>.from(imageData['data']));
+          }
+          print(first);
+          bool nameExists =
+              allUserName.any((userInfo) => userInfo['first_name'] == first);
+          // final theproduct = ProfileImageForChat;
+          //final imageData = theproduct['profile_image'];
+
+// If the name doesn't already exist, add it to the list
+          if (!nameExists) {
+            Map<String, dynamic> userInfo = {
+              'first_name': first,
+              'image': isHaveImage ? bytes : ' ',
+            };
+            isHaveImage = false;
+            print('################## userInfo : $userInfo');
+            // Add the map to the list
+            // allUserName.add(userInfo);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              //   setState(() {
+              allUserName.add(userInfo);
+              print(allUserName);
+              //  });
+            });
+          }
+
+          //  print('^^^^^^^  ProfileImageForChat : ${ProfileImageForChat[0]}');
+        } else {
+          print('Failed to fetch cart.');
+        }
+      } else {
+        print('Failed to fetch cart. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print(' Response body: '); //${response?.body}
+      // throw Exception('Failed to fetch data: $e');
+    }
+    return null;
+  }
+
+  static Future<Map<String, dynamic>?> getName(String email) async {
     http.Response? response;
 
     // print(email);
