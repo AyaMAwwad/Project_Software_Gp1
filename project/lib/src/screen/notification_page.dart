@@ -7,8 +7,11 @@ import 'package:project/src/screen/detailpage.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
+import 'package:project/src/screen/payment.dart';
 import 'package:project/widgets/bottom_nav.dart';
+import 'package:project/widgets/cart_item.dart';
 import 'package:project/widgets/cart_shop.dart';
+import 'package:project/widgets/recent_prod.dart';
 
 class NotificationPage extends StatefulWidget {
   @override
@@ -172,6 +175,17 @@ class NotificationPageState extends State<NotificationPage> {
                           );
 
                           ///// need to update to new collection page or details of product that added
+                        } else if (notifications[index]['title'] ==
+                            'Rating Products') {
+                          if (!CartItemState.flagIsOrder) {
+                            RecentSingleProdState.showRatingDialog(
+                                idOfProductForRating,
+                                imageOfProductForRating,
+                                nameOfProductForRating);
+                          } else if (CartItemState.flagIsOrder) {
+                            Payment.showRatingDialog();
+                            CartItemState.flagIsOrder = false;
+                          }
                         }
 
                         // Mark the notification as read

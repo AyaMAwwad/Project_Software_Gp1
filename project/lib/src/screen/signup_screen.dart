@@ -129,6 +129,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Radio(
+                  activeColor: Color.fromARGB(255, 2, 92, 123),
                   value: 'Male',
                   groupValue: selectedGender,
                   onChanged: (value) {
@@ -147,6 +148,7 @@ class SignupScreen extends State<Signup> with ValidationMixin {
                   ),
                 ),
                 Radio(
+                  activeColor: Color.fromARGB(255, 2, 92, 123),
                   value: 'Female',
                   groupValue: selectedGender,
                   onChanged: (value) {

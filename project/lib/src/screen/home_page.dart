@@ -3,6 +3,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, prefer_interpolation_to_compose_strings
 
 //import 'package:flutter_font_icons/flutter_font_icons.dart';
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -592,6 +593,12 @@ class HomePageState extends State<HomePage> {
       );
      */
     // bool isSearching = false;
+    /* final theproduct = HomePageState.userDetails[0];
+    final imageData = theproduct['profile_image'];
+    Uint8List? bytes;
+    if (imageData != null) {
+      bytes = Uint8List.fromList(List<int>.from(imageData['data']));
+    }*/
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 253, 246, 254),
       drawer: Drawer(
@@ -604,7 +611,49 @@ class HomePageState extends State<HomePage> {
               accountEmail: Text('$emailbefore'),
               currentAccountPicture: CircleAvatar(
                 radius: 300,
-                child: ClipRRect(
+                child: /*(bytes != null &&
+                        bytes.isNotEmpty &&
+                        !UserProfileState.isPress)
+                    ? CircleAvatar(
+                        radius: 200,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: SizedBox(
+                            width: 160,
+                            height: 160,
+                            child: Image.memory(
+                              bytes,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      )
+                    : (UserProfileState.imagesayyya == null)
+                        ? CircleAvatar(
+                            radius: 200,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.asset(
+                                'images/icon/profile.jpg',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: 200,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: SizedBox(
+                                width: 160,
+                                height: 160,
+                                child: Image.file(
+                                  UserProfileState.imagesayyya!,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                          ),*/
+                    ClipRRect(
                   borderRadius: BorderRadius.circular(50),
                   child: Image.asset(
                     imagepath,
@@ -1897,6 +1946,12 @@ UserAccountsDrawerHeader(
                           if (type == 'Free' ||
                               type == 'free' ||
                               type == 'مجاني') {
+                            print(' Free home ${type}');
+                            typeOfProductForRating = type;
+                            idOfProductForRating = productId;
+                            nameOfProductForRating = itemName;
+                            imageOfProductForRating = imagePath;
+
                             print('********* the state:$type');
                             showModalBottomSheet(
                               context: context,
@@ -1911,6 +1966,17 @@ UserAccountsDrawerHeader(
                               },
                             );
                           } else {
+                            print('  Not Free home ${type}');
+                            typeOfProductForRating = type;
+                            if (quantity == 1) {
+                              Duration delay = Duration(minutes: 2);
+
+                              Timer(delay, () async {
+                                triggerNotificationFromPages(
+                                    '[Private Reminder]',
+                                    "An item ${itemName} in your cart is nearly out of stock. Shop it before it sells out.");
+                              });
+                            }
                             //print(_cartCount);
 
                             HomePageState.InteractionOfUser(
@@ -2149,6 +2215,12 @@ UserAccountsDrawerHeader(
                             if (type == 'Free' ||
                                 type == 'free' ||
                                 type == 'مجاني') {
+                              print(' Free home ${type}');
+                              typeOfProductForRating = type;
+                              idOfProductForRating = productId;
+                              nameOfProductForRating = itemName;
+                              imageOfProductForRating = imagePath;
+
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
@@ -2162,6 +2234,17 @@ UserAccountsDrawerHeader(
                                 },
                               );
                             } else {
+                              print('  Not Free home ${type}');
+                              typeOfProductForRating = type;
+                              if (quantity == 1) {
+                                Duration delay = Duration(minutes: 2);
+
+                                Timer(delay, () async {
+                                  triggerNotificationFromPages(
+                                      '[Private Reminder]',
+                                      "An item ${itemName} in your cart is nearly out of stock. Shop it before it sells out.");
+                                });
+                              }
                               HomePageState.InteractionOfUser(
                                   Login.idd, productId, 0, 1, 0);
                               RecentSingleProdState.shoppingCartStore('1', '',

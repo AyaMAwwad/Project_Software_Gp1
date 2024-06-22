@@ -17,60 +17,64 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('******* Bottom Nav Selected index:$selectedIndex');
-    return CurvedNavigationBar(
-      backgroundColor: Colors.transparent,
-      color: Color.fromARGB(255, 90, 141, 158),
-      buttonBackgroundColor: Color.fromARGB(255, 90, 141, 158),
-      animationDuration: Duration(milliseconds: 300),
-      onTap: onTabSelected,
-      height: 50,
-      index: selectedIndex,
-      items: [
-        Icon(IconsaxBold.home_2, color: Colors.white),
-        Icon(IconsaxBold.box_add, color: Colors.white),
-        Icon(Icons.favorite_border, color: Colors.white),
-        Stack(
-          children: [
-            Icon(Icons.add_shopping_cart, color: Colors.white),
-            ValueListenableBuilder<int>(
-              valueListenable: CartState().cartCountNotifier,
-              builder: (context, cartCount, child) {
-                if (cartCount > 0) {
-                  return Positioned(
-                    right: -1,
-                    top: -3,
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      constraints: BoxConstraints(
-                        minWidth: 14,
-                        minHeight: 14,
-                      ),
-                      child: Text(
-                        '$cartCount',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
+    if (kIsWeb) {
+      return SizedBox();
+    } else {
+      return CurvedNavigationBar(
+        backgroundColor: Colors.transparent,
+        color: Color.fromARGB(255, 90, 141, 158),
+        buttonBackgroundColor: Color.fromARGB(255, 90, 141, 158),
+        animationDuration: Duration(milliseconds: 300),
+        onTap: onTabSelected,
+        height: 50,
+        index: selectedIndex,
+        items: [
+          Icon(IconsaxBold.home_2, color: Colors.white),
+          Icon(IconsaxBold.box_add, color: Colors.white),
+          Icon(Icons.favorite_border, color: Colors.white),
+          Stack(
+            children: [
+              Icon(Icons.add_shopping_cart, color: Colors.white),
+              ValueListenableBuilder<int>(
+                valueListenable: CartState().cartCountNotifier,
+                builder: (context, cartCount, child) {
+                  if (cartCount > 0) {
+                    return Positioned(
+                      right: -1,
+                      top: -3,
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(6),
                         ),
-                        textAlign: TextAlign.center,
+                        constraints: BoxConstraints(
+                          minWidth: 14,
+                          minHeight: 14,
+                        ),
+                        child: Text(
+                          '$cartCount',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
-                  );
-                } else {
-                  return SizedBox.shrink();
-                }
-              },
-            ),
-          ],
-        ),
-        Icon(IconsaxBold.profile_circle, color: Colors.white),
-      ],
-      animationCurve: Curves.easeInOutBack,
-      letIndexChange: (index) => true,
-    );
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              ),
+            ],
+          ),
+          Icon(IconsaxBold.profile_circle, color: Colors.white),
+        ],
+        animationCurve: Curves.easeInOutBack,
+        letIndexChange: (index) => true,
+      );
+    }
   }
 }
 

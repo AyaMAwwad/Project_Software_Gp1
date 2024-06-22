@@ -76,6 +76,10 @@ class FirebaseNotification {
       NotificationState.resetNotification();
       navigatorKey.currentState!.pushNamed('notification');
       // need to update to what page of new collection or open details of product
+    } else if (title == 'Rating Products') {
+      CartState().resetCart();
+      NotificationState.resetNotification();
+      navigatorKey.currentState!.pushNamed('notification');
     } else {
       NotificationState.resetNotification();
       navigatorKey.currentState!.pushNamed('notification');

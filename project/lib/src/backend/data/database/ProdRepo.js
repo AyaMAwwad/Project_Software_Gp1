@@ -596,10 +596,11 @@ getToShopCart(userId) {
                  console.log(state);
                  let Query='';
                  if(state== 'New' || state== 'new'|| state== 'جديد'){
-                   Query='SELECT warranty_period,price FROM new_product WHERE product_id = ?'
+                  // yosha convert to * 
+                   Query='SELECT * FROM new_product WHERE product_id = ?'
                  }
                  else if(state=='Used'|| state== 'used'|| state== 'مستعمل'){
-                   Query='SELECT product_condition,price FROM used_product WHERE product_id = ?'
+                   Query='SELECT * FROM used_product WHERE product_id = ?'
                  }
                 /* else if(state=='Free'|| state== 'free' ||state== 'مجاني'){
                    Query='SELECT product_condition,state_free FROM free_product WHERE product_id = ?'

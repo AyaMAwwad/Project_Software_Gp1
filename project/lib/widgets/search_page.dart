@@ -3,6 +3,7 @@
 
 // ignore_for_file: must_be_immutable
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:ficonsax/ficonsax.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/wishlist_page.dart';
 import 'package:project/widgets/delivery_page.dart';
 import 'package:project/src/screen/ipaddress.dart';
@@ -338,6 +340,15 @@ class SearchPage extends StatelessWidget {
                                                 theState == 'free' ||
                                                 theState == 'مجاني') {
                                               print(
+                                                  'free Search page ${theState}');
+                                              typeOfProductForRating = theState;
+                                              idOfProductForRating =
+                                                  productData['product_id'];
+                                              nameOfProductForRating =
+                                                  productData['name'];
+                                              imageOfProductForRating =
+                                                  productData['image'];
+                                              print(
                                                   '********* the state:$theState');
                                               showModalBottomSheet(
                                                 context: context,
@@ -356,6 +367,21 @@ class SearchPage extends StatelessWidget {
                                               );
                                               // DeliveryPage(isFree: true);
                                             } else {
+                                              if (productData['quantity'] ==
+                                                  1) {
+                                                Duration delay =
+                                                    Duration(minutes: 2);
+
+                                                Timer(delay, () async {
+                                                  triggerNotificationFromPages(
+                                                      '[Private Reminder]',
+                                                      "An item ${productData['name']} in your cart is nearly out of stock. Shop it before it sells out.");
+                                                });
+                                              }
+                                              print(
+                                                  '  Not Free search page ${theState}');
+                                              typeOfProductForRating = theState;
+
                                               HomePageState.InteractionOfUser(
                                                   Login.idd,
                                                   productData['product_id'],

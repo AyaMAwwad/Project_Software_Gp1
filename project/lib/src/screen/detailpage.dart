@@ -1,8 +1,10 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables, library_private_types_in_public_api
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
+import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/ipaddress.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +14,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/button.dart';
 import 'package:project/widgets/recent_prod.dart';
@@ -377,6 +380,16 @@ class DetailPageState extends State<DetailPage> {
       child: CustomeButton(
         onPressed: () async {
           if (widget.quantity != 0) {
+            if (widget.quantity == 1) {
+              Duration delay = Duration(minutes: 2);
+
+              Timer(delay, () async {
+                triggerNotificationFromPages('[Private Reminder]',
+                    "An item ${widget.name} in your cart is nearly out of stock. Shop it before it sells out.");
+              });
+            }
+            HomePageState.InteractionOfUser(
+                Login.idd, widget.productid, 0, 1, 0);
             await RecentSingleProdState.shoppingCartStore(
                 '1',
                 '',

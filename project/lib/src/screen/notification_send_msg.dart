@@ -15,6 +15,10 @@ import 'package:project/widgets/app_bar.dart';
 String title = '';
 List<Map<String, dynamic>> productFromNotificaiom = [];
 List<Map<String, dynamic>> productDetailFromNotificaiom = [];
+String typeOfProductForRating = '';
+int idOfProductForRating = 0;
+String nameOfProductForRating = '';
+dynamic imageOfProductForRating = '';
 ///////////////////
 
 int idx = 0;
@@ -22,7 +26,7 @@ void scheduleNotifications() async {
   final List<String> fcmTokens = await CRUDService.getFCMTokensFromDatabase();
   List<Map<String, dynamic>> itemsToNotify = [];
   int userId = Login.idd;
-  var response = await http.get(Uri.parse(
+  /*var response = await http.get(Uri.parse(
       'http://$ip:3000/tradetryst/Product/checkQuantityForNotification?userId=$userId'));
   if (response.statusCode == 200 || response.statusCode == 201) {
     dynamic responseData = jsonDecode(response.body);
@@ -41,9 +45,9 @@ void scheduleNotifications() async {
         }));
     productFromNotificaiom.addAll(names);
     productDetailFromNotificaiom.addAll(details);
-  }
+  }*/
 
-  response = await http.get(Uri.parse(
+  var response = await http.get(Uri.parse(
       'http://$ip:3000/tradetryst/Product/ProductNewCollectionForNotification?userId=$userId'));
   if (response.statusCode == 200 || response.statusCode == 201) {
     dynamic responseData = jsonDecode(response.body);
@@ -70,12 +74,22 @@ void scheduleNotifications() async {
       String title = itemsToNotify[i]['title'];
       String body = itemsToNotify[i]['body'];
 
-      Duration delay = Duration(minutes: 14 * i);
+      Duration delay = Duration(minutes: 5 + i);
       idx = i;
       Timer(delay, () async {
         await sendNotification(token, title, body);
       });
     }
+  }
+}
+
+Future<void> triggerNotificationFromPages(String title, String body) async {
+  print('********* IN  triggerNotification  ');
+  final List<String> fcmTokens = await CRUDService.getFCMTokensFromDatabase();
+  print(fcmTokens);
+
+  for (final token in fcmTokens) {
+    await sendNotification(token, title, body);
   }
 }
 

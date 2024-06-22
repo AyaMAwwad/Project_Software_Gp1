@@ -807,6 +807,7 @@ class AddProductState extends State<AddProductPageTwo> {
               Row(
                 children: [
                   Radio(
+                    activeColor: Color.fromARGB(255, 2, 92, 123),
                     value: 'New',
                     groupValue: valueState,
                     onChanged: (value) {
@@ -832,6 +833,7 @@ class AddProductState extends State<AddProductPageTwo> {
                   Radio(
                     value: 'Used',
                     groupValue: valueState,
+                    activeColor: Color.fromARGB(255, 2, 92, 123),
                     onChanged: (value) {
                       setState(() {
                         valueState = value.toString();
