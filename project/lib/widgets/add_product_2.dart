@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/menu.dart';
 import 'package:project/src/screen/saller_product_page.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
@@ -152,30 +153,7 @@ class AddProductState extends State<AddProductPageTwo> {
       high = 30;
     }
     return Scaffold(
-      drawer: Drawer(
-        //child: CustemAppBar(),
-        child: Column(
-          children: [
-            IconButton(
-              icon: Icon(Icons.exit_to_app),
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddProduct()));
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: menu(),
       body: SafeArea(
         child: Form(
           key: _formKey,

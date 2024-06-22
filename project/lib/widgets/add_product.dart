@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/menu.dart';
 import 'package:project/src/screen/wishlist_page.dart';
 import 'package:project/widgets/add_product_2.dart';
 import 'package:project/widgets/app_bar.dart';
@@ -219,30 +220,7 @@ class AddProductState extends State<AddProduct> {
         ("11".tr == 'Add Product') ? categoryTypes : categoryTypes1;
     List<String> ListState2 = "11".tr == 'Add Product' ? ListState : ListState1;
     return Scaffold(
-      drawer: Drawer(
-        //child: CustemAppBar(),
-        child: Column(
-          children: [
-            IconButton(
-              icon: Icon(Icons.exit_to_app),
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pushReplacementNamed(
-                    "homepagee"); // This will pop the current route (Drawer)
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: menu(),
       body: SafeArea(
         // child: SingleChildScrollView(
         child: Form(

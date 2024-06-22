@@ -15,6 +15,7 @@ import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/information.dart';
 import 'package:project/src/screen/ipaddress.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/menu.dart';
 import 'package:project/src/screen/multiLanguage.dart';
 import 'package:project/src/screen/security.dart';
 import 'package:project/src/screen/wishlist_page.dart';
@@ -149,30 +150,7 @@ class UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        //child: CustemAppBar(),
-        child: Column(
-          children: [
-            IconButton(
-              icon: Icon(Icons.exit_to_app),
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pushReplacementNamed(
-                    "homepagee"); // This will pop the current route (Drawer)
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: menu(),
       body: SafeArea(
         child: ListView(
           children: [

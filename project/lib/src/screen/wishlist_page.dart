@@ -10,6 +10,7 @@ import 'package:project/src/screen/find_simialer.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/ipaddress.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/menu.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
@@ -74,6 +75,7 @@ class WishlistPageState extends State<WishlistPage> {
     List<Map<String, dynamic>> filteredDetails = filteredData[1];
 
     return Scaffold(
+      drawer: menu(),
       body: SafeArea(
         child: Column(
           children: [

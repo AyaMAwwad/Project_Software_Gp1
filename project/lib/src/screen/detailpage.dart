@@ -14,6 +14,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/categorylist.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/menu.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/button.dart';
@@ -117,30 +118,7 @@ class DetailPageState extends State<DetailPage> {
 //List<int> bytes1 = _imagePaths.isNotEmpty ? List<int>.from((_imagePaths[selectedDotIndex]['image_data']['data'] as List<dynamic>).cast<int>()) : [];
 
     return Scaffold(
-      drawer: Drawer(
-        //child: CustemAppBar(),
-        child: Column(
-          children: [
-            IconButton(
-              icon: Icon(Icons.exit_to_app),
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-                //Navigator.of(context).pushReplacementNamed("homepagee");
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: menu(),
       /*
        appBar: AppBar(
         title: Text(widget.categoryName),
