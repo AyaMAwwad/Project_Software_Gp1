@@ -3,7 +3,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, prefer_interpolation_to_compose_strings
 
 //import 'package:flutter_font_icons/flutter_font_icons.dart';
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -61,7 +60,6 @@ class HomePage extends StatefulWidget {
 String Priceeneww = '';
 
 class HomePageState extends State<HomePage> {
-  static List<Map<String, dynamic>> userDetails = [];
   int selectedIndex = 0;
   //int _selectedIndex = 0;
   // int _cartCount = 0;
@@ -85,11 +83,13 @@ class HomePageState extends State<HomePage> {
     super.initState();
     FirebaseNotification.getDiveceToken();
     fetchProducts();
-    getImageOfUser(Login.idd);
+
+    /// add category ibtisam new admin ************************************
 
     _navigateToAddCategory();
 
-    //
+    ///// add category ibtisam new admin ************************************
+
     if (PrivacySecurity.Delete == 'delete') {
       setState(() {
         // Update the image path if the condition is met
@@ -540,14 +540,14 @@ class HomePageState extends State<HomePage> {
 
   String pricetablet = 'Price: \$100.00';
   final List<Category> categories = [
-    /* Category(name: '50'.tr, imagePath: 'images/icon/fashion.jpg'),
+    Category(name: '50'.tr, imagePath: 'images/icon/fashion.jpg'),
     Category(name: '51'.tr, imagePath: 'images/icon/books.jpg'),
     Category(name: '52'.tr, imagePath: 'images/icon/game.jpg'),
     Category(name: '53'.tr, imagePath: 'images/icon/vehicles.jpg'),
     Category(name: '54'.tr, imagePath: 'images/icon/furniture.jpg'),
     Category(name: '55'.tr, imagePath: 'images/icon/mobile.jpg'),
-    Category(name: '56'.tr, imagePath: 'images/icon/Houseware.jpg'),*/
-    Category(
+    Category(name: '56'.tr, imagePath: 'images/icon/Houseware.jpg'),
+    /* Category(
         name: '50'.tr,
         imagePath:
             'images/icon/fasNN.jpg'), //fasNN.jpeg //fasA.jpg //fashionN.jpeg
@@ -556,8 +556,10 @@ class HomePageState extends State<HomePage> {
     Category(name: '53'.tr, imagePath: 'images/icon/GT.jpg'),
     Category(name: '54'.tr, imagePath: 'images/icon/furNN.jpg'),
     Category(name: '55'.tr, imagePath: 'images/icon/iphN.jpeg'), //smartNew.jpg
-    Category(name: '56'.tr, imagePath: 'images/icon/houseN.jpg'),
+    Category(name: '56'.tr, imagePath: 'images/icon/houseN.jpg'),*/
   ];
+  //
+  // add category admin
 
 // /// add category ibtisam new admin ************************************
 
@@ -575,6 +577,7 @@ class HomePageState extends State<HomePage> {
 
   /// add category ibtisam new admin ************************************
 
+  // add category admin
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -614,57 +617,262 @@ class HomePageState extends State<HomePage> {
       );
      */
     // bool isSearching = false;
-    /* final theproduct = HomePageState.userDetails[0];
-    final imageData = theproduct['profile_image'];
-    Uint8List? bytes;
-    if (imageData != null) {
-      bytes = Uint8List.fromList(List<int>.from(imageData['data']));
-    }*/
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 253, 246, 254),
+      // menu update *******************************************************
       drawer: menu(),
-      /*(bytes != null &&
-                        bytes.isNotEmpty &&
-                        !UserProfileState.isPress)
-                    ? CircleAvatar(
-                        radius: 200,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: SizedBox(
-                            width: 160,
-                            height: 160,
-                            child: Image.memory(
-                              bytes,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+
+      /*
+      // dreawerrrrrrr
+      Drawer(
+        //child: CustemAppBar(),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: Text('$firsttname $lastttname'),
+              accountEmail: Text('$emailbefore'),
+              currentAccountPicture: CircleAvatar(
+                radius: 300,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image.asset(
+                    imagepath,
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 2, 92, 123),
+              ),
+            ),
+
+/*
+UserAccountsDrawerHeader(
+  accountName: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        '$firsttname $lastttname',
+        style: TextStyle(
+          fontSize: 18, // Adjust the font size of the account name
+          color: Colors.white,
+        ),
+      ),
+      SizedBox(height: 10), // Adjust the height of the SizedBox
+    ],
+  ),
+  accountEmail: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        '$emailbefore',
+        style: TextStyle(
+          fontSize: 18, // Adjust the font size of the account email
+          color: Colors.white,
+        ),
+      ),
+      SizedBox(height: 10), // Adjust the height of the SizedBox
+    ],
+  ),
+  currentAccountPicture: Column(
+    crossAxisAlignment: CrossAxisAlignment.center, // Adjusted the crossAxisAlignment to center
+    children: [
+      CircleAvatar(
+        radius: 60, // Reduce the radius of the CircleAvatar
+        child: ClipOval(
+          child: Image.asset(
+            'images/icon/userprofile.png',
+            fit: BoxFit.cover, // Ensure the image covers the entire circular area
+          ),
+        ),
+      ),
+      SizedBox(height: 10), // Adjust the height of the SizedBox
+    ],
+  ),
+  decoration: BoxDecoration(
+    color: Color.fromARGB(255, 2, 92, 123),
+  ),
+),
+*/
+//
+            SizedBox(height: 20),
+            ListTile(
+              leading: Icon(Icons.account_circle,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                '8'.tr,
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    //   color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () async {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfile()),
+                );
+              },
+            ), // SettingsPage
+            Visibility(
+              visible: isPressTosearch || isPressTosearchButton,
+              child: ListTile(
+                  leading: Icon(Icons.arrow_back_ios_new,
+                      size: 24, color: Color.fromARGB(255, 2, 92, 123)),
+                  title: Text(
+                    "137".tr,
+                    style: GoogleFonts.aBeeZee(
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        //  color: Color.fromARGB(255, 2, 92, 123),
+                      ),
+                    ),
+                  ),
+                  onTap: () => {
+                        isPressTosearch = false,
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
                         ),
-                      )
-                    : (UserProfileState.imagesayyya == null)
-                        ? CircleAvatar(
-                            radius: 200,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.asset(
-                                'images/icon/profile.jpg',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          )
-                        : CircleAvatar(
-                            radius: 200,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: SizedBox(
-                                width: 160,
-                                height: 160,
-                                child: Image.file(
-                                  UserProfileState.imagesayyya!,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                          ),*/
+                        // Navigator.pop(context),
+                      } //print('Notifications'),
+                  ),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                '62'.tr,
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    // color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () //async
+                  {
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => SettingsPage()),
+                // );
+                Get.to(() => SettingsPage());
+              },
+            ),
+            ListTile(
+              leading: Icon(IconsaxBold.bag,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                '144'.tr,
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    //  color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () {
+                Get.to(() => SellarPage());
+              },
+            ),
+            //new
+            ListTile(
+              leading: Icon(Icons.monetization_on,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                'Select Currency',
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    // color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () //async
+                  {
+                // Navigator.pushReplacement(
+                //  context,
+                //  MaterialPageRoute(builder: (context) => currency()),
+                // );
+
+                Get.to(() => currency());
+              },
+            ),
+
+            // admin ********************
+
+            if (Login.usertypee == 'Admin')
+              ListTile(
+                leading: Icon(Icons.admin_panel_settings,
+                    size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+                title: Text(
+                  'Admin Dashboard',
+                  style: GoogleFonts.aBeeZee(
+                    textStyle: TextStyle(
+                      fontSize: 18,
+                      // color: Color.fromARGB(255, 2, 92, 123),
+                    ),
+                  ),
+                ),
+                onTap: () //async
+                    {
+                  // Navigator.pushReplacement(
+                  //  context,
+                  //  MaterialPageRoute(builder: (context) => currency()),
+                  // );
+
+                  Get.to(() => AdminDashboard());
+                },
+              ),
+
+            //   },
+
+            // admin ***********************
+            ListTile(
+              leading: Icon(Icons.logout,
+                  size: 30, color: Color.fromARGB(255, 2, 92, 123)),
+              title: Text(
+                '60'.tr,
+                style: GoogleFonts.aBeeZee(
+                  textStyle: TextStyle(
+                    fontSize: 18,
+                    //  color: Color.fromARGB(255, 2, 92, 123),
+                  ),
+                ),
+              ),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
+              },
+            ),
+          ],
+        ),
+
+        /*
+        IconButton(
+          icon: Icon(Icons.exit_to_app),
+          onPressed: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Login()),
+            );
+          },
+        ),*/
+      ),
+
+*/
+// drawerrrrrrr ibtisammm
+// menu update *******************************************************
+
+      //appBar: buildAppBar(context),
 
       body: SafeArea(
         //SingleChildScrollView(
@@ -1182,94 +1390,8 @@ class HomePageState extends State<HomePage> {
   }
 
   /// add category ibtisam new admin ************************************
-/*
-  Widget buildCategoryCard(Category category, BuildContext context) {
-    double containerWidth = MediaQuery.of(context).size.width;
 
-    if (containerWidth < 500) {
-      return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: GestureDetector(
-          onTap: () {
-            CategorySelected = category.name;
-            // Navigate to a new page when the image is tapped
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ScreenCategory(category)),
-            );
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // ClipRRect
-              ClipOval(
-                // borderRadius: BorderRadius.circular(14),
-                child: Image.asset(
-                  category.imagePath,
-                  width: 100, // Adjust the width as needed
-                  height: 100, // Adjust the height as needed
-                  fit: BoxFit.cover,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                category.name,
-                style: GoogleFonts.aBeeZee(
-                  textStyle: TextStyle(
-                    color: Color.fromARGB(255, 72, 81, 81),
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                // ibt
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ), //,
-      ); // ibt
-    } else {
-      return // Padding(
-
-          //  padding: const EdgeInsets.all(10.0),
-          //  child:
-          GestureDetector(
-        onTap: () {
-          CategorySelected = category.name;
-          // Navigate to a new page when the image is tapped
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ScreenCategory(category)),
-          );
-        },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // ClipRRect
-            ClipOval(
-              // borderRadius: BorderRadius.circular(14),
-              child: Image.asset(
-                category.imagePath,
-                width: 100, // Adjust the width as needed
-                height: 100, // Adjust the height as needed
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              category.name,
-              // ibt
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ); //,
-      // );/
-
-      // end else
-    }
-  }*/
-
+// image update
 // new
 
   Widget buildCategoryRow(List<Category> categories, BuildContext context) {
@@ -1617,9 +1739,6 @@ class HomePageState extends State<HomePage> {
       ///aya
       int userId) {
     List<int> bytes = List<int>.from(imagePath['data']);
-    if (type == "free" || type == "Free" || type == "مجاني") {
-      price = 'Free';
-    }
 
     /// aya
     final isSelfProduct = Login.idd == userId;
@@ -1835,12 +1954,6 @@ class HomePageState extends State<HomePage> {
                           if (type == 'Free' ||
                               type == 'free' ||
                               type == 'مجاني') {
-                            print(' Free home ${type}');
-                            typeOfProductForRating = type;
-                            idOfProductForRating = productId;
-                            nameOfProductForRating = itemName;
-                            imageOfProductForRating = imagePath;
-
                             print('********* the state:$type');
                             showModalBottomSheet(
                               context: context,
@@ -1855,17 +1968,6 @@ class HomePageState extends State<HomePage> {
                               },
                             );
                           } else {
-                            print('  Not Free home ${type}');
-                            typeOfProductForRating = type;
-                            if (quantity == 1) {
-                              Duration delay = Duration(minutes: 2);
-
-                              Timer(delay, () async {
-                                triggerNotificationFromPages(
-                                    '[Private Reminder]',
-                                    "An item ${itemName} in your cart is nearly out of stock. Shop it before it sells out.");
-                              });
-                            }
                             //print(_cartCount);
 
                             HomePageState.InteractionOfUser(
@@ -1898,9 +2000,6 @@ class HomePageState extends State<HomePage> {
       String delivery,
       String avgRate,
       int userId) {
-    if (type == "free" || type == "Free" || type == "مجاني") {
-      price = 'Free';
-    }
     List<int> bytes = List<int>.from(imagePath['data']);
     final isSelfProduct = Login.idd == userId;
     ValueNotifier<bool> isInWishlist = ValueNotifier<bool>(false);
@@ -2104,12 +2203,6 @@ class HomePageState extends State<HomePage> {
                             if (type == 'Free' ||
                                 type == 'free' ||
                                 type == 'مجاني') {
-                              print(' Free home ${type}');
-                              typeOfProductForRating = type;
-                              idOfProductForRating = productId;
-                              nameOfProductForRating = itemName;
-                              imageOfProductForRating = imagePath;
-
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
@@ -2123,17 +2216,6 @@ class HomePageState extends State<HomePage> {
                                 },
                               );
                             } else {
-                              print('  Not Free home ${type}');
-                              typeOfProductForRating = type;
-                              if (quantity == 1) {
-                                Duration delay = Duration(minutes: 2);
-
-                                Timer(delay, () async {
-                                  triggerNotificationFromPages(
-                                      '[Private Reminder]',
-                                      "An item ${itemName} in your cart is nearly out of stock. Shop it before it sells out.");
-                                });
-                              }
                               HomePageState.InteractionOfUser(
                                   Login.idd, productId, 0, 1, 0);
                               RecentSingleProdState.shoppingCartStore('1', '',
@@ -2710,33 +2792,6 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  static Future<Map<String, dynamic>?> getImageOfUser(int userId) async {
-    http.Response? response;
-    print('&&&&&&&&&&&&&&&&&&&&7 in  getImageOfUser $userId');
-
-    try {
-      response = await http.get(Uri.parse(
-          'http://$ip:3000/tradetryst/user/getProfileImage?userId=$userId'));
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        dynamic responseData = jsonDecode(response.body);
-
-        if (responseData is Map<String, dynamic> &&
-            responseData.containsKey('results')) {
-          userDetails =
-              List<Map<String, dynamic>>.from(responseData['results']);
-        } else {
-          print('Failed to fetch cart.');
-        }
-      } else {
-        print('Failed to fetch cart. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print(' Response body: '); //${response?.body}
-      // throw Exception('Failed to fetch data: $e');
-    }
-    return null;
   }
 
   ///////////// new  view, addToCart, purchased

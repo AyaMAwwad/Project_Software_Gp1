@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/menu.dart';
 import 'package:project/src/screen/wishlist_page.dart';
 import 'package:project/widgets/add_product.dart';
 import 'package:project/widgets/app_bar.dart';
@@ -24,30 +25,7 @@ class CartShopState extends State<CartShop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        //child: CustemAppBar(),
-        child: Column(
-          children: [
-            IconButton(
-              icon: Icon(Icons.exit_to_app),
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pushReplacementNamed(
-                    "homepagee"); // This will pop the current route (Drawer)
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: menu(),
       body: SafeArea(
         child: Column(
           children: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/src/screen/AddCategory.dart';
 import 'package:project/src/screen/rolemanagement.dart';
 import 'package:project/src/screen/usermanagement.dart';
 
@@ -14,7 +15,7 @@ class AdminDashboard extends StatelessWidget {
     }
 
     int crossAxisCount = 2;
-    double crosses  = 0.0;
+    double crosses = 0.0;
     if (containerWidth > 1000) {
       crossAxisCount = 4;
       crosses = 1.4;
@@ -48,7 +49,7 @@ class AdminDashboard extends StatelessWidget {
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 36, 80, 95),//Color.fromARGB(255, 95, 150, 168),
+            color: Color(0xFF24505F), //Color.fromARGB(255, 95, 150, 168),
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20),
@@ -74,7 +75,7 @@ class AdminDashboard extends StatelessWidget {
         ),
       ),
 
-     /*appBar: AppBar(
+      /*appBar: AppBar(
   title: Text(
     'Admin Dashboard',
     style: TextStyle(
@@ -96,20 +97,18 @@ class AdminDashboard extends StatelessWidget {
   ],
 ),*/
 
-
-
-
-
-       body: LayoutBuilder(
+      body: LayoutBuilder(
         builder: (context, constraints) {
           return Column(
             children: [
-              if(containerWidth >1000)
-              SizedBox(height: 50),  // Add space after AppBar
+              if (containerWidth > 1000)
+                SizedBox(height: 50), // Add space after AppBar
               Expanded(
                 child: Center(
                   child: Container(
-                    width: constraints.maxWidth > 1000 ? 1000 : constraints.maxWidth,
+                    width: constraints.maxWidth > 1000
+                        ? 1000
+                        : constraints.maxWidth,
                     child: GridView.count(
                       crossAxisCount: constraints.maxWidth > 1000 ? 3 : 2,
                       padding: EdgeInsets.all(8.0),
@@ -130,12 +129,20 @@ class AdminDashboard extends StatelessWidget {
                           },
                         ),
                         AdminDashboardCard(
+                          title: 'Create Category',
+                          icon: Icons.category,
+                          onTap: () {
+                            Get.to(() => AddCategoryPage());
+                          },
+                        ),
+                        /*  AdminDashboardCard(
                           title: 'Activity Logs',
                           icon: Icons.list,
                           onTap: () {
-                            Navigator.pushNamed(context, '/activity_logs');
+                         //   Navigator.pushNamed(context, '/activity_logs');
+                          Get.to(() => AddCategoryPage());
                           },
-                        ),
+                        ), */
                         // Add more cards as needed
                       ],
                     ),
@@ -155,7 +162,8 @@ class AdminDashboardCard extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  AdminDashboardCard({required this.title, required this.icon, required this.onTap});
+  AdminDashboardCard(
+      {required this.title, required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
