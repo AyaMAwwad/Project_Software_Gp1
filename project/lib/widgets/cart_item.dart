@@ -40,6 +40,7 @@ class CartItemState extends State<CartItem> {
   }
 
   ////////
+  static bool flagIsOrder = false;
   static String selectedCurr = Providercurrency.selectedCurrency;
   String prevselectedCurr = 'ILS';
   static String getsymbol() {
@@ -95,7 +96,8 @@ class CartItemState extends State<CartItem> {
     return totalPrice;
   }
 
-  void deleteProduct(int index) {
+  void deleteProduct(int index, int idproduct) {
+    print(' in delete product from fronend id: $idproduct');
     setState(() {
       if (index < productInCart.length) productInCart.removeAt(index);
       if (index < allProductDetails.length) allProductDetails.removeAt(index);
@@ -139,7 +141,7 @@ class CartItemState extends State<CartItem> {
     fetchCart();
   }
 
-  static double? amount;
+  static double amount = 0.0;
   void fetchCart() async {
     getsymbol();
     await getProductCart(Login.idd);
@@ -414,6 +416,7 @@ merchantCountryCode: 'US', testEnv: true,
                 CustomeButton2(
                   text: "150".tr,
                   onPressed: () async {
+                    flagIsOrder = true;
                     /* DeliveryPageState.onPressedSuccess = () {
                       refreshCart();
                     };*/
@@ -737,10 +740,16 @@ merchantCountryCode: 'US', testEnv: true,
                                               ),
                                               ElevatedButton(
                                                 onPressed: () {
-                                                  deleteProduct(index);
-                                                  Navigator.of(context).pop();
                                                   getProductTypeState(
-                                                      productId!);
+                                                      productInCart[index]
+                                                          ['product_id']);
+                                                  deleteProduct(
+                                                      index,
+                                                      productInCart[index]
+                                                          ['product_id']);
+
+                                                  Navigator.of(context).pop();
+
                                                   fetchCart();
                                                 },
                                                 style: ElevatedButton.styleFrom(
@@ -833,6 +842,7 @@ merchantCountryCode: 'US', testEnv: true,
 
 ////////////////////// delete
   Future<Map<String, dynamic>?> getProductTypeState(int productid) async {
+    print(' DELETE FROM SHOPPING CART WITH ID : $productid');
     http.Response? response;
 
     try {

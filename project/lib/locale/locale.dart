@@ -248,12 +248,12 @@ class mylocale implements Translations {
           "151":
               "Do you want to recive the product or delivery by our service?",
           "152": "Free [Recive product]",
-          "153": "The product will Deliver you from sellar.",
+          "153": "The product will Deliver you from seller.",
           "154": "The product will deliver you from our service delivery.",
           "155":
-              "Details of your information as address and phone number that we will provide to the Sellar to deliver product to you.",
+              "Details of your information as address and phone number that we will provide to the Seller to deliver product to you.",
           "156": "Our service delivery will deliver the product to you.",
-          "157": "Sellar",
+          "157": "Seller",
           "158": "Phone",
           "159": "Will deliver product with",
           "160": "The Product will deliver you in maximmum three day",

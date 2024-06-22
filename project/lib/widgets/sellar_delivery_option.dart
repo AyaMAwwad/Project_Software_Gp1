@@ -107,6 +107,7 @@ class DeliveryOptionsModalContentState
             SizedBox(height: 20),
             RadioListTile(
               selectedTileColor: Color.fromARGB(255, 2, 92, 123),
+              activeColor: Color.fromARGB(255, 2, 92, 123),
               title: Text(
                 '147'.tr,
                 style: GoogleFonts.aBeeZee(

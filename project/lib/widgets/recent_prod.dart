@@ -1,14 +1,17 @@
 // ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unnecessary_brace_in_string_interps, prefer_interpolation_to_compose_strings, unnecessary_string_interpolations
 // ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, unnecessary_brace_in_string_interps, prefer_interpolation_to_compose_strings, unnecessary_string_interpolations
 
+import 'dart:async';
 import 'dart:typed_data';
 import 'package:another_flushbar/flushbar.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:project/src/app.dart';
 import 'package:project/src/chat/chat_service.dart';
 import 'package:project/src/screen/chat_page.dart';
 import 'package:project/src/screen/detailpage.dart';
@@ -17,7 +20,9 @@ import 'package:project/src/screen/ipaddress.dart';
 
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/multiLanguage.dart';
+import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
+import 'package:project/src/screen/payment.dart';
 import 'package:project/src/screen/product_page.dart';
 import 'package:project/src/screen/wishlist_page.dart';
 import 'package:project/widgets/cart_shop.dart';
@@ -658,6 +663,7 @@ class RecentSingleProd extends StatefulWidget {
 
 class RecentSingleProdState extends State<RecentSingleProd> {
   final ChatService chatService = ChatService();
+
   @override
   Widget build(BuildContext context) {
     print('the widget.recent_prod_quantity : ${widget.recent_prod_quantity}');
@@ -858,6 +864,13 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                                 RecentProd.thestate == 'free' ||
                                 RecentProd.thestate == 'مجاني') {
                               print(
+                                  ' Free widget.recent_prod_state ${widget.recent_prod_state}');
+                              typeOfProductForRating = widget.recent_prod_state;
+                              idOfProductForRating =
+                                  widget.recent_prod_productId;
+                              nameOfProductForRating = widget.recet_prod_name;
+                              imageOfProductForRating = widget.recet_prod_image;
+                              print(
                                   '******* the RecentProd.thestate:${RecentProd.thestate}');
                               showModalBottomSheet(
                                 context: context,
@@ -872,7 +885,28 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                                   );
                                 },
                               );
+                              /*  showRatingDialog(
+                                  widget.recent_prod_productId,
+                                  widget.recet_prod_image,
+                                  widget.recet_prod_name);*/
                             } else {
+                              if (widget.recent_prod_quantity == 1) {
+                                Duration delay = Duration(minutes: 2);
+                                print(
+                                    '  Not Free widget.recent_prod_state ${widget.recent_prod_state}');
+                                typeOfProductForRating =
+                                    widget.recent_prod_state;
+
+                                Timer(delay, () async {
+                                  triggerNotificationFromPages(
+                                      '[Private Reminder]',
+                                      "An item ${widget.recet_prod_name} in your cart is nearly out of stock. Shop it before it sells out.");
+                                });
+                              }
+                              print(
+                                  '  Not Free widget.recent_prod_state ${widget.recent_prod_state}');
+                              typeOfProductForRating = widget.recent_prod_state;
+
                               HomePageState.InteractionOfUser(Login.idd,
                                   widget.recent_prod_productId, 0, 1, 0);
                               await shoppingCartStore(
@@ -903,6 +937,183 @@ class RecentSingleProdState extends State<RecentSingleProd> {
           ),
         ),
       ),
+    );
+  }
+
+  static void showRatingDialog(int id, dynamic img, String name) {
+    final context = navigatorKey.currentState?.overlay?.context;
+    if (context == null) {
+      return;
+    }
+
+    List<Map<String, dynamic>> ratings = [];
+    TextEditingController feedbackController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        // final productInCart = Payment.productCart;
+
+        //  final item = productInCart.first;
+
+        // final imageData = img['image'];
+        print('&&&&&&&&&&&&&&&&&img  $img');
+        final bytes = List<int>.from(img['data']);
+        double rating = 3.0;
+
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: 500),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Hi ${Login.first_name} ${Login.last_name}',
+                      style: GoogleFonts.aBeeZee(
+                        textStyle: TextStyle(
+                          color: Color.fromARGB(255, 2, 92, 123),
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Thank you for purchasing from Tryde Tryst! We hope you\'re enjoying it.',
+                      style: GoogleFonts.aBeeZee(
+                        textStyle: TextStyle(
+                          color: Color.fromARGB(255, 105, 105, 105),
+                          fontSize: 16,
+                        ),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      name,
+                      style: GoogleFonts.aBeeZee(
+                        textStyle: TextStyle(
+                          color: Color.fromARGB(255, 2, 92, 123),
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: SizedBox(
+                        width: 120,
+                        height: 70,
+                        child: Image.memory(
+                          Uint8List.fromList(bytes),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    RatingBar.builder(
+                      initialRating: rating,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemSize: 25,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: (value) {
+                        rating = value;
+                        int existingIndex = ratings
+                            .indexWhere((entry) => entry['product_id'] == id);
+
+                        if (existingIndex != -1) {
+                          ratings[existingIndex]['rating'] = value;
+                        } else {
+                          ratings.add({'product_id': id, 'rating': value});
+                        }
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    TextField(
+                      controller: feedbackController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        labelText: 'Additional Notes',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Color.fromARGB(255, 51, 27, 27),
+                            side: BorderSide(
+                              color: Color.fromARGB(255, 112, 112, 112),
+                            ),
+                            textStyle: TextStyle(fontSize: 16.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 24.0, vertical: 8.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            String additionalNotes = feedbackController.text;
+                            Payment.submitRating(ratings);
+                            Navigator.of(context).pop();
+                            Future.delayed(Duration(milliseconds: 200), () {
+                              Flushbar(
+                                message: "Thank you for your feedback",
+                                duration: Duration(seconds: 3),
+                                margin: EdgeInsets.all(8),
+                                borderRadius: BorderRadius.circular(8),
+                              ).show(context);
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 2, 92, 123),
+                            textStyle: TextStyle(fontSize: 16.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 24.0, vertical: 8.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: Text(
+                            'Submit',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

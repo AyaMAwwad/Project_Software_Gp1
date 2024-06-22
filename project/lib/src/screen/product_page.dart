@@ -355,6 +355,7 @@ class ProductPageState extends State<ProductPage> {
                 );
                 break;
               case 3:
+                CartState().resetCart();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => CartShop()),

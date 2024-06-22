@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/payment.dart';
 import 'package:project/src/screen/providercurrency.dart';
 import 'package:project/widgets/button_2.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/widgets/cart_item.dart';
+import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_page.dart';
 import 'package:project/src/screen/ipaddress.dart';
 
@@ -58,7 +61,7 @@ class DeliveryPageState extends State<DeliveryPage> {
     }
   }
 
-  double totalAmount = CartItemState.amount!;
+  double totalAmount = CartItemState.amount;
   @override
   Widget build(BuildContext context) {
     print("*****isFree: ${widget.isFree} ");
@@ -260,8 +263,13 @@ class DeliveryPageState extends State<DeliveryPage> {
                   fetchDelivery();
                   if (!widget.isFree) {
                     try {
+                      print(
+                          'out if TotalpriceWithDelivery ; ${TotalpriceWithDelivery.split(" ")[2]}');
                       if (selectedOption == 'system_delivery') {
-                        totalAmount = totalAmount + 20;
+                        double total =
+                            double.parse(TotalpriceWithDelivery.split(" ")[2]);
+                        totalAmount = total + 0;
+                        print('in if TotalpriceWithDelivery ; $total');
                       }
                       Payment.onPaymentSuccess = widget.onPaymentSuccess;
                       Payment.makePayment(
@@ -272,8 +280,22 @@ class DeliveryPageState extends State<DeliveryPage> {
                       print('Error initializing payment sheet: $e');
                     }
                   }
+                  print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+                  if (widget.isFree) {
+                    Duration delay = Duration(minutes: 10);
 
+                    Timer(delay, () async {
+                      triggerNotificationFromPages('Rating Products',
+                          "We'd Love Your Feedback on Your Recent Order On The Free Product!");
+                    });
+                  }
                   Navigator.pop(context, selectedOption);
+
+/*
+                  RecentSingleProdState.showRatingDialog(
+                      RecentSingleProdState.id,
+                      RecentSingleProdState.image,
+                      RecentSingleProdState.name);*/
                 },
               ),
             ),

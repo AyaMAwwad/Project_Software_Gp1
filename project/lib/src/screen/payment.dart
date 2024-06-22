@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:another_flushbar/flushbar.dart';
@@ -14,6 +15,8 @@ import 'package:project/src/app.dart';
 import 'package:project/src/screen/home_page.dart';
 
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/notification_send_msg.dart';
+import 'package:project/src/screen/providercurrency.dart';
 import 'package:project/widgets/cart_item.dart';
 import 'dart:typed_data';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,15 +24,35 @@ import 'package:google_fonts/google_fonts.dart';
 class Payment {
   static Map<String, dynamic>? paymentIntent;
   static bool isPay = false;
+  static List<int> selectedListToPay = [];
+  static List<Map<String, dynamic>> productCart = [];
   //
   static Function()? onPaymentSuccess;
 
   static void makePayment(
       BuildContext context, double amount, int productId) async {
+    print(' in makePayment ');
+    print(amount);
+    String merchantCountryCode = "IL";
+    String currencyCode = "ILS";
+    if (Providercurrency.selectedCurrency == "USD") {
+      merchantCountryCode = "UD";
+      currencyCode = "USD";
+    } else if (Providercurrency.selectedCurrency == "DIN") {
+      merchantCountryCode = "JO";
+      currencyCode = "JOD";
+    } else if (Providercurrency.selectedCurrency == "ILS") {
+      merchantCountryCode = "IL";
+      currencyCode = "ILS";
+    }
+    print(merchantCountryCode);
+    print(currencyCode);
     try {
-      paymentIntent = await createPaymentIntent(amount, context);
+      paymentIntent = await createPaymentIntent(amount, context, currencyCode);
       var gPay = PaymentSheetGooglePay(
-          merchantCountryCode: "US", currencyCode: "USD", testEnv: true);
+          merchantCountryCode: merchantCountryCode,
+          currencyCode: currencyCode,
+          testEnv: true);
       await Stripe.instance.initPaymentSheet(
           paymentSheetParameters: SetupPaymentSheetParameters(
         paymentIntentClientSecret: paymentIntent!["client_secret"],
@@ -47,6 +70,8 @@ class Payment {
       print('***********before');
       await Stripe.instance.presentPaymentSheet();
       print('***********after');
+      selectedListToPay = CartItemState.selectedListOfUserToPay;
+      productCart = CartItemState.productInCart;
       /* ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           "payment Done",
@@ -56,7 +81,18 @@ class Payment {
       ));*/
       String? gg = CartItemState.deliveryOption;
       await updateQuantityOfProduct(CartItemState.selectedListOfUserToPay);
-      showRatingDialog();
+
+      //showRatingDialog();
+      // for (int i = 0; i < 10; i++) {
+
+      Duration delay = Duration(minutes: 10);
+
+      Timer(delay, () async {
+        triggerNotificationFromPages('Rating Products',
+            "We'd Love Your Feedback on Your Recent Purchase!");
+      });
+
+      // }
       await StoreToPay(
           Login.idd, amount, 'visa', CartItemState.selectedListOfUserToPay, gg);
       await deleteProductPaidFromShopCart(
@@ -105,14 +141,16 @@ class Payment {
     // cart.functionPayed();
   }
 
-  static createPaymentIntent(double amount, BuildContext context) async {
+  static createPaymentIntent(
+      double amount, BuildContext context, String currencyCode) async {
     try {
       print(amount);
+      print(currencyCode);
       final secretKey = dotenv.env["STRIPE_SECRET_KEY"]!;
       int amountInCents = (amount * 100).toInt();
       Map<String, dynamic> body = {
         "amount": amountInCents.toString(),
-        "currency": "USD",
+        "currency": currencyCode,
       };
       http.Response response = await http.post(
         Uri.parse("https://api.stripe.com/v1/payment_intents"),
@@ -246,18 +284,20 @@ class Payment {
     }
 
     List<Map<String, dynamic>> ratings = [];
+    TextEditingController feedbackController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (context) {
-        final selectedListOfUserToPay = CartItemState.selectedListOfUserToPay;
-        final productInCart = CartItemState.productInCart;
+        final selectedListOfUserToPay = Payment.selectedListToPay;
+        final productInCart = Payment.productCart;
 
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 400),
+            constraints: BoxConstraints(maxHeight: 500),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: SingleChildScrollView(
@@ -265,7 +305,7 @@ class Payment {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Rate the Products',
+                      'Hi ${Login.first_name} ${Login.last_name}',
                       style: GoogleFonts.aBeeZee(
                         textStyle: TextStyle(
                           color: Color.fromARGB(255, 2, 92, 123),
@@ -276,12 +316,11 @@ class Payment {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'Please rate the products you have purchased.',
+                      'Thank you for purchasing from Tryde Tryst! We hope you\'re enjoying it.',
                       style: GoogleFonts.aBeeZee(
                         textStyle: TextStyle(
                           color: Color.fromARGB(255, 105, 105, 105),
                           fontSize: 16,
-                          //  fontWeight: FontWeight.bold,
                         ),
                       ),
                       textAlign: TextAlign.center,
@@ -307,7 +346,6 @@ class Payment {
                               textStyle: TextStyle(
                                 color: Color.fromARGB(255, 2, 92, 123),
                                 fontSize: 18,
-                                //  fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -353,6 +391,17 @@ class Payment {
                         ],
                       );
                     }).toList(),
+                    TextField(
+                      controller: feedbackController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        labelText: 'Additional Notes',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -364,7 +413,7 @@ class Payment {
                             foregroundColor: Color.fromARGB(255, 51, 27, 27),
                             side: BorderSide(
                               color: Color.fromARGB(255, 112, 112, 112),
-                            ), // Border color
+                            ),
                             textStyle: TextStyle(fontSize: 16.0),
                             padding: EdgeInsets.symmetric(
                                 horizontal: 24.0, vertical: 8.0),
@@ -379,8 +428,17 @@ class Payment {
                         ),
                         ElevatedButton(
                           onPressed: () {
+                            String additionalNotes = feedbackController.text;
                             submitRating(ratings);
                             Navigator.of(context).pop();
+                            Future.delayed(Duration(milliseconds: 200), () {
+                              Flushbar(
+                                message: "Thank you for your feedback",
+                                duration: Duration(seconds: 3),
+                                margin: EdgeInsets.all(8),
+                                borderRadius: BorderRadius.circular(8),
+                              ).show(context);
+                            });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromARGB(255, 2, 92, 123),

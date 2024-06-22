@@ -133,7 +133,17 @@ class SellarPageState extends State<SellarPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: productSellar.isEmpty
-                          ? Center(child: Text("172".tr))
+                          ? Center(
+                              child: Text(
+                              "172".tr,
+                              style: GoogleFonts.aBeeZee(
+                                textStyle: TextStyle(
+                                  color: Color.fromARGB(255, 90, 90, 90),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ))
                           : GridView.builder(
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
