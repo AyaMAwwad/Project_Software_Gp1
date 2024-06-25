@@ -10,6 +10,7 @@ import 'package:ficonsax/ficonsax.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
@@ -22,6 +23,7 @@ import 'package:project/src/screen/home_page.dart';
 //import 'package:project/src/screen/ipaddress.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/src/screen/providercurrency.dart';
+import 'package:project/widgets/order_details_user.dart';
 import 'package:project/widgets/recent_prod.dart';
 
 class SearchPage extends StatelessWidget {
@@ -350,7 +352,13 @@ class SearchPage extends StatelessWidget {
                                                   productData['image'];
                                               print(
                                                   '********* the state:$theState');
-                                              showModalBottomSheet(
+                                              Get.to(() => orederDetailsUSer(
+                                                    deliveryOption: productData[
+                                                        'Delivery_option'],
+                                                    productId: productData[
+                                                        'product_id'],
+                                                  ));
+                                              /*  showModalBottomSheet(
                                                 context: context,
                                                 isScrollControlled: true,
                                                 builder:
@@ -364,7 +372,7 @@ class SearchPage extends StatelessWidget {
                                                     onPaymentSuccess: () {},
                                                   );
                                                 },
-                                              );
+                                              );*/
                                               // DeliveryPage(isFree: true);
                                             } else {
                                               if (productData['quantity'] ==

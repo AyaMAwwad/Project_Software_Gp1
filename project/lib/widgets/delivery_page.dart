@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/payment.dart';
 import 'package:project/src/screen/providercurrency.dart';
@@ -13,6 +15,7 @@ import 'package:project/widgets/cart_item.dart';
 import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_page.dart';
 import 'package:project/src/screen/ipaddress.dart';
+import 'package:project/widgets/textfield_add_prod.dart';
 
 class DeliveryPage extends StatefulWidget {
   final bool isFree;
@@ -76,6 +79,7 @@ class DeliveryPageState extends State<DeliveryPage> {
     String priceWithDelivery = SearchPage.priceprosearch(
         CartItemState.amount! + 20.0, prevselectedCurr);
     String TotalpriceWithDelivery = SearchPage.getsymbol(priceWithDelivery);
+    TextEditingController nameContr = TextEditingController();
 
     return Container(
       decoration: BoxDecoration(
@@ -115,6 +119,66 @@ class DeliveryPageState extends State<DeliveryPage> {
               ),
             ),
             SizedBox(height: 10),
+            /* TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Phone',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.phone,
+            ),
+            SizedBox(height: 16.0),
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Address',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.streetAddress,
+            ),
+            SizedBox(height: 16.0),*/
+            /* 
+           Row(
+              children: [
+                Text(
+                  'Phone',
+                  style: GoogleFonts.aBeeZee(
+                    textStyle: TextStyle(
+                      color: Color.fromARGB(255, 40, 39, 39),
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                custemFieldforProductPage(
+                  hintText: 'Enter Phone Number',
+                  controller: nameContr,
+                  text: '',
+                  validator: (value) {},
+                  width: 12,
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Text(
+                  'Address',
+                  style: GoogleFonts.aBeeZee(
+                    textStyle: TextStyle(
+                      color: Color.fromARGB(255, 40, 39, 39),
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                custemFieldforProductPage(
+                  hintText: 'Enter Address',
+                  controller: nameContr,
+                  text: '',
+                  validator: (value) {},
+                  width: 12,
+                ),
+              ],
+            ),*/
             Text(
               widget.isFree ||
                       (!widget.isFree &&
@@ -263,6 +327,7 @@ class DeliveryPageState extends State<DeliveryPage> {
                   fetchDelivery();
                   if (!widget.isFree) {
                     try {
+                      Navigator.pop(context);
                       print(
                           'out if TotalpriceWithDelivery ; ${TotalpriceWithDelivery.split(" ")[2]}');
                       if (selectedOption == 'system_delivery') {
@@ -288,8 +353,59 @@ class DeliveryPageState extends State<DeliveryPage> {
                       triggerNotificationFromPages('Rating Products',
                           "We'd Love Your Feedback on Your Recent Order On The Free Product!");
                     });
+                    Flushbar(
+                      message: "Order Done",
+                      duration: Duration(seconds: 3),
+                      backgroundColor: Colors.green,
+                      margin: EdgeInsets.all(8),
+                      borderRadius: BorderRadius.circular(8),
+                    ).show(context);
+                    // Get.to(() => HomePage());
+                    //   Navigator.of(context).pop();
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          title: Text(
+                            'Thank you',
+                            style: GoogleFonts.aBeeZee(
+                              textStyle: TextStyle(
+                                color: Color.fromARGB(255, 2, 92, 123),
+                                fontSize: 20,
+
+                                // decoration: TextDecoration.underline,
+                                decorationThickness: 1,
+                                // fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          content: Text(
+                            'You can Track your Order after start the delivery process, we will send notifications to you',
+                            style: GoogleFonts.aBeeZee(
+                              textStyle: TextStyle(
+                                color: Color.fromARGB(255, 1, 3, 4),
+                                fontSize: 14,
+                                decorationThickness: 1,
+                              ),
+                            ),
+                          ),
+                          actions: <Widget>[
+                            CustomeButton2(
+                              text: "Done",
+                              onPressed: () {
+                                Get.to(() => HomePage());
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   }
-                  Navigator.pop(context, selectedOption);
+                  //Navigator.pop(context, selectedOption);
 
 /*
                   RecentSingleProdState.showRatingDialog(

@@ -9,12 +9,14 @@ import 'package:project/src/screen/ipaddress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/order_tracking_page.dart';
 import 'package:project/src/screen/payment.dart';
 import 'package:project/src/screen/providercurrency.dart';
 import 'package:project/widgets/button_2.dart';
 import 'package:project/widgets/delivery_page.dart';
 import 'package:project/widgets/demo_counter.dart';
 import 'package:get/get.dart';
+import 'package:project/widgets/order_details_user.dart';
 import 'package:project/widgets/search_page.dart';
 
 class CartItem extends StatefulWidget {
@@ -23,7 +25,7 @@ class CartItem extends StatefulWidget {
 }
 
 class CartItemState extends State<CartItem> {
-  void _showDeliveryModal(
+  void showDeliveryModal(
       BuildContext context, String deliveryOption, int productId) {
     showModalBottomSheet(
       context: context,
@@ -423,8 +425,12 @@ merchantCountryCode: 'US', testEnv: true,
                     Payment.onPaymentSuccess = () {
                       refreshCart();
                     };
+                    Get.to(() => orederDetailsUSer(
+                          deliveryOption: deliveryOption!,
+                          productId: productId!,
+                        ));
                     //  try {
-                    _showDeliveryModal(context, deliveryOption!, productId!);
+                    //  showDeliveryModal(context, deliveryOption!, productId!);
                     /* Payment.onPaymentSuccess = () {
                         refreshCart();
                       };

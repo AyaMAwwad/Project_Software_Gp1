@@ -72,9 +72,10 @@ dependencies:
   another_flushbar: ^1.12.30
   fl_chart: ^0.68.0
   path: any
-  #flutter_polyline_points: ^2.0.0
-  # google_maps_flutter: ^2.6.1
-  #location: ^6.0.2
+  google_maps_flutter: ^2.6.1
+  flutter_polyline_points: ^2.0.0
+  location: ^6.0.2
+  geolocator: ^12.0.0
  # flutter_svg: ^2.0.10+1
  
 
