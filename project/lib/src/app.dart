@@ -17,6 +17,7 @@ import 'package:project/src/screen/settings.dart';
 
 import 'package:project/src/screen/signup_screen.dart';
 import 'package:project/widgets/cart_shop.dart';
+import 'package:project/widgets/order_details_user.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 

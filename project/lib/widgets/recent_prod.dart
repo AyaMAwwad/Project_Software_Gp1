@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:project/src/app.dart';
@@ -24,10 +25,12 @@ import 'package:project/src/screen/notification_send_msg.dart';
 import 'package:project/src/screen/open_chat_with_sellar.dart';
 import 'package:project/src/screen/payment.dart';
 import 'package:project/src/screen/product_page.dart';
+import 'package:project/src/screen/user_select_location.dart';
 import 'package:project/src/screen/wishlist_page.dart';
 import 'package:project/widgets/cart_shop.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:project/widgets/order_details_user.dart';
 import 'package:project/widgets/search_page.dart';
 import 'package:ficonsax/ficonsax.dart';
 import 'package:flutter/cupertino.dart';
@@ -865,14 +868,20 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                                 RecentProd.thestate == 'مجاني') {
                               print(
                                   ' Free widget.recent_prod_state ${widget.recent_prod_state}');
-                              typeOfProductForRating = widget.recent_prod_state;
+                              typeOfProductForRating = RecentProd.thestate!;
                               idOfProductForRating =
                                   widget.recent_prod_productId;
                               nameOfProductForRating = widget.recet_prod_name;
                               imageOfProductForRating = widget.recet_prod_image;
                               print(
                                   '******* the RecentProd.thestate:${RecentProd.thestate}');
-                              showModalBottomSheet(
+                              //   Get.to(() => userSelectLocation());orederDetailsUSer
+                              Get.to(() => orederDetailsUSer(
+                                    deliveryOption:
+                                        widget.recent_prod_deliveryoption!,
+                                    productId: widget.recent_prod_productId!,
+                                  ));
+                              /* showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
                                 builder: (BuildContext context) {
@@ -884,18 +893,10 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                                     onPaymentSuccess: () {},
                                   );
                                 },
-                              );
-                              /*  showRatingDialog(
-                                  widget.recent_prod_productId,
-                                  widget.recet_prod_image,
-                                  widget.recet_prod_name);*/
+                              );*/
                             } else {
                               if (widget.recent_prod_quantity == 1) {
                                 Duration delay = Duration(minutes: 2);
-                                print(
-                                    '  Not Free widget.recent_prod_state ${widget.recent_prod_state}');
-                                typeOfProductForRating =
-                                    widget.recent_prod_state;
 
                                 Timer(delay, () async {
                                   triggerNotificationFromPages(
@@ -903,9 +904,8 @@ class RecentSingleProdState extends State<RecentSingleProd> {
                                       "An item ${widget.recet_prod_name} in your cart is nearly out of stock. Shop it before it sells out.");
                                 });
                               }
-                              print(
-                                  '  Not Free widget.recent_prod_state ${widget.recent_prod_state}');
-                              typeOfProductForRating = widget.recent_prod_state;
+
+                              // typeOfProductForRating = widget.recent_prod_state;
 
                               HomePageState.InteractionOfUser(Login.idd,
                                   widget.recent_prod_productId, 0, 1, 0);

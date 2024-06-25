@@ -44,6 +44,7 @@ import 'package:project/widgets/app_bar.dart';
 import 'package:project/widgets/bottom_nav.dart';
 import 'package:project/widgets/cart_shop.dart';
 import 'package:project/widgets/enam.dart';
+import 'package:project/widgets/order_details_user.dart';
 import 'package:project/widgets/recent_prod.dart';
 import 'package:project/widgets/search_app.dart';
 import 'package:project/widgets/search_page.dart';
@@ -1842,7 +1843,11 @@ class HomePageState extends State<HomePage> {
                             imageOfProductForRating = imagePath;
 
                             print('********* the state:$type');
-                            showModalBottomSheet(
+                            Get.to(() => orederDetailsUSer(
+                                  deliveryOption: delivery!,
+                                  productId: productId,
+                                ));
+                            /*  showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
                               builder: (BuildContext context) {
@@ -1853,7 +1858,7 @@ class HomePageState extends State<HomePage> {
                                   onPaymentSuccess: () {},
                                 );
                               },
-                            );
+                            );*/
                           } else {
                             print('  Not Free home ${type}');
                             typeOfProductForRating = type;
@@ -2109,7 +2114,11 @@ class HomePageState extends State<HomePage> {
                               idOfProductForRating = productId;
                               nameOfProductForRating = itemName;
                               imageOfProductForRating = imagePath;
-
+                              Get.to(() => orederDetailsUSer(
+                                    deliveryOption: delivery!,
+                                    productId: productId,
+                                  ));
+/*
                               showModalBottomSheet(
                                 context: context,
                                 isScrollControlled: true,
@@ -2121,7 +2130,7 @@ class HomePageState extends State<HomePage> {
                                     onPaymentSuccess: () {},
                                   );
                                 },
-                              );
+                              );*/
                             } else {
                               print('  Not Free home ${type}');
                               typeOfProductForRating = type;

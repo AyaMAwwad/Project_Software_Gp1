@@ -1,7 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
@@ -9,77 +8,27 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/widgets/button_2.dart';
-import 'package:provider/provider.dart';
 
-class OrderTrackingPage extends StatefulWidget {
+class userSelectLocation extends StatefulWidget {
   @override
-  State<OrderTrackingPage> createState() => OrderTrackingPageState();
+  State<userSelectLocation> createState() => userSelectLocationState();
 }
 
-class OrderTrackingPageState extends State<OrderTrackingPage> {
-  //final Completer<GoogleMapController> controller = Completer();
+class userSelectLocationState extends State<userSelectLocation> {
   GoogleMapController? gmc;
   static double? firstLatLng;
   static double? secondLatLng;
-  StreamSubscription<Position>? positionStream;
-  List<Marker> marker = [
-    /*  Marker(
-      markerId: MarkerId("1"),
-      position: LatLng(32.161301, 35.283588),
-    ),
-    Marker(
-      markerId: MarkerId("2"),
-      position: LatLng(32.222668, 35.262146),
-    ),*/
-  ];
+  List<Marker> marker = [];
   bool _dialogShown = false;
-  void initSream() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.whileInUse) {
-      positionStream =
-          Geolocator.getPositionStream().listen((Position? position) {
-        marker.add(
-          Marker(
-            markerId: MarkerId("2"),
-            position: LatLng(position!.latitude, position.longitude),
-          ),
-        );
-        setState(() {});
-      });
-    }
-  }
-
   @override
   void initState() {
-    initSream();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _showLocationDialog());
   }
 
-  @override
-  void dispose() {
-    positionStream!.cancel();
-    super.dispose();
-  }
-
   void _showLocationDialog() {
     if (!_dialogShown) {
-      _dialogShown = true; // Set flag to true after showing dialog
+      _dialogShown = true;
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -166,7 +115,17 @@ class OrderTrackingPageState extends State<OrderTrackingPage> {
                     borderRadius: BorderRadius.circular(8),
                   ).show(context);
                 } else {
-                  showDialog(
+                  firstLatLng = null;
+                  secondLatLng = null;
+                  /*  Flushbar(
+                    message: "Your Location has been saved successfully",
+                    duration: Duration(seconds: 3),
+                    backgroundColor: Colors.green,
+                    margin: EdgeInsets.all(8),
+                    borderRadius: BorderRadius.circular(8),
+                  ).show(context);*/
+                  Navigator.of(context).pop();
+                  /* showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
@@ -193,9 +152,8 @@ class OrderTrackingPageState extends State<OrderTrackingPage> {
                               color: Color.fromARGB(255, 1, 3, 4),
                               fontSize: 14,
 
-                              // decoration: TextDecoration.underline,
                               decorationThickness: 1,
-                              // fontWeight: FontWeight.bold,
+                       
                             ),
                           ),
                         ),
@@ -211,7 +169,7 @@ class OrderTrackingPageState extends State<OrderTrackingPage> {
                         ],
                       );
                     },
-                  );
+                  );*/
                 }
               },
               child: Container(
@@ -266,127 +224,3 @@ class OrderTrackingPageState extends State<OrderTrackingPage> {
     );
   }
 }
-  
-
-
-/*
-static const LatLng sourceLocation = LatLng(32.1635515, 35.2877109);
-  static const LatLng destination = LatLng(32.2635515, 35.2077109);
-  List<LatLng> polyLineCoordinates = [];
-  LocationData? currentLocation;
-  BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor currentIcon = BitmapDescriptor.defaultMarker;
-
-  void getCurrentLocation() async {
-    Location location = Location();
-    location.getLocation().then((location) {
-      setState(() {
-        currentLocation = location;
-      });
-      //  print(currentLocation);
-    });
-    GoogleMapController googleMapController = await controller.future;
-/*
-    location.onLocationChanged.listen((newLocation) {
-      currentLocation = newLocation;
-      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-            //  zoom: 13.5,
-            target: LatLng(
-          newLocation.latitude!,
-          newLocation.longitude!,
-        )),
-      ));
-      setState(() {});
-    });*/
-  }
-
-  void getPolyPoint() async {
-    PolylinePoints polylinePoint = PolylinePoints();
-    PolylineResult result = await polylinePoint.getRouteBetweenCoordinates(
-      'AIzaSyDrgXyoZlKMUDQIet_5ywTkLwdPC4BEwYo',
-      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
-    );
-    if (result.points.isNotEmpty) {
-      result.points.forEach(
-        (PointLatLng point) => polyLineCoordinates.add(
-          LatLng(point.latitude, point.longitude),
-        ),
-      );
-    }
-
-    /// setState(() {});
-  }
-
-  void setCustomMarker() {}
-  @override
-  void initState() {
-    getCurrentLocation();
-    getPolyPoint();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Order Tracking'),
-      ),
-      body: currentLocation == null
-          ? Center(
-              child: Text('Loading'),
-            )
-          : GoogleMap(
-              /* mapType: MapType.normal,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-
-              initialCameraPosition: CameraPosition(
-                target: //sourceLocation,
-                    LatLng(0, 0),
-                zoom: 13.5,
-              ),
-              onMapCreated: (GoogleMapController controller) {},*/
-              // mapType: MapType.normal,
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              initialCameraPosition: CameraPosition(
-                target: //sourceLocation,
-                    LatLng(currentLocation!.latitude!,
-                        currentLocation!.longitude!),
-                zoom: 10.5,
-              ),
-              polylines: {
-                Polyline(
-                  polylineId: PolylineId("route"),
-                  points: polyLineCoordinates,
-                  color: Colors.black,
-                  width: 8,
-                ),
-              },
-              markers: {
-                Marker(
-                  markerId: MarkerId("currentLocation"),
-                  position: LatLng(
-                      currentLocation!.latitude!, currentLocation!.longitude!),
-                ),
-                Marker(
-                  markerId: MarkerId("source"),
-                  position: sourceLocation,
-                ),
-                Marker(
-                  markerId: MarkerId("destination"),
-                  position: destination,
-                ),
-              },
-              onMapCreated: (mapController) {
-                gmc = mapController;
-                // controller.complete(mapController);
-              },
-            ),
-    );
-  }
-*/

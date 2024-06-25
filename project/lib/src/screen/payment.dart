@@ -16,10 +16,14 @@ import 'package:project/src/screen/home_page.dart';
 
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
+import 'package:project/src/screen/order_tracking_page.dart';
 import 'package:project/src/screen/providercurrency.dart';
+import 'package:project/src/screen/user_select_location.dart';
+import 'package:project/widgets/button_2.dart';
 import 'package:project/widgets/cart_item.dart';
 import 'dart:typed_data';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project/widgets/cart_shop.dart';
 
 class Payment {
   static Map<String, dynamic>? paymentIntent;
@@ -110,6 +114,65 @@ class Payment {
       if (onPaymentSuccess != null) {
         onPaymentSuccess!();
       }
+      /* showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Color.fromARGB(255, 241, 235, 245),
+            title: Row(
+              children: [
+                Icon(
+                  Icons.map,
+                  color: Color.fromARGB(255, 13, 60, 99),
+                  size: 24,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  "Order Tracking",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 13, 60, 99),
+                    fontSize: 19,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Roboto',
+                    letterSpacing: 1.2,
+                    shadows: [
+                      Shadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        offset: Offset(2, 2),
+                        blurRadius: 2,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            content: Text(
+              'Select your Location in Google Maps',
+              style: GoogleFonts.aBeeZee(
+                textStyle: TextStyle(
+                  color: Color.fromARGB(255, 1, 3, 4),
+                  fontSize: 14,
+
+                  // decoration: TextDecoration.underline,
+                  decorationThickness: 1,
+                  // fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            actions: [
+              CustomeButton2(
+                text: "Select",
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => OrderTrackingPage()));
+                },
+              ),
+            ],
+          );
+        },
+      );*/
       await sendAdminNotification(amount, CartItemState.selectedListOfUserToPay,
           Login.Email); // ibtisam ****
       //
@@ -123,8 +186,11 @@ class Payment {
             amount, CartItemState.selectedListOfUserToPay, Login.Email);
 
         print("yes service employee \n ");
+        Get.to(() => CartShop());
       }
-
+      //   Get.to(() => userSelectLocation());
+      // Navigator.push(context,
+      //    MaterialPageRoute(builder: (context) => OrderTrackingPage()));
       //
       // CartItemState.functionPayed();
     } catch (e) {
