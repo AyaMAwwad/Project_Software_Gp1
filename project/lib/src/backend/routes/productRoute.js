@@ -100,4 +100,6 @@ router.get('/totalrevenueofseller', productController.totalrevenueofseller);
 // ayosh
 
 
+
+router.get('/userPercentages', productController.userPercentages); 
 module.exports = router;

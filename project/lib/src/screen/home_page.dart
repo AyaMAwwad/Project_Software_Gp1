@@ -88,7 +88,7 @@ class HomePageState extends State<HomePage> {
     fetchProducts();
     getImageOfUser(Login.idd);
 
-    _navigateToAddCategory();
+    //_navigateToAddCategory();
 
     //
     if (PrivacySecurity.Delete == 'delete') {

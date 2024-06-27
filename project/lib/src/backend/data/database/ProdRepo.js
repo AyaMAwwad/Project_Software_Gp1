@@ -1949,6 +1949,104 @@ totalrevenueofseller(userId, res) {
 }
 
 
+userPercentages = (userId, res) => {
+  // Query to get total products sold for each user, including user email
+  const query = `
+    SELECT p.user_id, u.email AS user_email, COUNT(*) AS totalProductsSold
+    FROM Product p
+    INNER JOIN user u ON p.user_id = u.user_id
+    GROUP BY p.user_id, u.email`;
+
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+      return;
+    }
+
+    // Query to get total products available for each user in Product table
+    const productQuery = `
+      SELECT 
+        user_id,
+        SUM(CASE WHEN quantity > 0 THEN 1 ELSE 0 END) AS totalProductsAvailable,
+        SUM(CASE WHEN quantity = 0 THEN 1 ELSE 0 END) AS totalProductsNotPaid
+      FROM Product
+      GROUP BY user_id`;
+
+    db.query(productQuery, (error, productResults) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+        return;
+      }
+
+      // Query to get total products paid for each user in the pay table
+      const payQuery = `
+        SELECT user_id, COUNT(DISTINCT idproduct) AS totalProductsPaid
+        FROM pay
+        GROUP BY user_id`;
+
+      db.query(payQuery, (error, payResults) => {
+        if (error) {
+          console.error(error);
+          res.status(500).json({ message: 'Internal server error' });
+          return;
+        }
+
+        // Prepare array to store user data
+        const usersData = [];
+
+        // Process each user's data
+        results.forEach(userSold => {
+          const userId = userSold.user_id;
+          const totalProductsSold = userSold.totalProductsSold || 0;
+
+          // Find corresponding totalProducts for the user from Product table
+          const userProducts = productResults.find(userProducts => userProducts.user_id === userId);
+          const totalProductsAvailable = userProducts ? userProducts.totalProductsAvailable : 0;
+          const totalProductsNotPaid = userProducts ? userProducts.totalProductsNotPaid : 0;
+
+          // Find corresponding totalProductsPaid for the user from pay table
+          const userPaidProducts = payResults.find(userPaidProducts => userPaidProducts.user_id === userId);
+          const totalProductsPaidFromPay = userPaidProducts ? userPaidProducts.totalProductsPaid : 0;
+
+          // Calculate totalProductsPaid
+          const totalProductsPaid = totalProductsPaidFromPay + totalProductsNotPaid;
+
+          // Calculate total products
+          const totalProducts = totalProductsAvailable + totalProductsNotPaid;
+
+          // Calculate percentage sold
+          const soldPercentage = totalProducts !== 0 ? (totalProductsSold / totalProducts) * 100 : 0;
+
+          // Prepare user data object
+          const userData = {
+            userId: userId,
+            name: userSold.user_email, // Use the fetched user email
+            soldPercentage: soldPercentage.toFixed(2),
+            totalProductsSold: totalProductsSold,
+            totalProductsAvailable: totalProductsAvailable,
+            totalProductsPaid: totalProductsPaid
+          };
+
+          console.log(`User: ${userId}`);
+          console.log(`Total Products Sold: ${totalProductsSold}`);
+          console.log(`Total Products Available: ${totalProductsAvailable}`);
+          console.log(`Total Products Not Paid: ${totalProductsNotPaid}`);
+          console.log(`Total Products Paid from Pay: ${totalProductsPaidFromPay}`);
+          console.log(`Total Products Paid: ${totalProductsPaid}`);
+          console.log(`Sold Percentage: ${soldPercentage.toFixed(2)}`);
+
+          usersData.push(userData);
+        });
+
+        // Respond with all users' data
+        res.status(200).json({ users: usersData });
+      });
+    });
+  });
+}
+
 
 // ayosh 
 
