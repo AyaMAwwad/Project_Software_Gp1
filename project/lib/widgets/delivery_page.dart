@@ -347,6 +347,7 @@ class DeliveryPageState extends State<DeliveryPage> {
                   }
                   print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
                   if (widget.isFree) {
+                    Navigator.pop(context);
                     Duration delay = Duration(minutes: 10);
 
                     Timer(delay, () async {

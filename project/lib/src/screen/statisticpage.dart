@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/src/screen/ipaddress.dart';
+import 'package:project/src/screen/user_show_percentage.dart';
 
 class StatisticsPage extends StatefulWidget {
   @override
@@ -281,6 +282,27 @@ class _StatisticsPageState extends State<StatisticsPage> {
                       const Color.fromARGB(255, 199, 198, 198), '193'.tr),
                 ],
               ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserShowPercentage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  textStyle: TextStyle(fontSize: 18, color: Colors.white),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Text('Show User Percentages',
+                    style: TextStyle(color: Colors.white, fontSize: 18)),
+              ),
+            ),
           ],
         ),
       ),

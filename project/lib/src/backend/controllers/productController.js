@@ -461,4 +461,10 @@ exports.totalproductsoldofSeller = (req, res) => {
 
 
 
+exports.userPercentages = (req, res) => {
+  const { userId } = req.query;
+  prod.userPercentages(userId, res); // Assuming prod is your repository instance
+};
+
+
   
