@@ -7,6 +7,7 @@ import 'package:project/src/screen/detailpage.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/src/screen/login_screen.dart';
 import 'package:project/src/screen/notification_send_msg.dart';
+import 'package:project/src/screen/order_tracking_page.dart';
 import 'package:project/src/screen/payment.dart';
 import 'package:project/widgets/bottom_nav.dart';
 import 'package:project/widgets/cart_item.dart';
@@ -186,6 +187,14 @@ class NotificationPageState extends State<NotificationPage> {
                             Payment.showRatingDialog();
                             CartItemState.flagIsOrder = false;
                           }
+                        } else if (notifications[index]['title'] ==
+                            'Track Your Order') {
+                          CartState().resetCart();
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderTrackingPage()));
                         }
 
                         // Mark the notification as read

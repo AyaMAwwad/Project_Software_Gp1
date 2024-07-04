@@ -8,16 +8,23 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:project/src/screen/home_page.dart';
 import 'package:project/widgets/button_2.dart';
+import 'package:geocoding/geocoding.dart';
 
+/*gmc!.animateCamera(CameraUpdate.newLatLng(
+            LatLng(position!.latitude, position.longitude)));*/
 class userSelectLocation extends StatefulWidget {
   @override
   State<userSelectLocation> createState() => userSelectLocationState();
 }
 
 class userSelectLocationState extends State<userSelectLocation> {
+  static String? city;
+  static String? street;
   GoogleMapController? gmc;
   static double? firstLatLng;
   static double? secondLatLng;
+  static double? firstLatLng1;
+  static double? secondLatLng2;
   List<Marker> marker = [];
   bool _dialogShown = false;
   @override
@@ -103,7 +110,7 @@ class userSelectLocationState extends State<userSelectLocation> {
               ),
             ),
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ $firstLatLng');
                 print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ $secondLatLng');
                 if (firstLatLng == null || secondLatLng == null) {
@@ -115,6 +122,21 @@ class userSelectLocationState extends State<userSelectLocation> {
                     borderRadius: BorderRadius.circular(8),
                   ).show(context);
                 } else {
+                  print('in else  $firstLatLng');
+                  print('in else $secondLatLng');
+                  firstLatLng1 = firstLatLng;
+                  secondLatLng2 = secondLatLng;
+                  List<Placemark> placemarks = await placemarkFromCoordinates(
+                      firstLatLng!, secondLatLng!);
+                  print('=========================================');
+                  print('${placemarks[0].country}');
+                  print('${placemarks[0].street}');
+                  print('${placemarks[0].administrativeArea}');
+                  print('${placemarks[0].locality}');
+                  print('=========================================');
+                  city = placemarks[0].locality;
+                  street = placemarks[0].street;
+
                   firstLatLng = null;
                   secondLatLng = null;
                   /*  Flushbar(
@@ -195,7 +217,7 @@ class userSelectLocationState extends State<userSelectLocation> {
         backgroundColor: Color(0xFF0D6775),
       ),
       body: GoogleMap(
-        onTap: (LatLng latlng) {
+        onTap: (LatLng latlng) async {
           print('++++++++++++++++++++++++++');
           print('${latlng.latitude}');
           print('${latlng.longitude}');
@@ -204,6 +226,7 @@ class userSelectLocationState extends State<userSelectLocation> {
             markerId: MarkerId("1"),
             position: LatLng(latlng.latitude, latlng.longitude),
           ));
+
           firstLatLng = latlng.latitude;
           secondLatLng = latlng.longitude;
           setState(() {});
