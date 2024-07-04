@@ -80,6 +80,10 @@ class FirebaseNotification {
       CartState().resetCart();
       NotificationState.resetNotification();
       navigatorKey.currentState!.pushNamed('notification');
+    } else if (title == 'Track Your Order') {
+      CartState().resetCart();
+      NotificationState.resetNotification();
+      navigatorKey.currentState!.pushNamed('TrackOrder');
     } else {
       NotificationState.resetNotification();
       navigatorKey.currentState!.pushNamed('notification');

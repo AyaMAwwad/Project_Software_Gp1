@@ -96,6 +96,13 @@ class Payment {
             "We'd Love Your Feedback on Your Recent Purchase!");
       });
 
+      Duration delay2 = Duration(seconds: 10);
+
+      Timer(delay2, () async {
+        triggerNotificationFromPages('Track Your Order',
+            "Delivery of your product start, Now You can Track Your Order");
+      });
+
       // }
       await StoreToPay(
           Login.idd, amount, 'visa', CartItemState.selectedListOfUserToPay, gg);
@@ -103,6 +110,7 @@ class Payment {
           CartItemState.selectedListOfUserToPay);
       isPay = true;
       print('Done');
+
       HomePageState.InteractionOfUser(Login.idd, productId, 0, 0, 1);
       Flushbar(
         message: "Payment Done",

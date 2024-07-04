@@ -44,6 +44,7 @@ class DeliveryPageState extends State<DeliveryPage> {
   static String? firstNameDelivery;
   static String? lastNameDelivery;
   static String? phoneNumber;
+  static String? address;
   late Future<void> fetchDeliveryFuture;
 
   @override
@@ -477,6 +478,7 @@ class DeliveryPageState extends State<DeliveryPage> {
             firstNameDelivery = sellarInfo[0]['first_name'];
             lastNameDelivery = sellarInfo[0]['last_name'];
             phoneNumber = sellarInfo[0]['phone_number'];
+            address = sellarInfo[0]['address'];
           });
           print(sellarInfo[0]['first_name']);
           print(sellarInfo[0]['last_name']);

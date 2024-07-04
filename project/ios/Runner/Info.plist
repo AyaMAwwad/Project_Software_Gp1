@@ -50,5 +50,10 @@
 <key>NSCameraUsageDescription
 &lt;string&gt;To scan cards&lt;/string&gt;</key>
 <string>To scan cards</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need your location to provide better services</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>We need your location to provide better services</string>
+
 </dict>
 </plist>

@@ -10,6 +10,7 @@ import 'package:project/src/screen/notification_page.dart';
 import 'package:project/src/screen/home_page.dart';
 
 import 'package:project/src/screen/login_screen.dart';
+import 'package:project/src/screen/order_tracking_page.dart';
 
 import 'package:project/src/screen/screen_state.dart';
 import 'package:project/src/screen/security.dart';
@@ -51,7 +52,7 @@ class MyAppState extends State<MyApp> {
     Get.put(mylocalcontroller());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home:
+      home: //OrderTrackingPage(),
           // CoverStateScreen(), //CustemAppBar(), // SliderPage(), //NewPass(),
           (FirebaseAuth.instance.currentUser == null)
               ? CoverStateScreen()
@@ -91,6 +92,7 @@ class MyAppState extends State<MyApp> {
         "multiLanguage": (context) => MultiLanguage(),
         "security": (context) => PrivacySecurityPage(),
         "cartShop": (context) => CartShop(),
+        "TrackOrder": (context) => OrderTrackingPage(),
         //"category": (context) => ScreenCategory(),
       },
       // Login(), // Signup(), //CoverStateScreen(), // Display SplashScreen initially

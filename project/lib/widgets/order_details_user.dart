@@ -6,12 +6,37 @@ import 'package:project/src/screen/user_select_location.dart';
 import 'package:project/widgets/cart_item.dart';
 import 'package:project/widgets/delivery_page.dart';
 
-class orederDetailsUSer extends StatelessWidget {
+class orederDetailsUSer extends StatefulWidget {
   final String deliveryOption;
   final int productId;
 
   const orederDetailsUSer(
       {super.key, required this.deliveryOption, required this.productId});
+
+  @override
+  State<orederDetailsUSer> createState() => orederDetailsUSerState();
+}
+
+class orederDetailsUSerState extends State<orederDetailsUSer> {
+  static TextEditingController address = TextEditingController();
+  static String? streetAddress;
+  @override
+  void initState() {
+    super.initState();
+    updateStreetAddress();
+  }
+
+  void updateStreetAddress() {
+    setState(() {
+      streetAddress = (userSelectLocationState.city != null ||
+              userSelectLocationState.street != null)
+          ? (userSelectLocationState.city == '')
+              ? userSelectLocationState.street
+              : userSelectLocationState.city
+          : 'City*';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,15 +108,18 @@ class orederDetailsUSer extends StatelessWidget {
               style: TextStyle(color: Colors.grey, fontSize: 12),
             ),
             TextFormField(
+              controller: address,
               decoration: InputDecoration(
-                labelText: 'City*',
+                labelText: streetAddress,
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 16.0),
             TextFormField(
               decoration: InputDecoration(
-                labelText: 'Street Address*',
+                labelText: (userSelectLocationState.street != null)
+                    ? userSelectLocationState.street
+                    : 'Street Address*',
                 hintText: 'Street Name, House No, Apt, suite etc.',
                 border: OutlineInputBorder(),
               ),
@@ -131,8 +159,8 @@ class orederDetailsUSer extends StatelessWidget {
                     builder: (BuildContext context) {
                       return DeliveryPage(
                         isFree: true,
-                        deliveryOption: deliveryOption,
-                        productId: productId,
+                        deliveryOption: widget.deliveryOption,
+                        productId: widget.productId,
                         onPaymentSuccess: () {},
                       );
                     },
@@ -144,8 +172,8 @@ class orederDetailsUSer extends StatelessWidget {
                     builder: (BuildContext context) {
                       return DeliveryPage(
                         isFree: false,
-                        deliveryOption: deliveryOption,
-                        productId: productId,
+                        deliveryOption: widget.deliveryOption,
+                        productId: widget.productId,
                         onPaymentSuccess: () {},
                       );
                     },
